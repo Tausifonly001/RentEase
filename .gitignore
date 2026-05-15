@@ -1,0 +1,51 @@
+# ===== ENVIRONMENT =====
+.env
+.env.local
+.env.*.local
+
+# ===== DEPENDENCIES =====
+/vendor/
+/node_modules/
+
+# ===== RUNTIME =====
+/backend/storage/cache/*
+!/backend/storage/cache/.gitkeep
+*.log
+
+# ===== OS =====
+.DS_Store
+__MACOSX/
+Thumbs.db
+desktop.ini
+
+# ===== EDITORS / IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# ===== AI AGENT CONFIGS =====
+.agent/
+.agents/
+.claude/
+.continue/
+.junie/
+.kiro/
+.trae/
+.planning/
+.gemini/
+skills-lock.json
+
+# ===== TEMP / DEBUG =====
+scratch/
+*.tmp
+temp*.html
+*-temp.html
+progress.txt
+
+# ===== BUILD ARTIFACTS =====
+*.map
+dist/
+build/

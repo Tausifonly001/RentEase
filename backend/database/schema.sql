@@ -20,7 +20,9 @@ END $$;
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
-        CREATE TYPE public.user_role AS ENUM ('user', 'admin');
+        CREATE TYPE public.user_role AS ENUM ('user', 'admin', 'vendor');
+    ELSE
+        BEGIN ALTER TYPE public.user_role ADD VALUE IF NOT EXISTS 'vendor'; EXCEPTION WHEN duplicate_object THEN END;
     END IF;
 END $$;
 
@@ -28,6 +30,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   email text not null unique,
   full_name text,
+  business_name text,
   role public.user_role not null default 'user',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -38,14 +41,22 @@ alter table public.profiles add column if not exists role public.user_role not n
 
 create table if not exists public.products (
   id bigserial primary key,
+  vendor_id uuid references public.profiles(id) on delete restrict,
   name text not null check (char_length(trim(name)) >= 2),
   category text not null check (char_length(trim(category)) >= 2),
   monthly_price numeric(12,2) not null check (monthly_price > 0),
   total_stock integer not null check (total_stock >= 0),
   image_url text,
   description text,
+  vendor_status text not null default 'active' check (vendor_status in ('active', 'paused', 'archived')),
   created_at timestamptz not null default now()
 );
+
+-- Ensure columns exist if table was created without them
+alter table public.products add column if not exists vendor_id uuid references public.profiles(id) on delete restrict;
+alter table public.products add column if not exists vendor_status text not null default 'active' check (vendor_status in ('active', 'paused', 'archived'));
+
+create index if not exists idx_products_vendor on public.products (vendor_id);
 
 create table if not exists public.rentals (
   id bigserial primary key,
@@ -123,6 +134,25 @@ drop policy if exists products_select_public on public.products;
 create policy products_select_public on public.products
 for select
 using (true);
+
+drop policy if exists products_insert_vendor on public.products;
+create policy products_insert_vendor on public.products
+for insert
+to authenticated
+with check (auth.uid() = vendor_id);
+
+drop policy if exists products_update_vendor on public.products;
+create policy products_update_vendor on public.products
+for update
+to authenticated
+using (auth.uid() = vendor_id)
+with check (auth.uid() = vendor_id);
+
+drop policy if exists products_delete_vendor on public.products;
+create policy products_delete_vendor on public.products
+for delete
+to authenticated
+using (auth.uid() = vendor_id);
 
 drop policy if exists profiles_select_own on public.profiles;
 create policy profiles_select_own on public.profiles

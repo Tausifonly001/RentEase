@@ -57,7 +57,7 @@ try {
 // Handle Toggle Wishlist
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_wishlist'])) {
     if (!$currentUser) {
-        header('Location: login.php');
+        header('Location: ' . baseUrl('/login'));
         exit;
     }
     
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rent_now'])) {
             'months' => $months
         ];
         session_write_close();
-        header('Location: cart.php');
+        header('Location: ' . baseUrl('/cart'));
         exit;
     }
 }
@@ -182,7 +182,7 @@ require __DIR__ . '/partials/header.php';
         </div>
         <h2 class="text-2xl font-bold text-primary mb-2">Something went wrong</h2>
         <p class="text-on-surface-variant mb-8 max-w-md mx-auto"><?= htmlspecialchars($error ?? 'The requested product could not be found in our catalog.') ?></p>
-        <a href="browse.php" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-primary/10">
+        <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-primary/10">
             <span class="material-symbols-outlined">arrow_back</span>
             Browse Collections
         </a>
@@ -192,11 +192,11 @@ require __DIR__ . '/partials/header.php';
     <!-- Breadcrumbs -->
     <nav aria-label="Breadcrumb" class="mb-8 overflow-hidden" id="breadcrumbs">
         <ol class="flex items-center gap-2 text-sm text-on-surface-variant">
-            <li><a href="home.php" class="hover:text-secondary transition-colors">Home</a></li>
+            <li><a href="<?= baseUrl('/') ?>" class="hover:text-secondary transition-colors">Home</a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
-            <li><a href="browse.php" class="hover:text-secondary transition-colors">Rentals</a></li>
+            <li><a href="<?= baseUrl('/browse') ?>" class="hover:text-secondary transition-colors">Rentals</a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
-            <li><a href="browse.php?category=<?= urlencode($product['category']) ?>" class="hover:text-secondary transition-colors"><?= htmlspecialchars($product['category']) ?></a></li>
+            <li><a href="<?= baseUrl('/browse?category=' . urlencode($product['category'])) ?>" class="hover:text-secondary transition-colors"><?= htmlspecialchars($product['category']) ?></a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
             <li class="font-semibold text-primary truncate"><?= htmlspecialchars($product['name']) ?></li>
         </ol>
@@ -308,7 +308,7 @@ require __DIR__ . '/partials/header.php';
                 <hr class="my-8 border-slate-100">
 
                 <!-- Tenure Selection -->
-                <form id="rent-form" method="POST" action="product-detail.php?id=<?= $product['id'] ?>" class="space-y-8">
+                <form id="rent-form" method="POST" action="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="space-y-8">
                     <input type="hidden" name="csrf_token" value="<?= RentEase\Support\Csrf::token() ?>">
                     <input type="hidden" name="rent_now" value="1">
                     
@@ -421,7 +421,7 @@ require __DIR__ . '/partials/header.php';
                 <h2 class="text-3xl font-black text-primary tracking-tighter mb-2">Pairs well with</h2>
                 <p class="text-on-surface-variant">Complete your room with these hand-picked items.</p>
             </div>
-            <a href="browse.php" class="text-sm font-black text-secondary uppercase tracking-widest hover:underline underline-offset-8">Explore Catalog</a>
+            <a href="<?= baseUrl('/browse') ?>" class="text-sm font-black text-secondary uppercase tracking-widest hover:underline underline-offset-8">Explore Catalog</a>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -437,7 +437,7 @@ require __DIR__ . '/partials/header.php';
                 <?php endfor; ?>
             <?php else: ?>
                 <?php foreach($relatedProducts as $related): ?>
-                    <a href="product-detail.php?id=<?= $related['id'] ?>" class="group block">
+                    <a href="<?= baseUrl('/product-detail?id=' . $related['id']) ?>" class="group block">
                         <div class="aspect-[4/5] rounded-3xl overflow-hidden bg-white border border-outline-variant mb-4 relative">
                             <img src="<?= htmlspecialchars($related['image_url'] ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80') ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="<?= htmlspecialchars($related['name']) ?>">
                             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>

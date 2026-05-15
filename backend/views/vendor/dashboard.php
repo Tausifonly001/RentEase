@@ -1,233 +1,9 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/Support/Csrf.php';
-
-use RentEase\Services\AuthService;
-use RentEase\Services\ProductService;
-use RentEase\Services\MaintenanceService;
-use RentEase\Support\HttpClient;
 use RentEase\Support\Csrf;
 
-require __DIR__ . '/../bootstrap.php';
 
-$authService = new AuthService($config);
-$productService = new ProductService($config);
-$maintenanceService = new MaintenanceService($config);
-
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-
-$currentUser = null;
-try {
-    $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
-    if ($token) {
-        $currentUser = $authService->validateToken($token);
-    }
-} catch (Throwable $ignored) {}
-
-if (!$currentUser) {
-    header('Location: login.php?redirect=admin.php');
-    exit;
-}
-
-if (($currentUser['role'] ?? 'user') !== 'admin') {
-    header('Location: dashboard.php?error=' . urlencode('Unauthorized access. Admin privileges required.'));
-    exit;
-}
-
-$http = new HttpClient();
-$serviceHeaders = [
-    'apikey' => (string) $config['supabase_service_role_key'],
-    'Authorization' => 'Bearer ' . $config['supabase_service_role_key'],
-    'Accept' => 'application/json',
-    'Content-Type' => 'application/json'
-];
-
-$success = null;
-$error = null;
-
-// POST Action Handlers (Product CRUD & Lease Status)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if (!Csrf::validate($_POST['csrf_token'] ?? '')) {
-        $error = "Security validation failed. Please try again.";
-    } else {
-        $action = $_POST['action'];
-        try {
-        if ($action === 'create_product') {
-            $name = filter_input(INPUT_POST, 'name', FILTER_DEFAULT);
-            $category = filter_input(INPUT_POST, 'category', FILTER_DEFAULT);
-            $monthlyPrice = filter_input(INPUT_POST, 'monthly_price', FILTER_VALIDATE_FLOAT);
-            $totalStock = filter_input(INPUT_POST, 'total_stock', FILTER_VALIDATE_INT);
-            $imageUrl = filter_input(INPUT_POST, 'image_url', FILTER_DEFAULT);
-            $description = filter_input(INPUT_POST, 'description', FILTER_DEFAULT);
-
-            if ($name && $category && $monthlyPrice !== false && $totalStock !== false) {
-                $payload = [
-                    'name' => trim($name),
-                    'category' => trim($category),
-                    'monthly_price' => $monthlyPrice,
-                    'total_stock' => $totalStock,
-                    'image_url' => $imageUrl ?: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
-                    'description' => trim((string)$description)
-                ];
-
-                $res = $http->request('POST', $config['supabase_url'] . '/rest/v1/products', $serviceHeaders, $payload);
-                if ($res['status'] >= 200 && $res['status'] < 300) {
-                    $success = 'New rental product offering created successfully.';
-                } else {
-                    $error = 'Failed to create product: ' . json_encode($res['body']);
-                }
-            } else {
-                $error = 'All product parameters are required to generate an inventory offering.';
-            }
-        }
-        
-        if ($action === 'update_maintenance') {
-            $requestId = filter_input(INPUT_POST, 'request_id', FILTER_VALIDATE_INT);
-            $status = filter_input(INPUT_POST, 'status', FILTER_DEFAULT);
-            $notes = filter_input(INPUT_POST, 'notes', FILTER_DEFAULT);
-            
-            if ($requestId && $status) {
-                $payload = ['status' => $status, 'notes' => $notes];
-                if ($status === 'RESOLVED' || $status === 'CLOSED') {
-                    $payload['resolved_at'] = date('c');
-                }
-                
-                $res = $http->request('PATCH', $config['supabase_url'] . '/rest/v1/maintenance_requests?id=eq.' . $requestId, $serviceHeaders, $payload);
-                if ($res['status'] >= 200 && $res['status'] < 300) {
-                    $success = 'Maintenance ticket updated successfully.';
-                } else {
-                    $error = 'Failed to update ticket: ' . json_encode($res['body']);
-                }
-            }
-        }
-
-        if ($action === 'update_product') {
-            $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-            $name = filter_input(INPUT_POST, 'name', FILTER_DEFAULT);
-            $category = filter_input(INPUT_POST, 'category', FILTER_DEFAULT);
-            $monthlyPrice = filter_input(INPUT_POST, 'monthly_price', FILTER_VALIDATE_FLOAT);
-            $totalStock = filter_input(INPUT_POST, 'total_stock', FILTER_VALIDATE_INT);
-            $imageUrl = filter_input(INPUT_POST, 'image_url', FILTER_DEFAULT);
-            $description = filter_input(INPUT_POST, 'description', FILTER_DEFAULT);
-
-            if ($id && $name && $category && $monthlyPrice !== false && $totalStock !== false) {
-                $payload = [
-                    'name' => trim($name),
-                    'category' => trim($category),
-                    'monthly_price' => $monthlyPrice,
-                    'total_stock' => $totalStock,
-                    'image_url' => $imageUrl,
-                    'description' => trim((string)$description)
-                ];
-
-                $res = $http->request('PATCH', $config['supabase_url'] . '/rest/v1/products?id=eq.' . $id, $serviceHeaders, $payload);
-                if ($res['status'] >= 200 && $res['status'] < 300) {
-                    $success = 'Offering successfully updated.';
-                } else {
-                    $error = 'Failed to update product: ' . json_encode($res['body']);
-                }
-            }
-        }
-
-        if ($action === 'delete_product') {
-            $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-            if ($id) {
-                $res = $http->request('DELETE', $config['supabase_url'] . '/rest/v1/products?id=eq.' . $id, $serviceHeaders);
-                if ($res['status'] >= 200 && $res['status'] < 300) {
-                    $success = 'Offering successfully removed.';
-                } else {
-                    $error = 'Failed to delete offering from catalog.';
-                }
-            }
-        }
-
-        if ($action === 'update_rental') {
-            $rentalId = filter_input(INPUT_POST, 'rental_id', FILTER_VALIDATE_INT);
-            $status = filter_input(INPUT_POST, 'status', FILTER_DEFAULT);
-            $notes = filter_input(INPUT_POST, 'notes', FILTER_DEFAULT) ?: '';
-
-            if ($rentalId && $status) {
-                $payload = ['status' => $status];
-                if ($notes) {
-                    $payload['inspection_notes'] = $notes;
-                }
-                if ($status === 'completed' || $status === 'closed') {
-                    $payload['actual_return_date'] = date('Y-m-d');
-                }
-                
-                $res = $http->request('PATCH', $config['supabase_url'] . '/rest/v1/rentals?id=eq.' . $rentalId, $serviceHeaders, $payload);
-                if ($res['status'] >= 200 && $res['status'] < 300) {
-                    $success = "Tenant agreement #{$rentalId} updated successfully to '{$status}'.";
-                } else {
-                    $error = 'Failed to update rental status: ' . json_encode($res['body']);
-                }
-            }
-        }
-        } catch (Throwable $e) {
-            $error = 'Platform administration exception occurred: ' . $e->getMessage();
-        }
-    }
-}
-
-$orders = [];
-$rentals = [];
-$products = [];
-$maintenanceReqs = [];
-
-// Fetch products via service role
-$prodRes = $http->request('GET', $config['supabase_url'] . '/rest/v1/products?select=*&order=created_at.desc', $serviceHeaders);
-if ($prodRes['status'] >= 200 && $prodRes['status'] < 300 && is_array($prodRes['body'])) {
-    $products = $prodRes['body'];
-}
-
-// Fetch rentals with joined products and profiles
-$rentRes = $http->request('GET', $config['supabase_url'] . '/rest/v1/rentals?select=*,products(name,monthly_price,image_url),profiles(email)&order=created_at.desc', $serviceHeaders);
-if ($rentRes['status'] >= 200 && $rentRes['status'] < 300 && is_array($rentRes['body'])) {
-    $rentals = $rentRes['body'];
-}
-
-// Fetch user orders
-$ordRes = $http->request('GET', $config['supabase_url'] . '/rest/v1/orders?select=*,profiles(email)&order=created_at.desc', $serviceHeaders);
-if ($ordRes['status'] >= 200 && $ordRes['status'] < 300 && is_array($ordRes['body'])) {
-    $orders = $ordRes['body'];
-}
-
-// Fetch maintenance requests
-try {
-    // Only fetch if service works, ignoring failures visually
-    $mRes = $maintenanceService->getAllRequests($_COOKIE['access_token'] ?? '');
-    if (!isset($mRes['error']) || !$mRes['error']) {
-         // Because service function includes header verification, we'll bypass it for admin if we get 4xx
-         // so let's do a direct service_role HTTP fetch just like the others
-         $mrData = $http->request('GET', $config['supabase_url'] . '/rest/v1/maintenance_requests?select=*,rentals(id,start_date,end_date,products(name)),profiles(full_name,email)&order=created_at.desc', $serviceHeaders);
-         if ($mrData['status'] >= 200 && $mrData['status'] < 300 && is_array($mrData['body'])) {
-             $maintenanceReqs = $mrData['body'];
-         }
-    }
-} catch (Throwable $e) {}
-
-// Stats computations
-$totalRevenue = 0.0;
-foreach ($orders as $o) {
-    if (($o['payment_status'] ?? 'pending') === 'completed') {
-        $totalRevenue += (float)($o['total_amount'] ?? 0.0);
-    }
-}
-
-$activeRentalsCount = 0;
-foreach ($rentals as $r) {
-    if (($r['status'] ?? 'active') === 'active') {
-        $activeRentalsCount++;
-    }
-}
-
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
 ?>
 <!doctype html>
 <html lang="en" class="h-full bg-[#f8f9ff] text-slate-900 antialiased selection:bg-teal-100">
@@ -272,7 +48,7 @@ function e(string $value): string
 </head>
 <body class="flex flex-col min-h-screen custom-scrollbar">
 
-    <?php require __DIR__ . '/partials/header.php'; ?>
+    <?php require_once __DIR__ . '/partials/header.php'; ?>
 
     <main class="flex-1 w-full mx-auto max-w-7xl px-4 py-8 md:px-8">
         <!-- Header Section -->
@@ -285,7 +61,7 @@ function e(string $value): string
                     </span>
                     Live Operations
                 </div>
-                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight font-outfit">Operations <span class="text-teal-600">Console</span></h1>
+                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight font-outfit">Vendor <span class="text-teal-600">Console</span></h1>
                 <p class="text-slate-500 font-medium max-w-2xl">Manage your inventory, monitor active leases, and resolve maintenance tickets from a single unified workspace.</p>
             </div>
             <div class="flex gap-3">
@@ -357,7 +133,7 @@ function e(string $value): string
                     </div>
                 </div>
                 <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($maintenanceReqs) ?></span>
+                    <span class="text-3xl font-black text-slate-900 font-outfit">0</span>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Support Tickets</p>
                 </div>
             </div>
@@ -385,6 +161,7 @@ function e(string $value): string
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 <?php foreach ($products as $p): ?>
+                                    <?php if (!is_array($p)) continue; ?>
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <td class="px-8 py-4">
                                             <div class="flex items-center gap-4">
@@ -412,7 +189,7 @@ function e(string $value): string
                                                 <button onclick='editOffering(<?= json_encode($p) ?>)' class="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-teal-600 hover:border-teal-200 transition-all active:scale-90">
                                                     <span class="material-symbols-outlined text-lg">edit</span>
                                                 </button>
-                                                <form action="admin.php" method="POST" onsubmit="return confirm('Archive this offering?');">
+                                                <form action="<?= baseUrl('/vendor-panel') ?>" method="POST" onsubmit="return confirm('Archive this offering?');">
                                                     <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                                                     <input type="hidden" name="action" value="delete_product" />
                                                     <input type="hidden" name="id" value="<?= e((string)$p['id']) ?>" />
@@ -449,6 +226,7 @@ function e(string $value): string
                             </thead>
                             <tbody class="divide-y divide-slate-100 text-sm">
                                 <?php foreach ($rentals as $r): ?>
+                                    <?php if (!is_array($r)) continue; ?>
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <td class="px-8 py-4">
                                             <span class="font-bold text-slate-900 block"><?= e((string)($r['profiles']['email'] ?? 'System Tenant')) ?></span>
@@ -471,10 +249,10 @@ function e(string $value): string
                                             </span>
                                         </td>
                                         <td class="px-8 py-4 text-right">
-                                            <form action="admin.php" method="POST" class="inline-flex gap-2">
+                                            <form action="<?= baseUrl('/vendor-panel') ?>" method="POST" class="inline-flex gap-2">
                                                 <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                                                 <input type="hidden" name="action" value="update_rental" />
-                                                <input type="hidden" name="rental_id" value="<?= e((string)$r['id']) ?>" />
+                                                <input type="hidden" name="id" value="<?= e((string)$r['id']) ?>" />
                                                 <select name="status" class="bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[11px] font-bold text-slate-600 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all">
                                                     <option value="active" <?= $rs === 'active' ? 'selected' : '' ?>>Active</option>
                                                     <option value="return_requested" <?= $rs === 'return_requested' ? 'selected' : '' ?>>Return</option>
@@ -506,7 +284,7 @@ function e(string $value): string
                         <h3 class="text-xl font-bold text-slate-900 font-outfit" id="form-heading">Create Offering</h3>
                     </div>
                     
-                    <form action="admin.php" method="POST" class="space-y-5">
+                    <form action="<?= baseUrl('/vendor-panel') ?>" method="POST" class="space-y-5">
                         <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                         <input type="hidden" name="action" id="product-action" value="create_product" />
                         <input type="hidden" name="id" id="product-id" value="" />
@@ -565,47 +343,13 @@ function e(string $value): string
                 <div class="bento-item glass-card p-6 rounded-[2.5rem] space-y-6">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-bold text-slate-900 font-outfit">Maintenance</h3>
-                        <span class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100"><?= count($maintenanceReqs) ?> Tickets</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100">0 Tickets</span>
                     </div>
                     <div class="space-y-4">
-                        <?php if (empty($maintenanceReqs)): ?>
-                            <div class="py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                                <span class="material-symbols-outlined text-slate-300 text-3xl">task_alt</span>
-                                <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">All Clear</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($maintenanceReqs as $mr): ?>
-                                <div class="p-4 rounded-2xl border border-slate-100 bg-white/50 space-y-3 group hover:border-teal-100 transition-colors">
-                                    <div class="flex justify-between items-start">
-                                        <div class="space-y-1">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase">#<?= $mr['rental_id'] ?></span>
-                                            <p class="text-xs font-bold text-slate-900 line-clamp-1"><?= e((string)($mr['issue_description'] ?? 'No detail')) ?></p>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider <?php 
-                                            echo match($mr['status'] ?? '') {
-                                                'OPEN' => 'bg-red-50 text-red-600',
-                                                'ASSIGNED', 'IN_PROGRESS' => 'bg-yellow-50 text-yellow-600',
-                                                'RESOLVED', 'CLOSED' => 'bg-emerald-50 text-emerald-600',
-                                                default => 'bg-slate-100 text-slate-600'
-                                            };
-                                        ?>"><?= e($mr['status'] ?? 'OPEN') ?></span>
-                                    </div>
-                                    <form method="POST" action="admin.php" class="flex gap-2">
-                                        <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                                        <input type="hidden" name="action" value="update_maintenance">
-                                        <input type="hidden" name="request_id" value="<?= e((string)$mr['id']) ?>">
-                                        <select name="status" class="flex-1 bg-white border border-slate-100 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-500 outline-none focus:border-teal-500 transition-all">
-                                            <?php foreach(['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'] as $s): ?>
-                                                <option value="<?= $s ?>" <?= (($mr['status'] ?? '') === $s) ? 'selected' : '' ?>><?= $s ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <button type="submit" class="p-1.5 rounded-lg bg-slate-900 text-white hover:bg-teal-600 transition-all active:scale-90">
-                                            <span class="material-symbols-outlined text-[16px]">send</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                        <div class="py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                            <span class="material-symbols-outlined text-slate-300 text-3xl">task_alt</span>
+                            <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">All Clear</p>
+                        </div>
                     </div>
                 </div>
             </div>

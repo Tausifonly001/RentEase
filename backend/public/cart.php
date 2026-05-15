@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     if ($action === 'clear') {
         $_SESSION['cart'] = [];
-        header('Location: cart.php');
+        header('Location: ' . baseUrl('/cart'));
         exit;
     }
 
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     'mobile_number' => $mobileNumber,
                     'work_verify' => filter_input(INPUT_POST, 'work_verify', FILTER_DEFAULT)
                 ];
-                header('Location: checkout.php');
+                header('Location: ' . baseUrl('/checkout'));
                 exit;
             }
         }
@@ -115,16 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 $cartCount = count($cart);
 
-/**
- * Escape HTML output for security.
- *
- * @param string $value
- * @return string
- */
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
+
 
 // Fetch DB details for the items
 $dbItems = [];
@@ -144,7 +135,7 @@ foreach ($cart as $id => $item) {
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg md:py-xl">
     <!-- Minimal Header & Stepper -->
     <div class="mb-lg">
-        <a class="inline-flex items-center text-secondary hover:text-on-secondary-container transition-colors mb-sm font-button text-button" href="browse.php">
+        <a class="inline-flex items-center text-secondary hover:text-on-secondary-container transition-colors mb-sm font-button text-button" href="<?= baseUrl('/browse') ?>">
             <span class="material-symbols-outlined text-sm mr-xs">arrow_back</span>
             Back to Browse
         </a>
@@ -167,7 +158,7 @@ foreach ($cart as $id => $item) {
         <?php if (empty($cart)): ?>
             <div class="text-center py-24 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest mt-4">
                 <p class="text-on-surface-variant font-medium text-lg mb-4">Your lease basket is currently empty.</p>
-                <a href="browse.php" class="inline-flex items-center justify-center bg-primary text-on-primary font-button px-6 py-3 rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all text-sm">
+                <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center justify-center bg-primary text-on-primary font-button px-6 py-3 rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all text-sm">
                     Explore Collections
                 </a>
             </div>
@@ -199,7 +190,7 @@ foreach ($cart as $id => $item) {
     </div>
 
     <!-- Main Checkout Area -->
-    <form action="cart.php" method="POST" class="flex flex-col lg:flex-row gap-lg">
+    <form action="<?= baseUrl('/cart') ?>" method="POST" class="flex flex-col lg:flex-row gap-lg">
         <input type="hidden" name="action" value="checkout">
         <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
         
@@ -350,7 +341,7 @@ foreach ($cart as $id => $item) {
     
     <!-- Clear Cart separate form -->
     <div class="flex justify-end mt-4 w-full lg:w-2/3">
-        <form action="cart.php" method="POST">
+        <form action="<?= baseUrl('/cart') ?>" method="POST">
             <input type="hidden" name="action" value="clear">
             <button type="submit" class="text-sm text-error underline hover:text-red-700 transition font-medium flex items-center gap-1">
                 <span class="material-symbols-outlined text-[16px]">delete</span> Empty Cart

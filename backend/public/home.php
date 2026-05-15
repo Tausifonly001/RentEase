@@ -32,10 +32,10 @@ require __DIR__ . '/partials/header.php';
         <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">Transform your space without the
             commitment. Flexible monthly rentals for high-quality pieces, delivered and assembled for you.</p>
         <div class="flex flex-wrap gap-sm mt-xs">
-            <a href="browse.php"
+            <a href="<?= baseUrl('/shop') ?>"
                 class="bg-primary text-on-primary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-opacity-90 transition-all ambient-shadow-low hover:ambient-shadow-high">Explore
                 Catalog</a>
-            <a href="browse.php"
+            <a href="<?= baseUrl('/shop') ?>"
                 class="border border-secondary text-secondary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-surface-container transition-all">View
                 Packages</a>
         </div>
@@ -62,12 +62,12 @@ require __DIR__ . '/partials/header.php';
     <div class="flex justify-between items-end mb-lg">
         <h2 class="font-h2 text-h2 text-primary">Shop by Category</h2>
         <a class="font-button text-button text-secondary flex items-center gap-xs hover:underline"
-            href="browse.php">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+            href="<?= baseUrl('/shop') ?>">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter auto-rows-[250px]">
         <!-- Living Room -->
         <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-2 lg:col-span-2 row-span-2"
-            href="browse.php?category=Furniture">
+            href="<?= baseUrl('/shop?category=Furniture') ?>">
             <img alt="Living Room"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop" />
@@ -81,7 +81,7 @@ require __DIR__ . '/partials/header.php';
         </a>
         <!-- Bedroom -->
         <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-1 lg:col-span-1 row-span-1"
-            href="browse.php?category=Bedroom">
+            href="<?= baseUrl('/shop?category=Bedroom') ?>">
             <img alt="Bedroom"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1505691723518-36a5ac3be353?q=80&w=1000&auto=format&fit=crop" />
@@ -92,7 +92,7 @@ require __DIR__ . '/partials/header.php';
         </a>
         <!-- Kitchen / Appliances -->
         <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-1 lg:col-span-1 row-span-1"
-            href="browse.php?category=Appliances">
+            href="<?= baseUrl('/shop?category=Appliances') ?>">
             <img alt="Kitchen"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=1000&auto=format&fit=crop" />
@@ -103,7 +103,7 @@ require __DIR__ . '/partials/header.php';
         </a>
         <!-- Home Office -->
         <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-2 lg:col-span-2 row-span-1"
-            href="browse.php?category=Office">
+            href="<?= baseUrl('/shop?category=Office') ?>">
             <img alt="Home Office"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1000&auto=format&fit=crop" />
@@ -172,7 +172,7 @@ require __DIR__ . '/partials/header.php';
     <div class="flex justify-between items-end mb-lg">
         <h2 class="font-h2 text-h2 text-primary">Featured Rentals</h2>
         <a class="font-button text-button text-secondary flex items-center gap-xs hover:underline"
-            href="browse.php">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+            href="<?= baseUrl('/shop') ?>">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
         <?php
@@ -183,7 +183,7 @@ require __DIR__ . '/partials/header.php';
             <?php foreach (array_slice($allProducts, 0, 8) as $product): ?>
                 <div
                     class="bg-surface rounded-lg ambient-shadow-low hover:ambient-shadow-high transition-shadow p-xs flex flex-col h-full border border-outline-variant">
-                    <a href="product-detail.php?id=<?= $product['id'] ?>"
+                    <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>"
                         class="relative w-full aspect-square rounded-DEFAULT overflow-hidden bg-surface-container-lowest mb-sm group">
                         <img alt="<?= htmlspecialchars($product['name']) ?>"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -196,7 +196,7 @@ require __DIR__ . '/partials/header.php';
                         <?php endif; ?>
                     </a>
                     <div class="flex-grow px-2">
-                        <a href="product-detail.php?id=<?= $product['id'] ?>">
+                        <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>">
                             <h3 class="font-body-lg text-body-lg font-medium text-primary line-clamp-1">
                                 <?= htmlspecialchars($product['name']) ?>
                             </h3>
@@ -211,7 +211,7 @@ require __DIR__ . '/partials/header.php';
                                 class="font-h3 text-h3 text-primary font-bold">$<?= number_format($product['monthly_price'], 0) ?></span>
                             <span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
                         </div>
-                        <form method="POST" action="cart.php">
+                        <form method="POST" action="<?= baseUrl('/cart') ?>">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                             <input type="hidden" name="quantity" value="1">

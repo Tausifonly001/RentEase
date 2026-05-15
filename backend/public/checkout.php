@@ -26,7 +26,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php?redirect=cart.php');
+    header('Location: ' . baseUrl('/login?redirect=cart'));
     exit;
 }
 
@@ -34,7 +34,7 @@ $cart = $_SESSION['cart'] ?? [];
 $kyc = $_SESSION['checkout_kyc'] ?? [];
 
 if (empty($cart)) {
-    header('Location: browse.php');
+    header('Location: ' . baseUrl('/shop'));
     exit;
 }
 
@@ -141,10 +141,7 @@ $cartCount = count($cart);
  * @param string $value
  * @return string
  */
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
+
 ?>
 <?php require __DIR__ . '/partials/header.php'; ?>
 
@@ -250,7 +247,7 @@ function e(string $value): string
                     </div>
                 </div>
 
-                <form action="checkout.php" method="POST">
+                <form action="<?= baseUrl('/checkout') ?>" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                     <button type="submit" name="pay" value="1" class="flex items-center justify-center gap-2 bg-primary text-on-primary font-button px-6 py-4 rounded-xl shadow-md hover:bg-primary/90 active:scale-95 transition-all w-full text-lg">
                         <span class="material-symbols-outlined">payments</span>

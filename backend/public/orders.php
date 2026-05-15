@@ -21,7 +21,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php?redirect=orders.php');
+    header('Location: ' . baseUrl('/login?redirect=orders'));
     exit;
 }
 
@@ -80,10 +80,7 @@ if (isset($_GET['checkout_success'])) {
 
 $success = isset($_GET['checkout_success']) ? 'Thank you for your order! Your lease is active and your items are queued for direct dispatch.' : null;
 
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
+
 ?>
 <?php require __DIR__ . '/partials/header.php'; ?>
 
@@ -122,7 +119,7 @@ function e(string $value): string
                 <div class="bg-surface-container-low rounded-xl p-xl text-center border border-outline-variant/30">
                     <span class="material-symbols-outlined text-outline text-4xl mb-2">inventory_2</span>
                     <p class="text-on-surface-variant font-medium">No active product leases found.</p>
-                    <a href="browse.php" class="inline-flex mt-4 text-secondary font-button hover:underline">Start browsing &rarr;</a>
+                    <a href="<?= baseUrl('/shop') ?>" class="inline-flex mt-4 text-secondary font-button hover:underline">Start browsing &rarr;</a>
                 </div>
             <?php else: ?>
                 <div class="grid gap-md">

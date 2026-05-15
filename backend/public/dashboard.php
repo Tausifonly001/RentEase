@@ -43,7 +43,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 
@@ -113,7 +113,7 @@ require_once __DIR__ . '/partials/header.php';
             <section class="reveal-element">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Active Rentals</h2>
-                    <a class="text-teal-600 font-semibold hover:underline underline-offset-4" href="browse.php">Explore More</a>
+                    <a class="text-teal-600 font-semibold hover:underline underline-offset-4" href="<?= baseUrl('/shop') ?>">Explore More</a>
                 </div>
 
                 <?php if (empty($rentals)): ?>
@@ -122,7 +122,7 @@ require_once __DIR__ . '/partials/header.php';
                             <span class="material-symbols-outlined text-3xl">inventory_2</span>
                         </div>
                         <p class="text-slate-500 font-medium mb-6">You don't have any active rentals yet.</p>
-                        <a href="browse.php" class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all inline-block">Start Your First Rental</a>
+                        <a href="<?= baseUrl('/shop') ?>" class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all inline-block">Start Your First Rental</a>
                     </div>
                 <?php else: ?>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -142,10 +142,10 @@ require_once __DIR__ . '/partials/header.php';
                                     <span class="text-xl font-bold text-primary">$<?= number_format((float)($rental['products']['monthly_price'] ?? 0), 0) ?><span class="text-xs font-normal text-slate-400">/mo</span></span>
                                     <div class="flex gap-2">
                                         <?php if ($rental['status'] === 'active'): ?>
-                                            <a href="return-pickup.php?id=<?= $rental['id'] ?>" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all">Return</a>
+                                            <a href="<?= baseUrl('/return-pickup?id=' . $rental['id']) ?>" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all">Return</a>
                                         <?php elseif ($rental['status'] === 'scheduled'): ?>
-                                            <a href="reschedule.php?id=<?= $rental['id'] ?>" class="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all">Reschedule</a>
-                                            <a href="tracking.php?id=<?= $rental['id'] ?>" class="bg-teal-50 text-teal-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-100 transition-colors">Track</a>
+                                            <a href="<?= baseUrl('/reschedule?id=' . $rental['id']) ?>" class="bg-secondary text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all">Reschedule</a>
+                                            <a href="<?= baseUrl('/tracking?id=' . $rental['id']) ?>" class="bg-teal-50 text-teal-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-teal-100 transition-colors">Track</a>
                                         <?php endif; ?>
                                         <button onclick="document.getElementById('extend-<?= $rental['id'] ?>').classList.toggle('hidden')" class="bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-100 transition-colors">Extend</button>
                                     </div>
@@ -153,7 +153,7 @@ require_once __DIR__ . '/partials/header.php';
 
                                 <!-- Extension Inline Form -->
                                 <div id="extend-<?= $rental['id'] ?>" class="hidden mt-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                    <form action="dashboard.php" method="POST" class="flex flex-col gap-3">
+                                    <form action="<?= baseUrl('/dashboard') ?>" method="POST" class="flex flex-col gap-3">
                                         <input type="hidden" name="csrf_token" value="<?= Csrf::token() ?>">
                                         <input type="hidden" name="action" value="extend_lease">
                                         <input type="hidden" name="rental_id" value="<?= $rental['id'] ?>">
@@ -178,32 +178,32 @@ require_once __DIR__ . '/partials/header.php';
             <section class="reveal-element">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6 tracking-tight">Quick Actions</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <a href="help-center.php" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <a href="<?= baseUrl('/support') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">build</span>
                         </div>
                         <span class="text-sm font-bold text-slate-900">Request Repair</span>
                     </a>
-                    <a href="browse.php" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <a href="<?= baseUrl('/shop') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">add_circle</span>
                         </div>
                         <span class="text-sm font-bold text-slate-900">Rent New</span>
                     </a>
-                    <a href="wishlist.php" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <a href="<?= baseUrl('/wishlist') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">favorite</span>
                         </div>
                         <span class="text-sm font-bold text-slate-900">Wishlist</span>
                     </a>
-                    <a href="survey.php" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <a href="<?= baseUrl('/feedback') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">rate_review</span>
                         </div>
                         <span class="text-sm font-bold text-slate-900">Give Feedback</span>
                     </a>
                     <?php if (($currentUser['role'] ?? 'user') === 'admin'): ?>
-                    <a href="admin.php" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-600 transition-all group shadow-lg">
+                    <a href="<?= baseUrl('/admin') ?>" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-600 transition-all group shadow-lg">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-slate-900 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">admin_panel_settings</span>
                         </div>
@@ -228,21 +228,21 @@ require_once __DIR__ . '/partials/header.php';
                     </div>
                 </div>
                 <nav class="space-y-1">
-                    <a href="settings.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                    <a href="<?= baseUrl('/settings') ?>" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                         <div class="flex items-center gap-3 text-slate-600 group-hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-xl">manage_accounts</span>
                             <span class="text-sm font-semibold">Account Settings</span>
                         </div>
                         <span class="material-symbols-outlined text-slate-300 group-hover:text-primary">chevron_right</span>
                     </a>
-                    <a href="payment-methods.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                    <a href="<?= baseUrl('/payments') ?>" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                         <div class="flex items-center gap-3 text-slate-600 group-hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-xl">credit_card</span>
                             <span class="text-sm font-semibold">Payment Methods</span>
                         </div>
                         <span class="material-symbols-outlined text-slate-300 group-hover:text-primary">chevron_right</span>
                     </a>
-                    <a href="help-center.php" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+                    <a href="<?= baseUrl('/support') ?>" class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                         <div class="flex items-center gap-3 text-slate-600 group-hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-xl">help</span>
                             <span class="text-sm font-semibold">Support Center</span>
@@ -250,7 +250,7 @@ require_once __DIR__ . '/partials/header.php';
                         <span class="material-symbols-outlined text-slate-300 group-hover:text-primary">chevron_right</span>
                     </a>
                     <div class="pt-4 mt-4 border-t border-slate-50">
-                        <a href="logout.php" class="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 text-red-500 transition-colors">
+                        <a href="<?= baseUrl('/logout') ?>" class="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 text-red-500 transition-colors">
                             <span class="material-symbols-outlined text-xl">logout</span>
                             <span class="text-sm font-bold">Sign Out</span>
                         </a>
@@ -262,7 +262,7 @@ require_once __DIR__ . '/partials/header.php';
             <section class="reveal-element">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-bold text-slate-900 tracking-tight">Maintenance</h2>
-                    <a class="text-xs font-bold text-teal-600 uppercase tracking-widest hover:underline" href="maintenance-tracker.php">View All</a>
+                    <a class="text-xs font-bold text-teal-600 uppercase tracking-widest hover:underline" href="<?= baseUrl('/maintenance') ?>">View All</a>
                 </div>
                 <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
                     <?php if (empty($maintenanceRequests)): ?>
@@ -284,7 +284,7 @@ require_once __DIR__ . '/partials/header.php';
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
-                    <button onclick="window.location.href='support.php'" class="w-full py-4 bg-slate-50 text-slate-600 text-sm font-bold hover:bg-slate-100 transition-colors border-t border-slate-100">
+                    <button onclick="window.location.href='<?= baseUrl('/support') ?>'" class="w-full py-4 bg-slate-50 text-slate-600 text-sm font-bold hover:bg-slate-100 transition-colors border-t border-slate-100">
                         Create New Ticket
                     </button>
                 </div>

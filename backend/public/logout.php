@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use RentEase\Services\AuthService;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $authService->clearAuthCookie();
@@ -13,5 +13,5 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     session_destroy();
 }
 
-header('Location: index.php');
+header('Location: ' . baseUrl('/'));
 exit;

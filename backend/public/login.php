@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if ($token !== '') {
                     $authService->setAuthCookie($token, $expires);
-                    header('Location: index.php');
+                    header('Location: ' . baseUrl('/'));
                     exit;
                 } else {
                     $error = 'Authentication failed. Please verify your email and password.';
@@ -92,7 +92,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
             </div>
             
             <div class="relative z-10 text-center px-12">
-                <a href="index.php" class="inline-block mb-12">
+                <a href="<?= baseUrl('/') ?>" class="inline-block mb-12">
                     <span class="text-5xl font-black text-white tracking-tighter">Rent<span class="text-secondary">Ease</span></span>
                 </a>
                 <h2 class="text-4xl font-bold text-white mb-6 leading-tight">Elevate Your Living Experience.</h2>
@@ -116,7 +116,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
         <!-- Right Side: Login Form -->
         <div class="flex flex-col justify-start sm:justify-center w-full lg:w-1/2 px-5 sm:px-12 lg:px-24 bg-white relative min-w-0">
             <div class="absolute top-8 left-5 lg:hidden">
-                <a href="index.php" class="text-2xl font-black text-primary tracking-tighter">RentEase</a>
+                <a href="<?= baseUrl('/') ?>" class="text-2xl font-black text-primary tracking-tighter">RentEase</a>
             </div>
 
             <div id="login-container" class="w-full max-w-md mx-auto pt-24 pb-12 sm:py-12 min-w-0">
@@ -132,7 +132,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     </div>
                 <?php endif; ?>
 
-                <form action="login.php" method="POST" class="space-y-6">
+                <form action="<?= baseUrl('/login') ?>" method="POST" class="space-y-6">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                     
                     <div>
@@ -149,7 +149,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <label for="password" class="block text-sm font-semibold text-primary">Password</label>
-                            <a href="forgot-password.php" class="text-xs font-bold text-secondary hover:underline">Forgot password?</a>
+                            <a href="<?= baseUrl('/forgot-password') ?>" class="text-xs font-bold text-secondary hover:underline">Forgot password?</a>
                         </div>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
@@ -179,7 +179,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <button onclick="window.location.href='api/auth/oauth.php?provider=<?= $id ?>'" 
+                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth.php?provider=' . $id) ?>'" 
                                 class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
                                 <span class="text-sm font-bold text-slate-700"><?= $provider['name'] ?></span>
@@ -191,7 +191,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                 <footer class="mt-10 text-center">
                     <p class="text-slate-500 text-sm">
                         Don't have an account? 
-                        <a href="signup.php" class="text-secondary font-bold hover:underline">Create an account</a>
+                        <a href="<?= baseUrl('/signup') ?>" class="text-secondary font-bold hover:underline">Create an account</a>
                     </p>
                 </footer>
             </div>

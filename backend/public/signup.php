@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $authService->setAuthCookie($token, $expires);
                 }
 
-                header('Location: index.php');
+                header('Location: ' . baseUrl('/'));
                 exit;
             } catch (Throwable $e) {
                 $error = 'Signup failed: ' . $e->getMessage();
@@ -120,7 +120,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
             </div>
             
             <div class="relative z-10 text-center px-12">
-                <a href="index.php" class="inline-block mb-12">
+                <a href="<?= baseUrl('/') ?>" class="inline-block mb-12">
                     <span class="text-5xl font-black text-white tracking-tighter">Rent<span class="text-secondary">Ease</span></span>
                 </a>
                 <h2 class="text-4xl font-bold text-white mb-6 leading-tight">Join the Premium Rental Marketplace.</h2>
@@ -144,7 +144,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
         <!-- Right Side: Signup Form -->
         <div class="flex flex-col justify-start sm:justify-center w-full lg:w-1/2 px-5 sm:px-12 lg:px-24 bg-white relative min-w-0">
             <div class="absolute top-8 left-5 lg:hidden">
-                <a href="index.php" class="text-2xl font-black text-primary tracking-tighter">RentEase</a>
+                <a href="<?= baseUrl('/') ?>" class="text-2xl font-black text-primary tracking-tighter">RentEase</a>
             </div>
 
             <div id="signup-container" class="w-full max-w-md mx-auto pt-24 pb-12 sm:py-12 min-w-0">
@@ -160,7 +160,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     </div>
                 <?php endif; ?>
 
-                <form action="signup.php" method="POST" class="space-y-5">
+                <form action="<?= baseUrl('/signup') ?>" method="POST" class="space-y-5">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                     
                     <div>
@@ -200,7 +200,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                             <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-secondary border-slate-300 rounded focus:ring-secondary cursor-pointer">
                         </div>
                         <div class="text-sm">
-                            <label for="terms" class="text-slate-500 leading-relaxed">I agree to the <a href="terms" class="text-secondary font-bold hover:underline">Terms of Service</a> and <a href="privacy" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</label>
+                            <label for="terms" class="text-slate-500 leading-relaxed">I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-secondary font-bold hover:underline">Terms of Service</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</label>
                         </div>
                     </div>
 
@@ -219,7 +219,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <button onclick="window.location.href='api/auth/oauth.php?provider=<?= $id ?>'" 
+                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth.php?provider=' . $id) ?>'" 
                                 class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
                                 <span class="text-sm font-bold text-slate-700"><?= $provider['name'] ?></span>
@@ -231,7 +231,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                 <footer class="mt-10 text-center">
                     <p class="text-slate-500 text-sm">
                         Already have an account? 
-                        <a href="login.php" class="text-secondary font-bold hover:underline">Sign in instead</a>
+                        <a href="<?= baseUrl('/login') ?>" class="text-secondary font-bold hover:underline">Sign in instead</a>
                     </p>
                 </footer>
             </div>

@@ -13,6 +13,8 @@ $dotenv->safeLoad();
 
 $config = require __DIR__ . '/config/config.php';
 
+require_once __DIR__ . '/src/Support/helpers.php';
+
 spl_autoload_register(static function (string $class): void {
     $prefix = 'RentEase\\';
     $baseDir = __DIR__ . '/src/';

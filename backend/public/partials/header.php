@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 use RentEase\Services\AuthService;
 
+/** @var array $config */
+if (!isset($config)) {
+    $config = require_once __DIR__ . '/../../config/config.php';
+}
+
 $authService = new AuthService($config);
 $currentUser = null;
 try {
@@ -162,27 +167,40 @@ if (!empty($_SESSION['cart'])) {
 <!-- TopNavBar -->
 <nav class="bg-white dark:bg-slate-900 font-inter tracking-tight font-medium sticky w-full top-0 border-b z-50 border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none flex">
     <div class="flex justify-between items-center h-16 px-4 md:px-8 w-full max-w-7xl mx-auto">
-        <a href="index.php" class="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tighter">RentEase</a>
+        <a href="<?= baseUrl('/') ?>" class="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tighter">RentEase</a>
         <div class="hidden md:flex gap-6 items-center">
-            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="browse.php?category=Furniture">Furniture</a>
-            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="browse.php?category=Appliances">Appliances</a>
-            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="browse.php">Packages</a>
-            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="index.php">How it Works</a>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="<?= baseUrl('/shop?category=Furniture') ?>">Furniture</a>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="<?= baseUrl('/shop?category=Appliances') ?>">Appliances</a>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="<?= baseUrl('/shop') ?>">Packages</a>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity" href="<?= baseUrl('/') ?>">How it Works</a>
         </div>
         <div class="hidden md:flex gap-4 items-center text-slate-900 dark:text-slate-50">
-            <a href="cart.php" class="hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity relative">
+            <a href="<?= baseUrl('/cart') ?>" class="hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity relative">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
                 <?php if ($cartCount > 0): ?>
                     <span class="absolute -top-1 -right-1 bg-secondary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center"><?= $cartCount ?></span>
                 <?php endif; ?>
             </a>
             <?php if (($currentUser['role'] ?? 'user') === 'admin'): ?>
-                <a href="admin.php" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-teal-600 transition-all shadow-sm">
+                <a href="<?= baseUrl('/admin') ?>" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-teal-600 transition-all shadow-sm">
                     <span class="material-symbols-outlined text-[14px]">admin_panel_settings</span>
                     Admin Console
                 </a>
             <?php endif; ?>
-            <a href="<?= $currentUser ? 'dashboard.php' : 'login.php' ?>" class="hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity">
+            <?php 
+                $profileLink = '/login';
+                if ($currentUser) {
+                    $role = $currentUser['role'] ?? 'user';
+                    if ($role === 'admin') {
+                        $profileLink = '/admin';
+                    } elseif ($role === 'vendor') {
+                        $profileLink = '/vendor-panel';
+                    } else {
+                        $profileLink = '/dashboard';
+                    }
+                }
+            ?>
+            <a href="<?= baseUrl($profileLink) ?>" class="hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 active:opacity-80 transition-opacity">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
             </a>
         </div>

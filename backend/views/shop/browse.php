@@ -1,93 +1,4 @@
-<?php
-declare(strict_types=1);
-
-use RentEase\Services\ProductService;
-use RentEase\Services\WishlistService;
-use RentEase\Services\AuthService;
-
-require __DIR__ . '/../bootstrap.php';
-
-$productService = new ProductService($config);
-$wishlistService = new WishlistService($config);
-$authService = new AuthService($config);
-
-$currentUser = null;
-$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
-if ($token) {
-    try {
-        $userData = $authService->validateToken($token);
-        if ($userData) {
-            $currentUser = $userData;
-            $currentUser['name'] = $userData['user_metadata']['full_name']
-                ?? $userData['name']
-                ?? explode('@', $userData['email'])[0]
-                ?? 'User';
-        }
-    } catch (Throwable $ignored) {
-    }
-}
-
-$category = $_GET['category'] ?? null;
-if ($category === '')
-    $category = null;
-
-$products = [];
-$wishlistIds = [];
-$error = null;
-$success = null;
-
-// Handle Toggle Wishlist
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_wishlist'])) {
-    if (!$currentUser) {
-        header('Location: login.php');
-        exit;
-    }
-
-    $pid = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
-    $csrfToken = $_POST['csrf_token'] ?? '';
-
-    if (!RentEase\Support\Csrf::validate((string) $csrfToken)) {
-        $error = "Security validation failed. Please try again.";
-    } elseif ($pid) {
-        try {
-            $wishlistService->toggleItem($currentUser['id'], $pid, $token);
-            // Success - refresh list below
-        } catch (Throwable $e) {
-            $error = "Wishlist update failed: " . $e->getMessage();
-        }
-    }
-}
-
-try {
-    $products = $productService->catalog(1, 50, $category);
-} catch (Throwable $e) {
-    $error = 'Unable to load products. Please try again.';
-    $products = [];
-    // Detailed logging for debugging
-    $logDir = __DIR__ . '/../scratch';
-    if (!is_dir($logDir))
-        @mkdir($logDir, 0777, true);
-    if (is_writable($logDir) || is_writable($logDir . '/error.log')) {
-        file_put_contents($logDir . '/error.log', "[" . date('Y-m-d H:i:s') . "] Catalog Error: " . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
-    }
-}
-
-$wishlistIds = [];
-if ($currentUser && empty($error)) {
-    try {
-        $wishItems = $wishlistService->getItems($currentUser['id'], $token);
-        $wishlistIds = array_column($wishItems, 'product_id');
-    } catch (Throwable $e) {
-        // Log wishlist error but don't block the page
-        $logDir = __DIR__ . '/../scratch';
-        if (is_writable($logDir) || is_writable($logDir . '/error.log')) {
-            file_put_contents($logDir . '/error.log', "[" . date('Y-m-d H:i:s') . "] Wishlist Fetch Error: " . $e->getMessage() . "\n", FILE_APPEND);
-        }
-    }
-}
-
-require __DIR__ . '/partials/header.php';
-?>
+<?php require __DIR__ . '/../../public/partials/header.php'; ?>
 
 <!-- Main Content Area -->
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg mb-xl">
@@ -95,14 +6,14 @@ require __DIR__ . '/partials/header.php';
     <nav aria-label="Breadcrumb" class="flex text-on-surface-variant font-body-sm text-body-sm mb-lg">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a class="inline-flex items-center hover:text-secondary transition-colors" href="home.php">
+                <a class="inline-flex items-center hover:text-secondary transition-colors" href="<?= baseUrl('/') ?>">
                     Home
                 </a>
             </li>
             <li>
                 <div class="flex items-center">
                     <span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
-                    <a class="hover:text-secondary transition-colors" href="browse.php">Rentals</a>
+                    <a class="hover:text-secondary transition-colors" href="<?= baseUrl('/browse') ?>">Rentals</a>
                 </div>
             </li>
             <li aria-current="page">
@@ -124,7 +35,7 @@ require __DIR__ . '/partials/header.php';
                 <div class="mb-md">
                     <h3 class="font-button text-button text-on-surface mb-xs">Category</h3>
                     <div class="flex flex-col gap-2">
-                        <a href="browse.php" class="flex items-center gap-3 group">
+                        <a href="<?= baseUrl('/browse') ?>" class="flex items-center gap-3 group">
                             <div
                                 class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === null ? 'bg-secondary border-secondary' : '' ?>">
                                 <?php if ($category === null): ?>
@@ -135,7 +46,7 @@ require __DIR__ . '/partials/header.php';
                                 class="font-body-sm text-body-sm transition-colors <?= $category === null ? 'text-on-surface font-semibold' : 'text-on-surface-variant group-hover:text-on-surface' ?>">All
                                 Items</span>
                         </a>
-                        <a href="browse.php?category=Furniture" class="flex items-center gap-3 group">
+                        <a href="<?= baseUrl('/browse?category=Furniture') ?>" class="flex items-center gap-3 group">
                             <div
                                 class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === 'Furniture' ? 'bg-secondary border-secondary' : '' ?>">
                                 <?php if ($category === 'Furniture'): ?>
@@ -145,7 +56,7 @@ require __DIR__ . '/partials/header.php';
                             <span
                                 class="font-body-sm text-body-sm transition-colors <?= $category === 'Furniture' ? 'text-on-surface font-semibold' : 'text-on-surface-variant group-hover:text-on-surface' ?>">Furniture</span>
                         </a>
-                        <a href="browse.php?category=Appliances" class="flex items-center gap-3 group">
+                        <a href="<?= baseUrl('/browse?category=Appliances') ?>" class="flex items-center gap-3 group">
                             <div
                                 class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === 'Appliances' ? 'bg-secondary border-secondary' : '' ?>">
                                 <?php if ($category === 'Appliances'): ?>
@@ -226,7 +137,7 @@ require __DIR__ . '/partials/header.php';
                             </form>
 
                             <!-- Image -->
-                            <a href="product-detail.php?id=<?= $product['id'] ?>"
+                            <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>"
                                 class="relative h-48 bg-surface-container-low overflow-hidden block">
                                 <img alt="<?= htmlspecialchars($product['name']) ?>"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -243,7 +154,7 @@ require __DIR__ . '/partials/header.php';
                             <!-- Info -->
                             <div class="p-4 flex flex-col flex-grow">
                                 <div class="flex justify-between items-start mb-2">
-                                    <a href="product-detail.php?id=<?= $product['id'] ?>">
+                                    <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>">
                                         <h3 class="font-h3 text-body-lg text-on-surface font-semibold line-clamp-2">
                                             <?= htmlspecialchars($product['name']) ?></h3>
                                     </a>
@@ -257,7 +168,7 @@ require __DIR__ . '/partials/header.php';
                                     <span class="font-body-sm text-body-sm text-on-surface-variant">Category:
                                         <?= htmlspecialchars($product['category']) ?></span>
                                 </div>
-                                <form method="POST" action="cart.php" class="mt-4">
+                                <form method="POST" action="<?= baseUrl('/cart') ?>" class="mt-4">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                     <input type="hidden" name="quantity" value="1">
@@ -276,4 +187,4 @@ require __DIR__ . '/partials/header.php';
     </div>
 </main>
 
-<?php require __DIR__ . '/partials/footer.php'; ?>
+<?php require __DIR__ . '/../../public/partials/footer.php'; ?>

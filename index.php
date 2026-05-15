@@ -26,6 +26,37 @@ if ($cleanPath === '') {
     $cleanPath = 'home';
 }
 
+require_once __DIR__ . '/backend/bootstrap.php';
+
+use RentEase\Routing\Router;
+use RentEase\Controllers\AdminController;
+use RentEase\Controllers\ShopController;
+use RentEase\Controllers\VendorController;
+
+$router = new Router();
+
+// Phase 2/3 ADR Routes (Add new routes here)
+$router->get('/admin', [AdminController::class, 'dashboard']);
+$router->post('/admin', [AdminController::class, 'action']);
+
+$router->get('/browse', [ShopController::class, 'browse']);
+$router->get('/shop', [ShopController::class, 'browse']);
+$router->post('/browse', [ShopController::class, 'action']);
+
+$router->get('/vendor-panel', [VendorController::class, 'dashboard']);
+$router->post('/vendor-panel', [VendorController::class, 'action']);
+
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+// Construct a normalized URI for the router to match against
+$normalizedUri = '/' . $cleanPath; // $cleanPath already has base path and .php extension stripped
+
+// Temporarily override the base path handling in Router since we already cleaned it
+if ($router->dispatch($normalizedUri, $requestMethod)) {
+    // If the router handled the request, stop execution of legacy routing
+    exit;
+}
+
 // Define the route mapping
 $routes = [
     'home' => 'home.php',
@@ -62,6 +93,10 @@ $routes = [
     'about' => 'about.php',
     'privacy' => 'privacy.php',
     'terms' => 'terms.php',
+    'support' => 'help-center.php',
+    'feedback' => 'survey.php',
+    'maintenance' => 'maintenance-tracker.php',
+    'payments' => 'payment-methods.php',
     'coming-soon' => 'coming-soon.php'
 ];
 

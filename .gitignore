@@ -36,7 +36,12 @@ desktop.ini
 .trae/
 .planning/
 .gemini/
+.github/prompts/
 skills-lock.json
+__pycache__/
+
+# ===== ONESIGNAL BUILD ARTIFACTS =====
+OneSignalSDK-v16-ServiceWorker/
 
 # ===== TEMP / DEBUG =====
 scratch/

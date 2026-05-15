@@ -1,0 +1,9 @@
+{
+  "name": "rentease",
+  "description": "Premium furniture and appliance rental platform",
+  "private": true,
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {}
+}

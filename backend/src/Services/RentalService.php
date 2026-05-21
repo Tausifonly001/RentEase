@@ -126,7 +126,8 @@ final class RentalService extends BaseSupabaseService
                 'product_id' => $payload['product_id'],
                 'start_date' => $payload['start_date'],
                 'end_date' => $payload['end_date'],
-                'status' => 'active'
+                'status' => $payload['status'] ?? 'pending',
+                'order_id' => $payload['order_id'] ?? null
             ]
         );
 
@@ -254,5 +255,23 @@ final class RentalService extends BaseSupabaseService
         }
 
         return is_array($response['body']) ? $response['body'] : [];
+    }
+
+    /**
+     * Activate all rentals linked to an order after payment confirmation.
+     */
+    public function activateRentalsByOrder(string $orderId): array
+    {
+        $headers = array_merge($this->serviceHeaders(), [
+            'Content-Type' => 'application/json',
+            'Prefer' => 'return=representation'
+        ]);
+
+        return $this->request(
+            'PATCH',
+            '/rest/v1/rentals?order_id=eq.' . $orderId . '&status=eq.pending',
+            $headers,
+            ['status' => 'active']
+        );
     }
 }

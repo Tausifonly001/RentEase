@@ -73,7 +73,7 @@ require_once __DIR__ . '/partials/header.php';
     <?php else: 
         $status = $activeDelivery['status'] ?? 'PENDING';
         $isPickup = ($activeDelivery['type'] ?? 'DELIVERY') === 'PICKUP';
-        $orderNumber = $activeDelivery['orders']['order_number'] ?? 'RE-' . substr($activeDelivery['user_id'], 0, 4);
+        $orderNumber = !empty($activeDelivery['orders']['id']) ? 'RE-' . strtoupper(substr((string)$activeDelivery['orders']['id'], 0, 8)) : 'RE-' . strtoupper(substr((string)$activeDelivery['user_id'], 0, 4));
     ?>
         <!-- Header Section: Live Countdown -->
         <div class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-end reveal-element">
@@ -268,10 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <!-- Load tracking JS -->
-<script src="../js/tracking.js"></script>
+<script src="<?= baseUrl('/js/tracking.js') ?>"></script>
 <!-- Load Google Maps API (Deferred to maintain performance) -->
 <?php $mapsKey = getenv('GOOGLE_MAPS_API_KEY') ?: ''; ?>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= htmlspecialchars($mapsKey) ?>&callback=initMap"></script>
 
 <?php require_once __DIR__ . '/partials/footer.php'; ?>
-?>

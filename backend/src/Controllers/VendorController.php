@@ -27,10 +27,10 @@ class VendorController
         $this->authService = new AuthService($config);
         $this->http = new HttpClient();
         $this->serviceHeaders = [
-            'apikey: ' . $config['supabase_service_role_key'],
-            'Authorization: Bearer ' . $config['supabase_service_role_key'],
-            'Content-Type: application/json',
-            'Prefer: return=representation'
+            'apikey' => (string) $config['supabase_service_role_key'],
+            'Authorization' => 'Bearer ' . $config['supabase_service_role_key'],
+            'Content-Type' => 'application/json',
+            'Prefer' => 'return=representation'
         ];
     }
 
@@ -39,30 +39,29 @@ class VendorController
      */
     private function validateVendorOrAdmin(): ?array
     {
-        $token = $_COOKIE[$this->config['cookie_name'] ?? ''] ?? '';
-        if (!$token) {
+        $token = $_COOKIE[$this->config['cookie_name'] ?? 'rentease_access_token'] ?? '';
+        if (empty($token)) {
+            error_log("VendorController: No token found in cookies.");
             $this->redirectWithError("Please log in first.", "/login");
         }
 
         try {
             $user = $this->authService->validateToken($token);
             if (!$user) {
+                error_log("VendorController: Token validation failed or profile not found.");
                 $this->redirectWithError("Invalid session. Please log in again.", "/login");
             }
             
-            // Check role from profiles using service role
-            $profileRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/profiles?id=eq.' . urlencode($user['id']), $this->serviceHeaders);
-            $profiles = isset($profileRes['body']) ? $profileRes['body'] : [];
-            $profile = $profiles[0] ?? null;
-
-            if (!$profile || !in_array($profile['role'], ['vendor', 'admin'])) {
+            // The role is already validated by AuthService and returned in the user array
+            if (!in_array($user['role'] ?? '', ['vendor', 'admin'])) {
+                error_log("[Auth Diagnostic] Access Denied. User ID: " . $user['id'] . " Role: " . ($user['role'] ?? 'null'));
                 $this->redirectWithError("Access Denied: Vendor privileges required.", "/home");
             }
             
-            $user['profile'] = $profile;
             return $user;
 
         } catch (\Exception $e) {
+            error_log("VendorController Exception: " . $e->getMessage());
             $this->redirectWithError("Session error: " . $e->getMessage(), "/login");
         }
     }
@@ -81,7 +80,8 @@ class VendorController
         $products = [];
         try {
             $productsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/products?vendor_id=eq.' . urlencode($user['id']) . '&select=*&order=id.desc', $this->serviceHeaders);
-            $products = isset($productsRes['body']) ? $productsRes['body'] : [];
+            $body = $productsRes['body'] ?? [];
+            $products = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
             $error = "Failed to load inventory: " . $e->getMessage();
         }
@@ -97,15 +97,16 @@ class VendorController
             if (!empty($products)) {
                 $productIds = array_column($products, 'id');
                 $idList = implode(',', $productIds);
-                $rentalsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/rentals?product_id=in.(' . urlencode($idList) . ')&select=*,profiles(email,full_name),products(name,category,monthly_price)&order=created_at.desc', $this->serviceHeaders);
-                $rentals = isset($rentalsRes['body']) ? $rentalsRes['body'] : [];
+                $rentalsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/rentals?product_id=in.(' . urlencode($idList) . ')&select=*,profiles(email,full_name),products(name,category,monthly_price,image_url,sku)&order=created_at.desc', $this->serviceHeaders);
+                $body = $rentalsRes['body'] ?? [];
+                $rentals = (is_array($body) && array_is_list($body)) ? $body : [];
                 
                 foreach ($rentals as $r) {
-                    if ($r['rental_status'] === 'active' || $r['status'] === 'active') {
+                    if (($r['rental_status'] ?? $r['status'] ?? '') === 'active') {
                         $activeRentalsCount++;
                     }
-                    if ($r['payment_status'] === 'paid' || $r['payment_status'] === 'completed') {
-                        $totalRevenue += (float)($r['products']['monthly_price'] ?? 0); // Simplistic revenue calc
+                    if (($r['payment_status'] ?? '') === 'paid' || ($r['payment_status'] ?? '') === 'completed') {
+                        $totalRevenue += (float)($r['products']['monthly_price'] ?? 0);
                     }
                 }
             }

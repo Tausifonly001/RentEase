@@ -69,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
         try {
             $baseUrl = rtrim(str_replace('index.php', '', $config['app_url']), '/');
             $checkoutParams = [
-                'success_url' => $baseUrl . '/orders.php?checkout_success=1',
-                'cancel_url' => $baseUrl . '/cart.php',
+                'success_url' => $baseUrl . '/success',
+                'cancel_url' => $baseUrl . '/cart',
                 'customer_email' => $currentUser['email'],
                 'client_reference_id' => $currentUser['id'],
                 'line_items' => [
@@ -113,10 +113,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                     'mobile_number' => $kyc['mobile_number'] ?? 'Not provided'
                 ];
 
-                $orderRes = $http->request('POST', $config['supabase_url'] . '/rest/v1/orders', $serviceHeaders, $orderData);
-                if ($orderRes['status'] >= 400) {
-                    unset($orderData['address'], $orderData['mobile_number']);
-                    $http->request('POST', $config['supabase_url'] . '/rest/v1/orders', $serviceHeaders, $orderData);
+                $orderHeaders = array_merge($serviceHeaders, ['Prefer' => 'return=representation']);
+                $orderRes = $http->request('POST', $config['supabase_url'] . '/rest/v1/orders', $orderHeaders, $orderData);
+                
+                $newOrder = $orderRes['body'][0] ?? null;
+                $orderId = $newOrder['id'] ?? null;
+
+                if ($orderId) {
+                    $rentalService = new \RentEase\Services\RentalService($config);
+                    foreach ($validCart as $prodId => $details) {
+                        try {
+                            $rentalRes = $rentalService->createBookingWithServiceRole([
+                                'user_id' => $currentUser['id'],
+                                'product_id' => (int)$prodId,
+                                'start_date' => date('Y-m-d'),
+                                'end_date' => date('Y-m-d', strtotime('+' . ($details['months'] ?? 3) . ' months')),
+                                'status' => 'pending',
+                                'order_id' => $orderId
+                            ]);
+
+                            $rentalId = $rentalRes[0]['id'] ?? null;
+                            if ($rentalId) {
+                                $rentalService->createDelivery([
+                                    'order_id' => $orderId,
+                                    'rental_id' => $rentalId,
+                                    'user_id' => $currentUser['id'],
+                                    'type' => 'DELIVERY',
+                                    'scheduled_date' => $kyc['delivery_date'] ?? date('Y-m-d', strtotime('+2 days')),
+                                    'time_slot' => $kyc['delivery_time'] ?? '09:00 AM - 12:00 PM',
+                                    'address' => $kyc['address'] ?? 'Not provided',
+                                    'status' => 'SCHEDULED',
+                                    'agent_notes' => 'Awaiting payment confirmation.'
+                                ]);
+                            }
+                        } catch (\Throwable $e) {
+                            // Log or handle individual item failure but don't stop the flow
+                        }
+                    }
                 }
 
                 $_SESSION['cart'] = [];

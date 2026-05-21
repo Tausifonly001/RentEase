@@ -31,38 +31,24 @@ if ($session['type'] === 'checkout.session.completed') {
         $orderId = (string)($sessionObject['metadata']['order_id'] ?? '');
         $cartIdsStr = (string)($sessionObject['metadata']['cart_ids'] ?? '');
         
-        if ($userId && $orderId && $cartIdsStr) {
-            $cartIds = explode(',', $cartIdsStr);
-            foreach ($cartIds as $prodId) {
-                $prodId = trim($prodId);
-                if ($prodId !== '') {
-                    try {
-                        $rentalRes = $rentalService->createBookingWithServiceRole([
-                            'user_id' => $userId,
-                            'product_id' => (int)$prodId,
-                            'start_date' => date('Y-m-d'),
-                            'end_date' => date('Y-m-d', strtotime('+3 months'))
-                        ]);
+        if ($userId && $orderId) {
+            try {
+                // 1. Activate pre-created rentals
+                $rentalService->activateRentalsByOrder($orderId);
 
-                        $rentalId = $rentalRes[0]['id'] ?? null;
-                        if ($rentalId) {
-                            // Register Delivery
-                            $rentalService->createDelivery([
-                                'order_id' => $orderId,
-                                'rental_id' => $rentalId,
-                                'user_id' => $userId,
-                                'type' => 'DELIVERY',
-                                'scheduled_date' => $sessionObject['metadata']['delivery_date'] ?? date('Y-m-d', strtotime('+2 days')),
-                                'time_slot' => $sessionObject['metadata']['delivery_time'] ?? '09:00 AM - 12:00 PM',
-                                'address' => $sessionObject['metadata']['address'] ?? 'Default Address',
-                                'status' => 'SCHEDULED',
-                                'agent_notes' => 'Initial dispatch created.'
-                            ]);
-                        }
-                    } catch (Throwable $e) {
-                        error_log("Webhook Post-Process Error: " . $e->getMessage());
-                    }
-                }
+                // 2. Ensure all deliveries for this order are active/confirmed
+                $serviceHeaders = [
+                    'apikey' => (string) $config['supabase_service_role_key'],
+                    'Authorization' => 'Bearer ' . $config['supabase_service_role_key'],
+                    'Content-Type' => 'application/json'
+                ];
+                $http = new \RentEase\Support\HttpClient();
+                $http->request('PATCH', $config['supabase_url'] . "/rest/v1/deliveries?order_id=eq.{$orderId}", $serviceHeaders, [
+                    'agent_notes' => 'Payment confirmed via webhook. Delivery scheduled.'
+                ]);
+
+            } catch (Throwable $e) {
+                error_log("Webhook Post-Process Error: " . $e->getMessage());
             }
 
             // Send Push Notification via OneSignal

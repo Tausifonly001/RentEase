@@ -78,9 +78,13 @@ final class AuthService extends BaseSupabaseService
             $profilePath = '/rest/v1/profiles?select=role&id=eq.' . $user['id'] . '&limit=1';
             $profileRes = $this->request('GET', $profilePath, $this->serviceHeaders());
             
+            error_log("AuthService: Profile Fetch - Status: " . ($profileRes['status'] ?? 'N/A') . " ID: " . $user['id']);
+            
             if ($profileRes['status'] >= 200 && $profileRes['status'] < 300 && !empty($profileRes['body'][0])) {
                 $user['role'] = $profileRes['body'][0]['role'] ?? 'user';
+                error_log("AuthService: Profile Found - Role: " . $user['role']);
             } else {
+                error_log("AuthService: Profile NOT Found or Fetch Failed. Response: " . json_encode($profileRes['body'] ?? []));
                 $user['role'] = 'user'; // Fallback
             }
             

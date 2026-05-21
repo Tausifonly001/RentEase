@@ -66,7 +66,7 @@ require_once __DIR__ . '/partials/header.php';
 <script>
     const supabaseUrl = '<?= $config['supabase_url'] ?>';
     const supabaseKey = '<?= $config['supabase_anon_key'] ?>';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     let watchId = null;
     let lastLat = null;
@@ -101,7 +101,7 @@ require_once __DIR__ . '/partials/header.php';
     }
 
     async function pushLocation(orderId, lat, lng, heading) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('delivery_logistics')
             .upsert({
                 order_id: orderId,

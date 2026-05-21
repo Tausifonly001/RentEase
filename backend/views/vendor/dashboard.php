@@ -97,7 +97,7 @@ use RentEase\Support\Csrf;
                     <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">+12%</span>
                 </div>
                 <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= $activeRentalsCount ?></span>
+                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= (int)($activeRentalsCount ?? 0) ?></span>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Active Leases</p>
                 </div>
             </div>
@@ -109,7 +109,7 @@ use RentEase\Support\Csrf;
                     </div>
                 </div>
                 <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($products) ?></span>
+                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($products ?? []) ?></span>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Catalog</p>
                 </div>
             </div>
@@ -121,7 +121,7 @@ use RentEase\Support\Csrf;
                     </div>
                 </div>
                 <div class="mt-4">
-                    <span class="text-3xl font-black text-emerald-600 font-outfit">$<?= e(number_format($totalRevenue, 2)) ?></span>
+                    <span class="text-3xl font-black text-emerald-600 font-outfit">$<?= e(number_format((float)($totalRevenue ?? 0), 2)) ?></span>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Revenue</p>
                 </div>
             </div>
@@ -146,7 +146,7 @@ use RentEase\Support\Csrf;
                     <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white/50">
                         <h2 class="text-xl font-bold text-slate-900 font-outfit">Catalog Inventory</h2>
                         <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold"><?= count($products) ?> Items</span>
+                            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold"><?= count($products ?? []) ?> Items</span>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -175,13 +175,13 @@ use RentEase\Support\Csrf;
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="text-sm font-bold text-teal-600">$<?= number_format((float)$p['monthly_price'], 2) ?></span>
+                                            <span class="text-sm font-bold text-teal-600">$<?= number_format((float)($p['monthly_price'] ?? 0), 2) ?></span>
                                             <span class="text-[10px] text-slate-400 block">/month</span>
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-2">
                                                 <div class="h-1.5 w-1.5 rounded-full <?= (int)$p['total_stock'] > 0 ? 'bg-emerald-500' : 'bg-red-500' ?>"></div>
-                                                <span class="text-sm font-bold text-slate-700"><?= (int)$p['total_stock'] ?></span>
+                                                <span class="text-sm font-bold text-slate-700"><?= (int)($p['total_stock'] ?? 0) ?></span>
                                             </div>
                                         </td>
                                         <td class="px-8 py-4 text-right">
@@ -230,7 +230,7 @@ use RentEase\Support\Csrf;
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <td class="px-8 py-4">
                                             <span class="font-bold text-slate-900 block"><?= e((string)($r['profiles']['email'] ?? 'System Tenant')) ?></span>
-                                            <span class="text-[10px] text-slate-400">UID: <?= substr((string)$r['id'], 0, 8) ?></span>
+                                            <span class="text-[10px] text-slate-400">UID: <?= substr((string)($r['id'] ?? ''), 0, 8) ?></span>
                                         </td>
                                         <td class="px-6 py-4 font-medium text-slate-600"><?= e((string)($r['products']['name'] ?? 'Custom')) ?></td>
                                         <td class="px-6 py-4">
@@ -384,7 +384,9 @@ use RentEase\Support\Csrf;
             document.getElementById('product-stock').value = item.total_stock;
             document.getElementById('product-image').value = item.image_url;
             document.getElementById('product-desc').value = item.description || '';
-            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            if (document.getElementById('cancel-edit-btn')) {
+                document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            }
             
             window.scrollTo({ top: form.offsetTop - 100, behavior: 'smooth' });
         };

@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 use RentEase\Support\Csrf;
+use RentEase\Support\Request;
 
+$activeTab = Request::get('tab', 'overview');
 
 ?>
 <!doctype html>
@@ -44,6 +46,14 @@ use RentEase\Support\Csrf;
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-link.active { 
+            color: #14b8a6; 
+            background: #f0fdfa;
+            border-color: #ccfbf1;
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen custom-scrollbar">
@@ -51,23 +61,31 @@ use RentEase\Support\Csrf;
     <?php require_once __DIR__ . '/partials/header.php'; ?>
 
     <main class="flex-1 w-full mx-auto max-w-7xl px-4 py-8 md:px-8">
+        
         <!-- Header Section -->
-        <div class="bento-item mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div class="bento-item mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div class="space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-600 text-[10px] font-bold uppercase tracking-wider border border-teal-100">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
-                    </span>
-                    Live Operations
-                </div>
                 <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight font-outfit">Operations <span class="text-teal-600">Console</span></h1>
-                <p class="text-slate-500 font-medium max-w-2xl">Manage your inventory, monitor active leases, and resolve maintenance tickets from a single unified workspace.</p>
+                <p class="text-slate-500 font-medium max-w-2xl">Centralized management for marketplace logistics, inventory, and user relations.</p>
             </div>
-            <div class="flex gap-3">
-                <button onclick="window.scrollTo({top: document.getElementById('product-form').offsetTop - 100, behavior: 'smooth'})" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-3.5 text-xs font-bold text-white transition-all hover:bg-slate-800 hover:scale-[1.02] active:scale-95 shadow-lg">
-                    <span class="material-symbols-outlined text-sm">add_circle</span>
-                    New Offering
+            <div class="flex items-center gap-3 bg-white p-1.5 rounded-[2rem] shadow-sm border border-slate-200">
+                <button onclick="switchTab('overview')" class="tab-link active px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">grid_view</span> Overview
+                </button>
+                <button onclick="switchTab('inventory')" class="tab-link px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">inventory_2</span> Inventory
+                </button>
+                <button onclick="switchTab('orders')" class="tab-link px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">shopping_cart</span> Orders
+                </button>
+                <button onclick="switchTab('logistics')" class="tab-link px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">local_shipping</span> Logistics
+                </button>
+                <button onclick="switchTab('tenants')" class="tab-link px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">group</span> Tenants
+                </button>
+                <button onclick="switchTab('support')" class="tab-link px-6 py-2.5 rounded-[1.5rem] text-xs font-bold transition-all hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">support_agent</span> Support
                 </button>
             </div>
         </div>
@@ -86,115 +104,160 @@ use RentEase\Support\Csrf;
             </div>
         <?php endif; ?>
 
-        <!-- Quick Stats Bento Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <!-- Stat 1 -->
-            <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-teal-200 transition-colors">
-                <div class="flex justify-between items-start">
-                    <div class="p-3 rounded-2xl bg-teal-50 text-teal-600 group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">history_edu</span>
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-content active space-y-12">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-teal-200 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 rounded-2xl bg-teal-50 text-teal-600 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">history_edu</span>
+                        </div>
                     </div>
-                    <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">+12%</span>
+                    <div class="mt-4">
+                        <span class="text-3xl font-black text-slate-900 font-outfit"><?= $activeRentalsCount ?></span>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Active Leases</p>
+                    </div>
                 </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= $activeRentalsCount ?></span>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Active Leases</p>
+                <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-blue-200 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 rounded-2xl bg-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">shopping_bag</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($orders) ?></span>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Orders</p>
+                    </div>
+                </div>
+                <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-emerald-200 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 rounded-2xl bg-emerald-50 text-emerald-600 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">payments</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-3xl font-black text-emerald-600 font-outfit">$<?= e(number_format((float)($totalRevenue ?? 0), 2)) ?></span>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Revenue</p>
+                    </div>
+                </div>
+                <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-orange-200 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 rounded-2xl bg-orange-50 text-orange-600 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined">build</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($maintenanceReqs) ?></span>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Tickets</p>
+                    </div>
                 </div>
             </div>
-            <!-- Stat 2 -->
-            <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-blue-200 transition-colors">
-                <div class="flex justify-between items-start">
-                    <div class="p-3 rounded-2xl bg-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">inventory_2</span>
+
+            <!-- Recent Activity Mixed View -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recent Orders -->
+                <div class="bento-item glass-card rounded-[2.5rem] p-8 space-y-6">
+                    <h3 class="text-xl font-bold text-slate-900 font-outfit">Recent Sales</h3>
+                    <div class="space-y-4">
+                        <?php foreach (array_slice($orders, 0, 5) as $o): ?>
+                            <div class="flex items-center justify-between p-4 rounded-2xl bg-white/50 border border-slate-100 group hover:border-blue-100 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                                        <span class="material-symbols-outlined text-[20px]">person</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900"><?= e($o['profiles']['full_name'] ?? 'Guest') ?></p>
+                                        <p class="text-[10px] text-slate-400 font-medium"><?= date('M d, H:i', strtotime($o['created_at'] ?? 'now')) ?></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-black text-slate-900">$<?= number_format((float)($o['total_amount'] ?? 0), 2) ?></p>
+                                    <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full"><?= e($o['payment_status'] ?? 'unknown') ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($products) ?></span>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Catalog</p>
-                </div>
-            </div>
-            <!-- Stat 3 -->
-            <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-emerald-200 transition-colors">
-                <div class="flex justify-between items-start">
-                    <div class="p-3 rounded-2xl bg-emerald-50 text-emerald-600 group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">payments</span>
+
+                <!-- Recent Maintenance -->
+                <div class="bento-item glass-card rounded-[2.5rem] p-8 space-y-6">
+                    <h3 class="text-xl font-bold text-slate-900 font-outfit">Active Issues</h3>
+                    <div class="space-y-4">
+                        <?php foreach (array_slice($maintenanceReqs, 0, 5) as $m): ?>
+                            <div class="flex items-center justify-between p-4 rounded-2xl bg-white/50 border border-slate-100 group hover:border-orange-100 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+                                        <span class="material-symbols-outlined text-[20px]">warning</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900 line-clamp-1"><?= e($m['issue_description'] ?? 'No description') ?></p>
+                                        <p class="text-[10px] text-slate-400 font-medium"><?= e($m['products']['name'] ?? 'Unknown Product') ?></p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600 text-[9px] font-bold uppercase"><?= e($m['status'] ?? 'unknown') ?></span>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-black text-emerald-600 font-outfit">$<?= e(number_format($totalRevenue, 2)) ?></span>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Revenue</p>
-                </div>
-            </div>
-            <!-- Stat 4 -->
-            <div class="bento-item glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-orange-200 transition-colors">
-                <div class="flex justify-between items-start">
-                    <div class="p-3 rounded-2xl bg-orange-50 text-orange-600 group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined">build</span>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($maintenanceReqs) ?></span>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Support Tickets</p>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Product Management Section (LHS) -->
-            <div class="lg:col-span-8 space-y-8">
-                <div class="bento-item glass-card rounded-[2.5rem] overflow-hidden">
+        <!-- INVENTORY TAB -->
+        <div id="tab-inventory" class="tab-content space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Catalog List -->
+                <div class="lg:col-span-8 bento-item glass-card rounded-[2.5rem] overflow-hidden">
                     <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white/50">
                         <h2 class="text-xl font-bold text-slate-900 font-outfit">Catalog Inventory</h2>
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold"><?= count($products) ?> Items</span>
-                        </div>
+                        <button onclick="window.scrollTo({top: document.getElementById('product-form').offsetTop - 100, behavior: 'smooth'})" class="px-4 py-2 rounded-xl bg-teal-600 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-teal-500 transition-all">Add Product</button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead>
                                 <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
-                                    <th class="px-8 py-4">Item details</th>
-                                    <th class="px-6 py-4">Pricing</th>
+                                    <th class="px-8 py-4">Product</th>
                                     <th class="px-6 py-4">Stock</th>
-                                    <th class="px-8 py-4 text-right">Actions</th>
+                                    <th class="px-6 py-4">Price</th>
+                                    <th class="px-8 py-4 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 <?php foreach ($products as $p): ?>
-                                    <?php if (!is_array($p)) continue; ?>
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <td class="px-8 py-4">
                                             <div class="flex items-center gap-4">
-                                                <div class="h-14 w-14 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 group-hover:scale-105 transition-transform">
-                                                    <img src="<?= e((string)($p['image_url'] ?? '')) ?>" class="h-full w-full object-cover">
-                                                </div>
+                                                <img src="<?= e($p['image_url'] ?: '') ?>" class="h-10 w-10 rounded-xl object-cover border border-slate-200">
                                                 <div>
-                                                    <span class="text-sm font-bold text-slate-900 block"><?= e((string)$p['name']) ?></span>
-                                                    <span class="text-[11px] font-medium text-slate-400 block line-clamp-1"><?= e((string)($p['description'] ?? 'No description')) ?></span>
+                                                    <p class="text-sm font-bold text-slate-900"><?= e($p['name']) ?></p>
+                                                    <p class="text-[10px] text-slate-400 font-medium"><?= e($p['category']) ?></p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="text-sm font-bold text-teal-600">$<?= number_format((float)$p['monthly_price'], 2) ?></span>
-                                            <span class="text-[10px] text-slate-400 block">/month</span>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center gap-2">
-                                                <div class="h-1.5 w-1.5 rounded-full <?= (int)$p['total_stock'] > 0 ? 'bg-emerald-500' : 'bg-red-500' ?>"></div>
-                                                <span class="text-sm font-bold text-slate-700"><?= (int)$p['total_stock'] ?></span>
-                                            </div>
-                                        </td>
-                                        <td class="px-8 py-4 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <button onclick='editOffering(<?= json_encode($p) ?>)' class="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-teal-600 hover:border-teal-200 transition-all active:scale-90">
-                                                    <span class="material-symbols-outlined text-lg">edit</span>
+                                            <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex items-center gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                                <input type="hidden" name="action" value="update_stock" />
+                                                <input type="hidden" name="id" value="<?= $p['id'] ?>" />
+                                                <input type="number" name="total_stock" value="<?= (int)($p['total_stock'] ?? 0) ?>" 
+                                                       class="w-16 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 outline-none focus:border-teal-500">
+                                                <button type="submit" class="p-1 rounded-lg bg-slate-900 text-white hover:bg-teal-600 active:scale-90 transition-all">
+                                                    <span class="material-symbols-outlined text-[16px]">done</span>
                                                 </button>
-                                                <form action="<?= baseUrl('/admin') ?>" method="POST" onsubmit="return confirm('Archive this offering?');">
+                                            </form>
+                                        </td>
+                                        <td class="px-6 py-4 font-bold text-slate-900">$<?= number_format((float)($p['monthly_price'] ?? 0), 2) ?></td>
+                                        <td class="px-8 py-4 text-right">
+                                            <div class="flex justify-end gap-2">
+                                                <button onclick='editOffering(<?= json_encode($p) ?>)' class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all">
+                                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                                </button>
+                                                <form action="<?= baseUrl('/admin') ?>" method="POST" onsubmit="return confirm('Archive?');">
                                                     <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                                                     <input type="hidden" name="action" value="delete_product" />
-                                                    <input type="hidden" name="id" value="<?= e((string)$p['id']) ?>" />
-                                                    <button type="submit" class="p-2 rounded-xl bg-white border border-slate-200 text-red-500 hover:bg-red-50 hover:border-red-200 transition-all active:scale-90">
-                                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                                    <input type="hidden" name="id" value="<?= $p['id'] ?>" />
+                                                    <button type="submit" class="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
+                                                        <span class="material-symbols-outlined text-[20px]">delete</span>
                                                     </button>
                                                 </form>
                                             </div>
@@ -206,64 +269,114 @@ use RentEase\Support\Csrf;
                     </div>
                 </div>
 
-                <!-- Rental Management -->
-                <div class="bento-item glass-card rounded-[2.5rem] overflow-hidden">
-                    <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white/50">
-                        <h2 class="text-xl font-bold text-slate-900 font-outfit">Tenant Agreements</h2>
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-500 text-[10px] font-bold">Active Management</span>
-                        </div>
+                <!-- Product Form -->
+                <div class="lg:col-span-4" id="product-form">
+                    <div class="bento-item glass-card p-8 rounded-[2.5rem] sticky top-24">
+                        <h3 id="form-heading" class="text-xl font-bold text-slate-900 font-outfit mb-8">Create Offering</h3>
+                        <form action="<?= baseUrl('/admin') ?>" method="POST" class="space-y-4">
+                            <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                            <input type="hidden" name="action" id="product-action" value="create_product" />
+                            <input type="hidden" name="id" id="product-id" value="" />
+                            
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Name</label>
+                                <input type="text" name="name" id="product-name" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</label>
+                                <select name="category" id="product-category" class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                                    <option value="Furniture">Furniture</option>
+                                    <option value="Appliances">Appliances</option>
+                                    <option value="Electronics">Electronics</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Price ($)</label>
+                                    <input type="number" step="0.01" name="monthly_price" id="product-price" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Stock</label>
+                                    <input type="number" name="total_stock" id="product-stock" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Image URL</label>
+                                <input type="text" name="image_url" id="product-image" class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                            </div>
+                            <button type="submit" class="w-full py-4 rounded-2xl bg-teal-600 text-white text-xs font-bold uppercase tracking-widest hover:bg-teal-500 transition-all shadow-lg shadow-teal-600/20 active:scale-95">Save Product</button>
+                            <button type="button" onclick="cancelEdit()" id="cancel-edit-btn" class="hidden w-full py-3 rounded-2xl bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDERS TAB -->
+        <div id="tab-orders" class="tab-content space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Sales List -->
+                <div class="lg:col-span-12 bento-item glass-card rounded-[2.5rem] overflow-hidden">
+                    <div class="px-8 py-6 border-b border-slate-100 bg-white/50">
+                        <h2 class="text-xl font-bold text-slate-900 font-outfit">Orders & Fulfillment</h2>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead>
                                 <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
-                                    <th class="px-8 py-4">Tenant</th>
-                                    <th class="px-6 py-4">Product</th>
-                                    <th class="px-6 py-4">Status</th>
-                                    <th class="px-8 py-4 text-right">Control</th>
+                                    <th class="px-8 py-4">Order Details</th>
+                                    <th class="px-6 py-4">Customer</th>
+                                    <th class="px-6 py-4">Payment</th>
+                                    <th class="px-6 py-4">Shipping</th>
+                                    <th class="px-8 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm">
-                                <?php foreach ($rentals as $r): ?>
-                                    <?php if (!is_array($r)) continue; ?>
+                            <tbody class="divide-y divide-slate-100">
+                                <?php foreach ($orders as $o): ?>
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <td class="px-8 py-4">
-                                            <span class="font-bold text-slate-900 block"><?= e((string)($r['profiles']['email'] ?? 'System Tenant')) ?></span>
-                                            <span class="text-[10px] text-slate-400">UID: <?= substr((string)$r['id'], 0, 8) ?></span>
+                                            <p class="text-sm font-bold text-slate-900 uppercase">#<?= substr((string)($o['id'] ?? ''), 0, 8) ?></p>
+                                            <p class="text-[10px] text-slate-400 font-medium"><?= date('M d, Y H:i', strtotime($o['created_at'] ?? 'now')) ?></p>
                                         </td>
-                                        <td class="px-6 py-4 font-medium text-slate-600"><?= e((string)($r['products']['name'] ?? 'Custom')) ?></td>
                                         <td class="px-6 py-4">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider <?php 
-                                                $rs = $r['status'] ?? 'active';
-                                                echo match($rs) {
-                                                    'active' => 'bg-emerald-50 text-emerald-600',
-                                                    'completed', 'closed' => 'bg-blue-50 text-blue-600',
-                                                    'cancelled' => 'bg-red-50 text-red-600',
-                                                    'return_requested' => 'bg-orange-50 text-orange-600 border border-orange-200',
-                                                    'return_inspection' => 'bg-purple-50 text-purple-600 border border-purple-200',
-                                                    default => 'bg-slate-100 text-slate-600'
-                                                };
-                                            ?>">
-                                                <?= e(ucwords(str_replace('_', ' ', (string)$rs))) ?>
-                                            </span>
+                                            <p class="text-sm font-bold text-slate-900"><?= e($o['profiles']['full_name'] ?? 'Guest') ?></p>
+                                            <p class="text-[10px] text-slate-400"><?= e($o['profiles']['email'] ?? 'N/A') ?></p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex items-center gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                                <input type="hidden" name="action" value="update_order_status" />
+                                                <input type="hidden" name="order_id" value="<?= $o['id'] ?>" />
+                                                <input type="hidden" name="shipping_status" value="<?= $o['shipping_status'] ?>" />
+                                                <select name="payment_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php 
+                                                    echo $o['payment_status'] === 'paid' ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-orange-600 bg-orange-50 border-orange-100';
+                                                ?>">
+                                                    <option value="pending" <?= $o['payment_status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                    <option value="paid" <?= $o['payment_status'] === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="failed" <?= $o['payment_status'] === 'failed' ? 'selected' : '' ?>>Failed</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex items-center gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                                <input type="hidden" name="action" value="update_order_status" />
+                                                <input type="hidden" name="order_id" value="<?= $o['id'] ?>" />
+                                                <input type="hidden" name="payment_status" value="<?= $o['payment_status'] ?>" />
+                                                <select name="shipping_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php 
+                                                    echo $o['shipping_status'] === 'delivered' ? 'text-emerald-600 bg-emerald-50' : ($o['shipping_status'] === 'pending' ? 'text-slate-500 bg-slate-50' : 'text-blue-600 bg-blue-50');
+                                                ?>">
+                                                    <option value="pending" <?= $o['shipping_status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                    <option value="processing" <?= $o['shipping_status'] === 'processing' ? 'selected' : '' ?>>Processing</option>
+                                                    <option value="shipped" <?= $o['shipping_status'] === 'shipped' ? 'selected' : '' ?>>Shipped</option>
+                                                    <option value="delivered" <?= $o['shipping_status'] === 'delivered' ? 'selected' : '' ?>>Delivered</option>
+                                                </select>
+                                            </form>
                                         </td>
                                         <td class="px-8 py-4 text-right">
-                                            <form action="<?= baseUrl('/admin') ?>" method="POST" class="inline-flex gap-2">
-                                                <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                                                <input type="hidden" name="action" value="update_rental" />
-                                                <input type="hidden" name="rental_id" value="<?= e((string)$r['id']) ?>" />
-                                                <select name="status" class="bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-[11px] font-bold text-slate-600 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all">
-                                                    <option value="active" <?= $rs === 'active' ? 'selected' : '' ?>>Active</option>
-                                                    <option value="return_requested" <?= $rs === 'return_requested' ? 'selected' : '' ?>>Return</option>
-                                                    <option value="return_inspection" <?= $rs === 'return_inspection' ? 'selected' : '' ?>>Inspection</option>
-                                                    <option value="completed" <?= $rs === 'completed' ? 'selected' : '' ?>>Complete</option>
-                                                    <option value="closed" <?= $rs === 'closed' ? 'selected' : '' ?>>Close</option>
-                                                </select>
-                                                <button type="submit" class="p-1.5 rounded-xl bg-slate-900 text-white hover:bg-teal-600 transition-all active:scale-90">
-                                                    <span class="material-symbols-outlined text-sm">save</span>
-                                                </button>
-                                            </form>
+                                            <button onclick="viewLogistics('<?= $o['id'] ?>')" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all">
+                                                <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -272,130 +385,200 @@ use RentEase\Support\Csrf;
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Forms & Maintenance Section (RHS) -->
-            <div class="lg:col-span-4 space-y-8">
-                <!-- Product Form -->
-                <div id="product-form" class="bento-item glass-card p-8 rounded-[2.5rem] sticky top-24 scroll-mt-28">
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="p-2 rounded-xl bg-teal-50 text-teal-600">
-                            <span class="material-symbols-outlined" id="form-icon">add_task</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 font-outfit" id="form-heading">Create Offering</h3>
+        <!-- LOGISTICS TAB -->
+        <div id="tab-logistics" class="tab-content space-y-8">
+            <div class="bento-item glass-card rounded-[2.5rem] overflow-hidden">
+                <div class="px-8 py-6 border-b border-slate-100 bg-white/50">
+                    <h2 class="text-xl font-bold text-slate-900 font-outfit">Delivery Operations</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
+                                <th class="px-8 py-4">Delivery ID</th>
+                                <th class="px-6 py-4">Destination</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4">Agent Notes</th>
+                                <th class="px-8 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <?php foreach ($deliveries as $d): ?>
+                                <tr class="group hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-8 py-4">
+                                        <p class="text-xs font-bold text-slate-900 uppercase">#<?= substr((string)$d['id'], 0, 8) ?></p>
+                                        <p class="text-[10px] text-slate-400">Order: <?= substr((string)$d['order_id'], 0, 8) ?></p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-slate-600 line-clamp-1"><?= e($d['delivery_address'] ?? 'N/A') ?></p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <form method="POST" action="<?= baseUrl('/admin') ?>">
+                                            <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                            <input type="hidden" name="action" value="update_delivery_status" />
+                                            <input type="hidden" name="delivery_id" value="<?= $d['id'] ?>" />
+                                            <select name="status" onchange="this.form.submit()" class="bg-white border border-slate-100 rounded-lg px-2 py-1 text-[10px] font-bold uppercase outline-none <?php 
+                                                echo match($d['status']) {
+                                                    'delivered' => 'text-emerald-600 bg-emerald-50',
+                                                    'shipped' => 'text-blue-600 bg-blue-50',
+                                                    'out_for_delivery' => 'text-purple-600 bg-purple-50',
+                                                    default => 'text-slate-500 bg-slate-50'
+                                                };
+                                            ?>">
+                                                <option value="pending" <?= $d['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                <option value="out_for_delivery" <?= $d['status'] === 'out_for_delivery' ? 'selected' : '' ?>>Out for Delivery</option>
+                                                <option value="delivered" <?= $d['status'] === 'delivered' ? 'selected' : '' ?>>Delivered</option>
+                                                <option value="cancelled" <?= $d['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex items-center gap-2">
+                                            <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                            <input type="hidden" name="action" value="update_delivery_status" />
+                                            <input type="hidden" name="delivery_id" value="<?= $d['id'] ?>" />
+                                            <input type="hidden" name="status" value="<?= $d['status'] ?>" />
+                                            <input type="text" name="agent_notes" placeholder="Add note..." value="<?= e($d['agent_notes'] ?? '') ?>" 
+                                                   class="bg-slate-50 border border-slate-100 rounded-lg px-2 py-1 text-[10px] font-medium text-slate-600 outline-none focus:bg-white focus:border-teal-500 w-32">
+                                            <button type="submit" class="p-1 rounded-lg text-slate-400 hover:text-teal-600">
+                                                <span class="material-symbols-outlined text-[16px]">save</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td class="px-8 py-4 text-right">
+                                        <p class="text-[10px] text-slate-400 font-bold"><?= date('M d', strtotime($d['created_at'] ?? 'now')) ?></p>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="tab-tenants" class="tab-content space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- User Profiles -->
+                <div class="bento-item glass-card rounded-[2.5rem] p-8 space-y-6">
+                    <h3 class="text-xl font-bold text-slate-900 font-outfit">User Accounts</h3>
+                    <div class="space-y-4">
+                        <?php foreach ($users as $u): ?>
+                            <div class="flex items-center justify-between p-4 rounded-2xl bg-white/50 border border-slate-100">
+                                <div class="flex items-center gap-4">
+                                    <div class="h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 font-bold uppercase"><?= substr((string)($u['full_name'] ?? ''), 0, 1) ?></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900"><?= e($u['full_name'] ?? 'N/A') ?></p>
+                                        <p class="text-[10px] text-slate-400"><?= e($u['email'] ?? 'N/A') ?></p>
+                                    </div>
+                                </div>
+                                <form method="POST" action="<?= baseUrl('/admin') ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                    <input type="hidden" name="action" value="update_user_role" />
+                                    <input type="hidden" name="user_id" value="<?= $u['id'] ?>" />
+                                    <select name="role" onchange="this.form.submit()" class="bg-white border border-slate-100 rounded-lg px-2 py-1 text-[9px] font-bold uppercase outline-none focus:border-teal-500">
+                                        <option value="user" <?= $u['role'] === 'user' ? 'selected' : '' ?>>User</option>
+                                        <option value="vendor" <?= $u['role'] === 'vendor' ? 'selected' : '' ?>>Vendor</option>
+                                        <option value="admin" <?= $u['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                                    </select>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    
-                    <form action="<?= baseUrl('/admin') ?>" method="POST" class="space-y-5">
-                        <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                        <input type="hidden" name="action" id="product-action" value="create_product" />
-                        <input type="hidden" name="id" id="product-id" value="" />
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Title</label>
-                            <input type="text" name="name" id="product-name" required placeholder="Luxury Velvet Sofa"
-                                   class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm" />
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Category</label>
-                            <select name="category" id="product-category" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm appearance-none">
-                                <option value="Furniture">Furniture</option>
-                                <option value="Appliances">Appliances</option>
-                            </select>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Rent ($)</label>
-                                <input type="number" step="0.01" name="monthly_price" id="product-price" required placeholder="59.00"
-                                       class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm" />
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Stock</label>
-                                <input type="number" name="total_stock" id="product-stock" required placeholder="12"
-                                       class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm" />
-                            </div>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Image URL</label>
-                            <input type="url" name="image_url" id="product-image" placeholder="https://..."
-                                   class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm" />
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Description</label>
-                            <textarea name="description" id="product-desc" rows="3" placeholder="Premium features..."
-                                      class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all shadow-sm resize-none"></textarea>
-                        </div>
-
-                        <div class="pt-4 flex gap-3">
-                            <button type="submit" class="flex-1 rounded-2xl bg-teal-600 hover:bg-teal-500 text-xs font-bold text-white px-6 py-4 transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-teal-600/20">
-                                Save Product
-                            </button>
-                            <button type="button" onclick="cancelEdit()" id="cancel-edit-btn" class="hidden rounded-2xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 px-6 py-4 transition-all active:scale-95">
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
                 </div>
 
-                <!-- Maintenance Tickets -->
-                <div class="bento-item glass-card p-6 rounded-[2.5rem] space-y-6">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-bold text-slate-900 font-outfit">Maintenance</h3>
-                        <span class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100"><?= count($maintenanceReqs) ?> Tickets</span>
-                    </div>
+                <!-- Rental Agreements -->
+                <div class="bento-item glass-card rounded-[2.5rem] p-8 space-y-6">
+                    <h3 class="text-xl font-bold text-slate-900 font-outfit">Lease Agreements</h3>
                     <div class="space-y-4">
-                        <?php if (empty($maintenanceReqs)): ?>
-                            <div class="py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                                <span class="material-symbols-outlined text-slate-300 text-3xl">task_alt</span>
-                                <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">All Clear</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($maintenanceReqs as $mr): ?>
-                                <?php if (!is_array($mr)) continue; ?>
-                                <div class="p-4 rounded-2xl border border-slate-100 bg-white/50 space-y-3 group hover:border-teal-100 transition-colors">
-                                    <div class="flex justify-between items-start">
-                                        <div class="space-y-1">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase">#<?= $mr['rental_id'] ?></span>
-                                            <p class="text-xs font-bold text-slate-900 line-clamp-1"><?= e((string)($mr['issue_description'] ?? 'No detail')) ?></p>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider <?php 
-                                            echo match($mr['status'] ?? '') {
-                                                'OPEN' => 'bg-red-50 text-red-600',
-                                                'ASSIGNED', 'IN_PROGRESS' => 'bg-yellow-50 text-yellow-600',
-                                                'RESOLVED', 'CLOSED' => 'bg-emerald-50 text-emerald-600',
-                                                default => 'bg-slate-100 text-slate-600'
-                                            };
-                                        ?>"><?= e($mr['status'] ?? 'OPEN') ?></span>
+                        <?php foreach ($rentals as $r): ?>
+                            <div class="p-4 rounded-2xl bg-white/50 border border-slate-100 space-y-3">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900"><?= e($r['products']['name'] ?? 'N/A') ?></p>
+                                        <p class="text-[9px] text-slate-400 font-medium">Tenant: <?= e($r['profiles']['full_name'] ?? 'Guest') ?></p>
                                     </div>
-                                    <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex gap-2">
-                                        <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                                        <input type="hidden" name="action" value="update_maintenance">
-                                        <input type="hidden" name="request_id" value="<?= e((string)$mr['id']) ?>">
-                                        <select name="status" class="flex-1 bg-white border border-slate-100 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-500 outline-none focus:border-teal-500 transition-all">
-                                            <?php foreach(['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'] as $s): ?>
-                                                <option value="<?= $s ?>" <?= (($mr['status'] ?? '') === $s) ? 'selected' : '' ?>><?= $s ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <button type="submit" class="p-1.5 rounded-lg bg-slate-900 text-white hover:bg-teal-600 transition-all active:scale-90">
-                                            <span class="material-symbols-outlined text-[16px]">send</span>
-                                        </button>
-                                    </form>
+                                    <span class="px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-wider <?php 
+                                        echo match($r['status'] ?? 'active') {
+                                            'active' => 'bg-emerald-50 text-emerald-600',
+                                            'return_requested' => 'bg-orange-50 text-orange-600',
+                                            default => 'bg-slate-100 text-slate-500'
+                                        };
+                                    ?>"><?= e($r['status'] ?? 'active') ?></span>
                                 </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                <form method="POST" action="<?= baseUrl('/admin') ?>" class="flex gap-2">
+                                    <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                    <input type="hidden" name="action" value="update_rental_status" />
+                                    <input type="hidden" name="rental_id" value="<?= $r['id'] ?>" />
+                                    <select name="status" class="flex-1 bg-white border border-slate-100 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-500 outline-none">
+                                        <option value="active" <?= $r['status'] === 'active' ? 'selected' : '' ?>>Active</option>
+                                        <option value="return_requested" <?= $r['status'] === 'return_requested' ? 'selected' : '' ?>>Return Requested</option>
+                                        <option value="return_inspection" <?= $r['status'] === 'return_inspection' ? 'selected' : '' ?>>Inspection</option>
+                                        <option value="completed" <?= $r['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
+                                        <option value="closed" <?= $r['status'] === 'closed' ? 'selected' : '' ?>>Closed</option>
+                                    </select>
+                                    <button type="submit" class="p-1.5 rounded-lg bg-slate-900 text-white hover:bg-teal-600 transition-all">
+                                        <span class="material-symbols-outlined text-[14px]">save</span>
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- SUPPORT TAB -->
+        <div id="tab-support" class="tab-content space-y-8">
+            <div class="bento-item glass-card rounded-[2.5rem] p-8 space-y-8">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-slate-900 font-outfit">Maintenance Desk</h3>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100"><?= count($maintenanceReqs) ?> Active Tickets</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php foreach ($maintenanceReqs as $mr): ?>
+                        <div class="p-6 rounded-[2rem] border border-slate-100 bg-white/50 space-y-4 hover:border-teal-100 transition-all">
+                            <div class="flex justify-between items-start">
+                                <div class="p-2 rounded-xl bg-orange-50 text-orange-600">
+                                    <span class="material-symbols-outlined text-[18px]">engineering</span>
+                                </div>
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400">ID: <?= $mr['id'] ?></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900"><?= e($mr['products']['name'] ?? 'N/A') ?></p>
+                                <p class="text-[11px] text-slate-500 line-clamp-2 mt-1"><?= e($mr['issue_description'] ?? 'No description') ?></p>
+                            </div>
+                            <div class="flex items-center gap-3 pt-2 border-t border-slate-50">
+                                <div class="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold"><?= substr((string)($mr['profiles']['full_name'] ?? ''), 0, 1) ?></div>
+                                <span class="text-[10px] font-bold text-slate-600"><?= e($mr['profiles']['full_name'] ?? 'Guest') ?></span>
+                            </div>
+                            <form method="POST" action="<?= baseUrl('/admin') ?>" class="space-y-3 pt-2">
+                                <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
+                                <input type="hidden" name="action" value="update_maintenance" />
+                                <input type="hidden" name="request_id" value="<?= $mr['id'] ?>" />
+                                <select name="status" class="w-full bg-white border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-slate-600 outline-none focus:border-teal-500">
+                                    <?php foreach(['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'] as $st): ?>
+                                        <option value="<?= $st ?>" <?= $mr['status'] === $st ? 'selected' : '' ?>><?= $st ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <textarea name="notes" placeholder="Update notes..." class="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-medium text-slate-600 outline-none focus:bg-white transition-all"><?= e($mr['notes'] ?? '') ?></textarea>
+                                <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-teal-600 transition-all">Update Ticket</button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <?php require __DIR__ . '/partials/footer.php'; ?>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // GSAP Entrance Animations
+        // GSAP Entrance
         gsap.to(".bento-item", {
             opacity: 1,
             y: 0,
@@ -404,13 +587,44 @@ use RentEase\Support\Csrf;
             ease: "power4.out"
         });
 
-        // Floating Form Interaction
+        // Tab Switching Logic
+        window.switchTab = function(tabName) {
+            // Update Tab Links
+            document.querySelectorAll('.tab-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.innerText.toLowerCase().includes(tabName)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Update Content Visibility with Animation
+            const activeContent = document.querySelector('.tab-content.active');
+            const targetContent = document.getElementById('tab-' + tabName);
+
+            if (activeContent === targetContent) return;
+
+            gsap.to(activeContent, {
+                opacity: 0,
+                y: 10,
+                duration: 0.3,
+                onComplete: () => {
+                    activeContent.classList.remove('active');
+                    targetContent.classList.add('active');
+                    gsap.fromTo(targetContent, 
+                        { opacity: 0, y: 10 },
+                        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+                    );
+                }
+            });
+        };
+
+        // Product Form Logic
         window.editOffering = function(item) {
+            switchTab('inventory');
             const form = document.getElementById('product-form');
             gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
             
             document.getElementById('form-heading').innerText = 'Modify Subscription';
-            document.getElementById('form-icon').innerText = 'edit_note';
             document.getElementById('product-action').value = 'update_product';
             document.getElementById('product-id').value = item.id;
             document.getElementById('product-name').value = item.name;
@@ -418,15 +632,11 @@ use RentEase\Support\Csrf;
             document.getElementById('product-price').value = item.monthly_price;
             document.getElementById('product-stock').value = item.total_stock;
             document.getElementById('product-image').value = item.image_url;
-            document.getElementById('product-desc').value = item.description || '';
             document.getElementById('cancel-edit-btn').classList.remove('hidden');
-            
-            window.scrollTo({ top: form.offsetTop - 100, behavior: 'smooth' });
         };
 
         window.cancelEdit = function() {
             document.getElementById('form-heading').innerText = 'Create Offering';
-            document.getElementById('form-icon').innerText = 'add_task';
             document.getElementById('product-action').value = 'create_product';
             document.getElementById('product-id').value = '';
             document.getElementById('product-name').value = '';
@@ -434,7 +644,6 @@ use RentEase\Support\Csrf;
             document.getElementById('product-price').value = '';
             document.getElementById('product-stock').value = '';
             document.getElementById('product-image').value = '';
-            document.getElementById('product-desc').value = '';
             document.getElementById('cancel-edit-btn').classList.add('hidden');
         };
     });

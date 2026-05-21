@@ -52,7 +52,8 @@ class AdminController
         $products = [];
         try {
             $productsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/products?select=*&order=id.desc', $this->serviceHeaders);
-            $products = (isset($productsRes['body']) && is_array($productsRes['body']) && !isset($productsRes['body']['raw'])) ? $productsRes['body'] : [];
+            $body = $productsRes['body'] ?? [];
+            $products = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
             $error = "Failed to load products: " . $e->getMessage();
         }
@@ -60,15 +61,35 @@ class AdminController
         $rentals = [];
         try {
             $rentalsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/rentals?select=*,profiles(email,full_name),products(name,category,monthly_price)&order=created_at.desc', $this->serviceHeaders);
-            $rentals = (isset($rentalsRes['body']) && is_array($rentalsRes['body']) && !isset($rentalsRes['body']['raw'])) ? $rentalsRes['body'] : [];
+            $body = $rentalsRes['body'] ?? [];
+            $rentals = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
             $error = $error ?? "Failed to load rentals: " . $e->getMessage();
+        }
+
+        $orders = [];
+        try {
+            $ordersRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/orders?select=*,profiles(email,full_name)&order=created_at.desc', $this->serviceHeaders);
+            $body = $ordersRes['body'] ?? [];
+            $orders = (is_array($body) && array_is_list($body)) ? $body : [];
+        } catch (\Exception $e) {
+            $error = $error ?? "Failed to load orders: " . $e->getMessage();
+        }
+
+        $deliveries = [];
+        try {
+            $deliveriesRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/deliveries?select=*,profiles(email,full_name),orders(id),rentals(id)&order=scheduled_date.asc', $this->serviceHeaders);
+            $body = $deliveriesRes['body'] ?? [];
+            $deliveries = (is_array($body) && array_is_list($body)) ? $body : [];
+        } catch (\Exception $e) {
+            $error = $error ?? "Failed to load deliveries: " . $e->getMessage();
         }
 
         $users = [];
         try {
             $usersRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/profiles?select=*&order=created_at.desc', $this->serviceHeaders);
-            $users = (isset($usersRes['body']) && is_array($usersRes['body']) && !isset($usersRes['body']['raw'])) ? $usersRes['body'] : [];
+            $body = $usersRes['body'] ?? [];
+            $users = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
             $error = $error ?? "Failed to load users: " . $e->getMessage();
         }
@@ -77,7 +98,8 @@ class AdminController
         $maintenanceReqs = [];
         try {
             $mReqsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/maintenance_requests?select=*,profiles(full_name),products(name)', $this->serviceHeaders);
-            $maintenanceReqs = (isset($mReqsRes['body']) && is_array($mReqsRes['body']) && !isset($mReqsRes['body']['raw'])) ? $mReqsRes['body'] : [];
+            $body = $mReqsRes['body'] ?? [];
+            $maintenanceReqs = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
             $error = $error ?? "Failed to load maintenance requests: " . $e->getMessage();
         }
@@ -85,13 +107,17 @@ class AdminController
         // Calculate stats
         $activeRentalsCount = 0;
         $totalRevenue = 0.0;
+        
+        error_log("AdminController: Data Loaded - Products: " . count($products) . " Rentals: " . count($rentals) . " Orders: " . count($orders));
+
         foreach ($rentals as $rental) {
-            if (($rental['rental_status'] ?? '') === 'active' || ($rental['status'] ?? '') === 'active') {
+            if (($rental['status'] ?? $rental['rental_status'] ?? '') === 'active') {
                 $activeRentalsCount++;
             }
-            if (($rental['payment_status'] ?? '') === 'paid' || ($rental['payment_status'] ?? '') === 'completed') {
-                // Use a simplistic approach: sum up the product price for each paid rental
-                $totalRevenue += (float)($rental['products']['monthly_price'] ?? 0);
+        }
+        foreach ($orders as $order) {
+            if (($order['payment_status'] ?? '') === 'paid' || ($order['payment_status'] ?? '') === 'completed') {
+                $totalRevenue += (float)($order['total_amount'] ?? 0);
             }
         }
 
@@ -118,12 +144,20 @@ class AdminController
                 $this->updateProduct();
             } elseif ($action === 'delete_product') {
                 $this->deleteProduct();
-            } elseif ($action === 'update_lease_status') {
-                $this->updateLeaseStatus();
+            } elseif ($action === 'update_stock') {
+                $this->updateStock();
+            } elseif ($action === 'update_rental_status') {
+                $this->updateRentalStatus();
+            } elseif ($action === 'update_order_status') {
+                $this->updateOrderStatus();
+            } elseif ($action === 'update_delivery_status') {
+                $this->updateDeliveryStatus();
+            } elseif ($action === 'update_maintenance') {
+                $this->updateMaintenanceStatus();
             } elseif ($action === 'update_user_role') {
                 $this->updateUserRole();
             } else {
-                $this->redirectWithError("Invalid action.");
+                $this->redirectWithError("Invalid action: " . $action);
             }
         } catch (\Exception $e) {
             $this->redirectWithError("Error: " . $e->getMessage());
@@ -168,21 +202,80 @@ class AdminController
         $this->redirectWithSuccess("Product deleted successfully.");
     }
 
-    private function updateLeaseStatus(): void
+    private function updateStock(): void
     {
-        // Mock implementation for lease status based on current logic
+        $id = Request::post('id');
+        $stock = (int) Request::post('total_stock');
+        
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/products?id=eq.' . urlencode((string)$id), $this->serviceHeaders, ['total_stock' => $stock]);
+        $this->redirectWithSuccess("Stock level updated.");
+    }
+
+    private function updateRentalStatus(): void
+    {
         $id = Request::post('rental_id');
         $status = Request::post('status');
         
-        $data = [];
-        if ($status === 'returned') {
+        $data = ['status' => $status];
+        if ($status === 'returned' || $status === 'completed' || $status === 'closed') {
             $data['actual_return_date'] = date('Y-m-d');
         }
 
-        if (!empty($data)) {
-            $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/rentals?id=eq.' . urlencode($id), $this->serviceHeaders, $data);
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/rentals?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
+        $this->redirectWithSuccess("Agreement status updated.");
+    }
+
+    private function updateOrderStatus(): void
+    {
+        $id = Request::post('order_id');
+        $paymentStatus = Request::post('payment_status');
+        $shippingStatus = Request::post('shipping_status');
+        $trackingUrl = Request::post('tracking_url');
+        
+        $data = [
+            'payment_status' => $paymentStatus,
+            'shipping_status' => $shippingStatus,
+            'tracking_url' => $trackingUrl ?: null
+        ];
+
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/orders?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
+        $this->redirectWithSuccess("Order status updated.");
+    }
+
+    private function updateDeliveryStatus(): void
+    {
+        $id = Request::post('delivery_id');
+        $status = Request::post('status');
+        $notes = Request::post('agent_notes');
+        
+        $data = [
+            'status' => $status,
+            'agent_notes' => $notes ?: null,
+            'updated_at' => date('c')
+        ];
+
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/deliveries?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
+        $this->redirectWithSuccess("Logistics status updated.");
+    }
+
+    private function updateMaintenanceStatus(): void
+    {
+        $id = Request::post('request_id');
+        $status = Request::post('status');
+        $notes = Request::post('notes');
+        
+        $data = [
+            'status' => $status,
+            'notes' => $notes ?: null,
+            'updated_at' => date('c')
+        ];
+
+        if ($status === 'RESOLVED' || $status === 'CLOSED') {
+            $data['resolved_at'] = date('c');
         }
-        $this->redirectWithSuccess("Rental status updated.");
+
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/maintenance_requests?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
+        $this->redirectWithSuccess("Maintenance ticket updated.");
     }
 
     private function updateUserRole(): void
@@ -191,7 +284,7 @@ class AdminController
         $role = Request::post('role');
         $data = ['role' => $role];
 
-        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/profiles?id=eq.' . urlencode($id), $this->serviceHeaders, $data);
+        $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/profiles?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
         $this->redirectWithSuccess("User role updated successfully.");
     }
 

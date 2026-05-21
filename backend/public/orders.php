@@ -2,11 +2,13 @@
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
+use RentEase\Services\LogisticsService;
 use RentEase\Support\HttpClient;
 
 require __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
+$logisticsService = new LogisticsService($config);
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -55,30 +57,27 @@ if ($rentalsRes['status'] >= 200 && $rentalsRes['status'] < 300 && is_array($ren
     $rentals = $rentalsRes['body'];
 }
 
-if (isset($_GET['checkout_success'])) {
-    $serviceHeaders = [
-        'apikey' => (string) $config['supabase_service_role_key'],
-        'Authorization' => 'Bearer ' . $config['supabase_service_role_key'],
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/json'
-    ];
-    $latestOrderRes = $http->request(
-        'GET',
-        $config['supabase_url'] . '/rest/v1/orders?select=*&user_id=eq.' . urlencode($currentUser['id']) . '&payment_status=eq.pending&order=created_at.desc&limit=1',
-        $serviceHeaders
-    );
-    if ($latestOrderRes['status'] >= 200 && !empty($latestOrderRes['body'][0])) {
-        $orderId = $latestOrderRes['body'][0]['id'];
-        $http->request(
-            'PATCH',
-            $config['supabase_url'] . '/rest/v1/orders?id=eq.' . urlencode((string)$orderId),
-            $serviceHeaders,
-            ['payment_status' => 'completed']
-        );
+// Fetch deliveries to enable tracking
+$deliveries = [];
+try {
+    $deliveries = $logisticsService->getUserDeliveries($currentUser['id'], $token);
+} catch (Throwable $e) {}
+
+// Map deliveries by order_id and rental_id for quick lookup
+$orderDeliveries = [];
+$rentalDeliveries = [];
+foreach ($deliveries as $d) {
+    if (!empty($d['order_id'])) {
+        $orderDeliveries[$d['order_id']] = $d;
+    }
+    if (!empty($d['rental_id'])) {
+        $rentalDeliveries[$d['rental_id']] = $d;
     }
 }
 
-$success = isset($_GET['checkout_success']) ? 'Thank you for your order! Your lease is active and your items are queued for direct dispatch.' : null;
+// Success logic moved to success.php
+
+$success = null;
 
 
 ?>
@@ -138,6 +137,14 @@ $success = isset($_GET['checkout_success']) ? 'Thank you for your order! Your le
                                             <?= e((string)$rental['status']) ?>
                                         </span>
                                     </div>
+                                    <?php if (isset($rentalDeliveries[$rental['id']])): ?>
+                                        <div class="mt-4">
+                                            <a href="<?= baseUrl('/tracking?id=' . $rentalDeliveries[$rental['id']]['id']) ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                                                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                                                Track Delivery
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -166,8 +173,10 @@ $success = isset($_GET['checkout_success']) ? 'Thank you for your order! Your le
                         <div class="bg-white/70 backdrop-blur-md rounded-3xl p-6 border border-slate-100 shadow-sm group hover:border-emerald-200 transition-all">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Session Reference</span>
-                                    <p class="font-mono text-[10px] text-slate-500 break-all bg-slate-50 p-2 rounded-lg border border-slate-100"><?= e((string)$order['stripe_session_id']) ?></p>
+                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Receipt Number</span>
+                                    <p class="font-outfit text-sm font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 inline-block">
+                                        #<?= strtoupper(substr((string)$order['id'], 0, 8)) ?>
+                                    </p>
                                 </div>
                                 <div class="text-right">
                                     <span class="text-2xl font-black text-slate-900 font-outfit">$<?= number_format((float)$order['total_amount'], 2) ?></span>
@@ -178,6 +187,12 @@ $success = isset($_GET['checkout_success']) ? 'Thank you for your order! Your le
                                 <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest <?= $order['payment_status'] === 'completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100' ?>">
                                     <?= e((string)$order['payment_status']) ?>
                                 </span>
+                                <?php if (isset($orderDeliveries[$order['id']])): ?>
+                                    <a href="<?= baseUrl('/tracking?id=' . $orderDeliveries[$order['id']]['id']) ?>" class="ml-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-700 transition-all shadow-md shadow-emerald-500/20">
+                                        <span class="material-symbols-outlined text-[14px]">distance</span>
+                                        Live Track
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>

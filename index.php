@@ -97,7 +97,8 @@ $routes = [
     'feedback' => 'survey.php',
     'maintenance' => 'maintenance-tracker.php',
     'payments' => 'payment-methods.php',
-    'coming-soon' => 'coming-soon.php'
+    'coming-soon' => 'coming-soon.php',
+    'success' => 'success.php'
 ];
 
 // Handle specific API patterns

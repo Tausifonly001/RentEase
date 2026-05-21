@@ -18,7 +18,9 @@ if (!function_exists('baseUrl')) {
     function baseUrl(string $path = ''): string
     {
         $base = dirname($_SERVER['SCRIPT_NAME']);
-        if ($base === DIRECTORY_SEPARATOR || $base === '\\' || $base === '/') {
+        // Handle root cases and normalize slashes
+        $base = str_replace('\\', '/', $base);
+        if ($base === '/') {
             $base = '';
         }
         return rtrim($base, '/') . '/' . ltrim($path, '/');

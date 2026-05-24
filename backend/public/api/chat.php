@@ -16,11 +16,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 }
 
 try {
-    AuthMiddleware::requireUser($config);
-} catch (\RuntimeException) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
-    exit;
+    $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+    if ($token) {
+        $authService = new \RentEase\Services\AuthService($config);
+        $authService->validateToken($token);
+    }
+} catch (\Throwable $e) {
+    // Ignore auth errors, allow guest chat
 }
 
 $input = json_decode(file_get_contents('php://input') ?: '{}', true);
@@ -38,12 +40,12 @@ if (mb_strlen($message) > 2000) {
     exit;
 }
 
-$apiKey = getenv('GEMINI_API_KEY') ?: '';
+$apiKey = getenv('GROQ_API_KEY') ?: '';
 
 if ($apiKey === '') {
     sleep(1);
     $lowerMessage = strtolower($message);
-    $reply = "I'm a virtual concierge. Please set GEMINI_API_KEY in the .env file to enable smart AI features.";
+    $reply = "I'm a virtual concierge. Please set GROQ_API_KEY in the .env file to enable smart AI features.";
 
     if (strpos($lowerMessage, 'hello') !== false || strpos($lowerMessage, 'hi') !== false) {
         $reply = "Hello! How can I help you with your rental today?";
@@ -59,37 +61,58 @@ if ($apiKey === '') {
     exit;
 }
 
-$url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . urlencode($apiKey);
+$url = 'https://api.groq.com/openai/v1/chat/completions';
 
 $data = [
-    'contents' => [
+    'model' => 'llama-3.3-70b-versatile',
+    'messages' => [
+        [
+            'role' => 'system',
+            'content' => "You are an AI support concierge for a premium furniture rental service called RentEase. Provide a helpful, concise response to the user's message."
+        ],
         [
             'role' => 'user',
-            'parts' => [
-                ['text' => "You are an AI support concierge for a premium furniture rental service called RentEase. Provide a helpful, concise response to the user's message. User message: " . $message],
-            ],
-        ],
-    ],
+            'content' => $message
+        ]
+    ]
 ];
 
+$isLocal = strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false || strpos($config['app_url'] ?? '', 'localhost') !== false;
+
 $ch = curl_init($url);
-curl_setopt_array($ch, [
+$curlOptions = [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
-    CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+    CURLOPT_HTTPHEADER => [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $apiKey
+    ],
     CURLOPT_POSTFIELDS => json_encode($data),
-]);
+    CURLOPT_TIMEOUT => 20,
+];
+
+if ($isLocal) {
+    $curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
+    $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
+}
+
+curl_setopt_array($ch, $curlOptions);
 $response = curl_exec($ch);
 $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
 curl_close($ch);
 
 if ($httpCode !== 200 || !is_string($response)) {
+    error_log("Groq API Error - HTTP Code: " . $httpCode . ", cURL Error: " . $curlError . ", Response: " . (is_string($response) ? $response : 'Not a string'));
     http_response_code(502);
-    echo json_encode(['error' => 'Failed to connect to AI service']);
+    echo json_encode([
+        'error' => 'Failed to connect to AI service',
+        'details' => is_string($response) ? $response : 'cURL error: ' . $curlError
+    ], JSON_THROW_ON_ERROR);
     exit;
 }
 
 $responseData = json_decode($response, true);
-$replyText = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? "I'm sorry, I couldn't understand that.";
+$replyText = $responseData['choices'][0]['message']['content'] ?? "I'm sorry, I couldn't understand that.";
 
 echo json_encode(['reply' => $replyText]);

@@ -155,14 +155,14 @@ require_once __DIR__ . '/partials/header.php';
             <p class="font-body-lg text-body-lg text-on-primary-container max-w-lg">Our dedicated concierge team is available 24/7 to ensure your home living experience is seamless.</p>
         </div>
         <div class="relative z-10 flex flex-col sm:flex-row gap-md">
-            <button class="bg-secondary text-white font-button text-button px-lg py-md rounded-lg flex items-center gap-xs hover:bg-[#005a56] transition-all">
+            <a href="<?= baseUrl('/concierge') ?>" class="bg-secondary text-white font-button text-button px-lg py-md rounded-lg flex items-center gap-xs hover:bg-[#005a56] transition-all">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
                 Start Live Chat
-            </button>
-            <button class="bg-transparent border border-white/30 text-white font-button text-button px-lg py-md rounded-lg flex items-center gap-xs hover:bg-white/10 transition-all">
+            </a>
+            <a href="<?= baseUrl('/support') ?>" class="bg-transparent border border-white/30 text-white font-button text-button px-lg py-md rounded-lg flex items-center gap-xs hover:bg-white/10 transition-all">
                 <span class="material-symbols-outlined">mail</span>
                 Email Support
-            </button>
+            </a>
         </div>
         <!-- Decorative element -->
         <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-secondary/20 rounded-full blur-3xl"></div>

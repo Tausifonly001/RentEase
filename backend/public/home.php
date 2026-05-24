@@ -184,49 +184,48 @@ require __DIR__ . '/partials/header.php';
             <p class="text-on-surface-variant py-8 col-span-full text-center">No featured products available.</p>
         <?php else: ?>
             <?php foreach (array_slice($allProducts, 0, 8) as $product): ?>
-                    <div class="group flex flex-col bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 relative">
+                    <div class="product-card flex flex-col bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(4,22,39,0.03)] relative cursor-pointer" style="visibility: hidden;">
                         <!-- Image Area -->
-                        <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="relative aspect-[4/3] overflow-hidden bg-slate-50 block">
+                        <div class="relative aspect-square overflow-hidden bg-[#F8F9FA] flex items-center justify-center p-6 group/img" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . $product['id']) ?>'">
                             <img alt="<?= htmlspecialchars($product['name']) ?>"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x300?text=No+Image') ?>"
+                                class="product-img w-full h-full object-contain mix-blend-multiply"
+                                src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x400?text=No+Image') ?>"
                                 loading="lazy" />
                             
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
                             <!-- Badges -->
-                            <div class="absolute top-4 left-4 flex flex-col gap-2 items-start">
+                            <div class="absolute top-3 left-3 flex flex-col gap-2 items-start z-10">
                                 <?php if ($product['category'] === 'Appliances'): ?>
-                                    <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-full shadow-sm">Fast Delivery</span>
+                                    <span class="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-sm">Fast Delivery</span>
                                 <?php endif; ?>
                             </div>
-                        </a>
+                        </div>
 
                         <!-- Content Area -->
-                        <div class="p-6 flex flex-col flex-grow bg-white z-10 relative">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2"><?= htmlspecialchars($product['category']) ?></p>
+                        <div class="p-5 flex flex-col flex-grow bg-white z-10 relative border-t border-slate-50">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"><?= htmlspecialchars($product['category']) ?></p>
                             <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="mb-4">
-                                <h3 class="font-bold text-xl text-slate-900 leading-tight group-hover:text-teal-600 transition-colors line-clamp-2">
+                                <h3 class="product-title font-bold text-[16px] text-slate-900 leading-snug line-clamp-2">
                                     <?= htmlspecialchars($product['name']) ?>
                                 </h3>
                             </a>
                             
-                            <div class="mt-auto flex items-end justify-between border-t border-slate-100 pt-4">
+                            <div class="mt-auto flex items-end justify-between pt-1">
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Monthly</p>
+                                    <p class="text-[10px] font-medium text-slate-500 mb-0.5">Starting at</p>
                                     <div class="flex items-baseline gap-1">
-                                        <span class="text-2xl font-black text-slate-900 tracking-tighter">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
+                                        <span class="text-xl font-black text-slate-900 tracking-tight">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
+                                        <span class="text-xs text-slate-400 font-medium">/mo</span>
                                     </div>
                                 </div>
                                 
-                                <form method="POST" action="<?= baseUrl('/cart') ?>">
+                                <form method="POST" action="<?= baseUrl('/cart') ?>" class="z-20">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(Csrf::token()) ?>">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" aria-label="Add to cart"
-                                        class="h-12 w-12 rounded-2xl bg-slate-50 text-slate-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300 transform group-hover:rotate-12 active:scale-90">
-                                        <span class="material-symbols-outlined !text-xl">shopping_bag</span>
+                                        class="add-to-cart-btn h-10 w-10 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-md">
+                                        <span class="material-symbols-outlined !text-[18px]">add_shopping_cart</span>
                                     </button>
                                 </form>
                             </div>
@@ -236,5 +235,86 @@ require __DIR__ . '/partials/header.php';
         <?php endif; ?>
     </div>
 </section>
+
+<style>
+/* Fallback: if GSAP fails to load after 2s, show everything */
+.no-js .product-card, .gsap-failed .product-card {
+    visibility: visible !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Safety fallback
+    const fallbackTimer = setTimeout(() => {
+        if (!window.gsap) {
+            document.body.classList.add('gsap-failed');
+        }
+    }, 2000);
+
+    const checkGsap = setInterval(() => {
+        if (window.gsap) {
+            clearInterval(checkGsap);
+            clearTimeout(fallbackTimer);
+            initHomeAnimations();
+        }
+    }, 50);
+
+    function initHomeAnimations() {
+        const ctx = gsap.context(() => {
+            
+            // Make cards visible for GSAP
+            gsap.set('.product-card', { visibility: 'visible' });
+
+            // Entrance for featured items using ScrollTrigger if possible, otherwise simple stagger
+            // We'll use a simple timeline with ScrollTrigger
+            if (window.ScrollTrigger) {
+                gsap.from('.product-card', {
+                    scrollTrigger: {
+                        trigger: '.product-card',
+                        start: 'top 85%'
+                    },
+                    opacity: 0,
+                    y: 40,
+                    scale: 0.95,
+                    stagger: 0.1,
+                    duration: 0.8,
+                    ease: 'back.out(1.2)'
+                });
+            } else {
+                gsap.from('.product-card', {
+                    opacity: 0,
+                    y: 40,
+                    scale: 0.95,
+                    stagger: 0.1,
+                    duration: 0.8,
+                    ease: 'back.out(1.2)'
+                });
+            }
+
+            // Dynamic Hover Interactions
+            document.querySelectorAll('.product-card').forEach(card => {
+                const img = card.querySelector('.product-img');
+                const btn = card.querySelector('.add-to-cart-btn');
+                const title = card.querySelector('.product-title');
+
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { y: -6, boxShadow: '0 20px 40px -12px rgba(4,22,39,0.08)', duration: 0.4, ease: 'power2.out' });
+                    gsap.to(img, { scale: 1.05, duration: 0.6, ease: 'power2.out' });
+                    gsap.to(title, { color: '#006a65', duration: 0.3 }); // secondary color
+                    gsap.to(btn, { backgroundColor: '#006a65', scale: 1.1, rotation: 12, duration: 0.4, ease: 'back.out(2)' });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { y: 0, boxShadow: '0 2px 12px rgba(4,22,39,0.03)', duration: 0.4, ease: 'power2.out' });
+                    gsap.to(img, { scale: 1, duration: 0.6, ease: 'power2.out' });
+                    gsap.to(title, { color: '#0b1c30', duration: 0.3 }); // on-surface
+                    gsap.to(btn, { backgroundColor: '#0f172a', scale: 1, rotation: 0, duration: 0.4, ease: 'power2.out' }); // slate-900
+                });
+            });
+        });
+    }
+});
+</script>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>

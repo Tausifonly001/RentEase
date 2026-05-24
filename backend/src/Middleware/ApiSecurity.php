@@ -23,12 +23,21 @@ final class ApiSecurity
         // ---------------------------------------------------------------
         // CORS: Restrict to configured origin (default: same-origin only)
         // ---------------------------------------------------------------
-        $allowedOrigin = $config['app_url'] ?? '';
+        $appUrl = $config['app_url'] ?? '';
+        $parsedUrl = parse_url($appUrl);
+        $allowedOrigin = '';
+        if ($parsedUrl && isset($parsedUrl['scheme'], $parsedUrl['host'])) {
+            $allowedOrigin = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+            if (isset($parsedUrl['port'])) {
+                $allowedOrigin .= ':' . $parsedUrl['port'];
+            }
+        }
+
         $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-        if ($requestOrigin !== '' && $requestOrigin !== $allowedOrigin) {
+        if ($requestOrigin !== '' && $allowedOrigin !== '' && $requestOrigin !== $allowedOrigin) {
             http_response_code(403);
-            echo json_encode(['error' => 'Origin not allowed']);
+            echo json_encode(['error' => 'Origin not allowed: ' . $requestOrigin . ' vs ' . $allowedOrigin]);
             exit;
         }
 

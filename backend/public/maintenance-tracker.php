@@ -106,7 +106,7 @@ require_once __DIR__ . '/partials/header.php';
         <section class="lg:col-span-8 space-y-6">
             <div class="flex items-center justify-between mb-4 reveal-element">
                 <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Current Tickets</h2>
-                <a href="help-center.php" class="flex items-center space-x-2 text-teal-600 font-bold hover:underline transition-all">
+                <a href="<?= baseUrl('/request-maintenance') ?>" class="flex items-center space-x-2 text-teal-600 font-bold hover:underline transition-all">
                     <span class="material-symbols-outlined text-xl">add_circle</span>
                     <span>New Request</span>
                 </a>
@@ -229,9 +229,9 @@ require_once __DIR__ . '/partials/header.php';
             <div class="bg-primary text-white rounded-3xl p-8 shadow-xl reveal-element">
                 <h3 class="text-2xl font-bold mb-3 tracking-tight">Need Help?</h3>
                 <p class="text-teal-100/80 text-sm leading-relaxed mb-8">Our 24/7 concierge is available for emergency maintenance or general inquiries.</p>
-                <button class="w-full bg-white text-primary py-4 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg">
+                <a href="<?= baseUrl('/support') ?>" class="w-full bg-white text-primary py-4 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg text-center block">
                     Contact Support
-                </button>
+                </a>
             </div>
         </aside>
     </div>

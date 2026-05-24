@@ -46,7 +46,7 @@ require_once __DIR__ . '/partials/header.php';
                         <div>
                             <h4 class="font-bold text-primary mb-1">Live Chat</h4>
                             <p class="text-sm text-slate-500">Available 24/7 for urgent issues</p>
-                            <a href="concierge.php" class="text-secondary text-sm font-bold mt-2 hover:underline inline-block">Start Chatting →</a>
+                            <a href="<?= baseUrl('/concierge') ?>" class="text-secondary text-sm font-bold mt-2 hover:underline inline-block">Start Chatting →</a>
                         </div>
                     </div>
 
@@ -57,7 +57,7 @@ require_once __DIR__ . '/partials/header.php';
                         <div>
                             <h4 class="font-bold text-primary mb-1">Email Support</h4>
                             <p class="text-sm text-slate-500">Typical response within 2 hours</p>
-                            <p class="text-secondary text-sm font-bold mt-1">support@rentease.com</p>
+                            <a href="mailto:support@rentease.com" class="text-secondary text-sm font-bold mt-1 hover:underline">support@rentease.com</a>
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@ require_once __DIR__ . '/partials/header.php';
                         <div>
                             <h4 class="font-bold text-primary mb-1">Phone Support</h4>
                             <p class="text-sm text-slate-500">Mon-Fri, 9am - 6pm EST</p>
-                            <p class="text-secondary text-sm font-bold mt-1">+1 (800) RENT-EASE</p>
+                            <a href="tel:+1800RENTEASE" class="text-secondary text-sm font-bold mt-1 hover:underline">+1 (800) RENT-EASE</a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@ require_once __DIR__ . '/partials/header.php';
                     <div class="relative z-10">
                         <h4 class="font-bold mb-2">Check the Help Center</h4>
                         <p class="text-xs text-on-primary-container mb-4">Most questions can be answered instantly in our knowledge base.</p>
-                        <a href="help-center.php" class="inline-block bg-secondary text-white text-xs font-bold px-4 py-2 rounded-lg hover:brightness-110 transition-all">Go to FAQs</a>
+                        <a href="<?= baseUrl('/help-center') ?>" class="inline-block bg-secondary text-white text-xs font-bold px-4 py-2 rounded-lg hover:brightness-110 transition-all">Go to FAQs</a>
                     </div>
                     <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-7xl text-white/5 group-hover:scale-110 transition-transform">help</span>
                 </div>
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">sync</span> Processing...';
 
         const formData = new FormData(e.target);
-        const data = Object.from_entries(formData.entries());
+        const data = Object.fromEntries(formData.entries());
 
         try {
             const response = await fetch('api/support/ticket.php', {

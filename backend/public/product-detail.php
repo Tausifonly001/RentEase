@@ -492,7 +492,7 @@ require __DIR__ . '/partials/header.php';
         });
     }
 
-    // GSAP Entrance Animations
+    // GSAP Entrance Animations and Interactions
     window.addEventListener('load', () => {
         // Image error handling
         document.querySelectorAll('img').forEach(img => {
@@ -502,29 +502,90 @@ require __DIR__ . '/partials/header.php';
             });
         });
 
-        const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.2 } });
+        // Initialize GSAP Context for Cleanup and Organization
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.2 } });
 
-        tl.from('#breadcrumbs', { opacity: 0, y: -10, duration: 0.8 })
-          .from('#gallery-container > div > div', { 
-              opacity: 0, 
-              scale: 0.95, 
-              stagger: 0.2,
-              duration: 1
-          }, '-=0.4')
-          .from('#details-container > *', {
-              opacity: 0,
-              y: 20,
-              stagger: 0.1,
-              duration: 0.8
-          }, '-=1')
-          .from('#related-products', {
-              opacity: 0,
-              y: 40,
-              scrollTrigger: {
-                  trigger: '#related-products',
-                  start: 'top 80%'
-              }
-          });
+            // Entrance Timeline
+            tl.from('#breadcrumbs', { opacity: 0, y: -10, duration: 0.8 })
+              .from('#gallery-container > div > div', { 
+                  opacity: 0, 
+                  scale: 0.95, 
+                  y: 20,
+                  stagger: 0.15,
+                  duration: 1,
+                  ease: 'back.out(1.2)'
+              }, '-=0.4')
+              .from('#gallery-container .p-5', {
+                  opacity: 0,
+                  y: 20,
+                  stagger: 0.1,
+                  duration: 0.8
+              }, '-=0.6')
+              .from('#details-container > *', {
+                  opacity: 0,
+                  y: 20,
+                  stagger: 0.1,
+                  duration: 0.8
+              }, '-=1');
+
+            // ScrollTrigger for Related Products
+            gsap.from('#related-products', {
+                opacity: 0,
+                y: 40,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: '#related-products',
+                    start: 'top 85%'
+                }
+            });
+
+            // Micro-interactions: Tenure Selection Cards Hover
+            const tenureCards = document.querySelectorAll('input[name="tenure"] + div');
+            tenureCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    if (!card.previousElementSibling.checked) {
+                        gsap.to(card, { y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', duration: 0.3, ease: 'power2.out' });
+                    }
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { y: 0, boxShadow: 'none', duration: 0.3, ease: 'power2.out' });
+                });
+            });
+
+            // Micro-interactions: Reserve Button
+            const reserveBtn = document.querySelector('button[type="submit"].bg-slate-900');
+            if (reserveBtn) {
+                const btnIcon = reserveBtn.querySelector('.material-symbols-outlined');
+                reserveBtn.addEventListener('mouseenter', () => {
+                    gsap.to(reserveBtn, { scale: 1.02, backgroundColor: '#0f172a', duration: 0.4, ease: 'back.out(1.5)' });
+                    gsap.to(btnIcon, { rotation: 15, scale: 1.2, duration: 0.4, ease: 'back.out(2)' });
+                });
+                reserveBtn.addEventListener('mouseleave', () => {
+                    gsap.to(reserveBtn, { scale: 1, backgroundColor: '#0f172a', duration: 0.4, ease: 'power2.out' });
+                    gsap.to(btnIcon, { rotation: 0, scale: 1, duration: 0.4, ease: 'power2.out' });
+                });
+                reserveBtn.addEventListener('mousedown', () => {
+                    gsap.to(reserveBtn, { scale: 0.95, duration: 0.1 });
+                });
+                reserveBtn.addEventListener('mouseup', () => {
+                    gsap.to(reserveBtn, { scale: 1.02, duration: 0.4, ease: 'back.out(1.5)' });
+                });
+            }
+
+            // Accordion Hover Effects
+            const accordions = document.querySelectorAll('#details-container .bg-white.shadow-sm button');
+            accordions.forEach(acc => {
+                const icon = acc.querySelector('.w-10.h-10');
+                acc.addEventListener('mouseenter', () => {
+                    gsap.to(icon, { scale: 1.1, rotation: 5, duration: 0.3, ease: 'back.out(1.5)' });
+                });
+                acc.addEventListener('mouseleave', () => {
+                    gsap.to(icon, { scale: 1, rotation: 0, duration: 0.3 });
+                });
+            });
+
+        });
     });
 </script>
 

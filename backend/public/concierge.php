@@ -71,9 +71,9 @@ include_once __DIR__ . '/partials/header.php';
 
                     <!-- Status Update -->
                     <div id="initial-status" class="flex justify-center">
-                        <div class="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-800/30 px-4 py-2 rounded-xl">
-                            <span class="material-symbols-outlined text-teal-600 text-sm animate-spin">sync</span>
-                            <span class="text-xs text-teal-900 dark:text-teal-100 font-medium">Concierge is connecting you to a specialist...</span>
+                        <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/30 px-4 py-2 rounded-xl">
+                            <span class="material-symbols-outlined text-emerald-600 text-sm">smart_toy</span>
+                            <span class="text-xs text-emerald-900 dark:text-emerald-100 font-medium">AI Concierge is online and ready to help</span>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@ include_once __DIR__ . '/partials/header.php';
                     <div class="relative z-10">
                         <p class="text-lg font-bold mb-2">Need a faster resolution?</p>
                         <p class="text-sm text-slate-400 mb-6">Our help center has answers to 90% of common questions.</p>
-                        <a href="help-center.php" class="inline-flex items-center gap-2 text-teal-400 font-bold text-sm hover:underline">
+                        <a href="<?= baseUrl('/help-center') ?>" class="inline-flex items-center gap-2 text-teal-400 font-bold text-sm hover:underline">
                             Browse Help Center
                             <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         </a>
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showTypingIndicator();
         
         try {
-            const response = await fetch('api/chat.php', {
+            const response = await fetch('<?= baseUrl('/api/chat') ?>', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

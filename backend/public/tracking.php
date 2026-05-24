@@ -209,7 +209,7 @@ require_once __DIR__ . '/partials/header.php';
                     <?php endif; ?>
                     
                     <div class="mt-10 pt-6 border-t border-slate-50 flex flex-col space-y-3">
-                        <a href="support.php" class="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
+                        <a href="<?= baseUrl('/support') ?>" class="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
                             <span class="material-symbols-outlined text-xl">support_agent</span>
                             Live Support
                         </a>

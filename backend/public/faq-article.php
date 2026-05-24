@@ -16,9 +16,9 @@ require_once __DIR__ . '/partials/header.php';
 <main class="pt-8 pb-12 max-w-7xl mx-auto px-4 md:px-8">
     <!-- Breadcrumbs -->
     <nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-on-surface-variant font-label-caps mb-8 text-xs uppercase tracking-wider">
-        <a class="hover:text-secondary transition-colors" href="help-center.php">Help Center</a>
+        <a class="hover:text-secondary transition-colors" href="<?= baseUrl('/help-center') ?>">Help Center</a>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-        <a class="hover:text-secondary transition-colors" href="help-center.php">Returns & End of Lease</a>
+        <a class="hover:text-secondary transition-colors" href="<?= baseUrl('/help-center') ?>">Returns & End of Lease</a>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
         <span class="text-primary font-bold">Return Process</span>
     </nav>
@@ -38,19 +38,19 @@ require_once __DIR__ . '/partials/header.php';
                     <h4 class="text-primary font-h3 text-lg mb-4">Related articles</h4>
                     <ul class="space-y-4 font-body-sm">
                         <li>
-                            <a class="text-secondary hover:underline flex items-start" href="help-center.php">
+                            <a class="text-secondary hover:underline flex items-start" href="<?= baseUrl('/help-center') ?>">
                                 <span class="material-symbols-outlined mr-2 text-[18px]">article</span>
                                 Moving out early: Breakage terms
                             </a>
                         </li>
                         <li>
-                            <a class="text-secondary hover:underline flex items-start" href="help-center.php">
+                            <a class="text-secondary hover:underline flex items-start" href="<?= baseUrl('/help-center') ?>">
                                 <span class="material-symbols-outlined mr-2 text-[18px]">article</span>
                                 Tenure extension options
                             </a>
                         </li>
                         <li>
-                            <a class="text-secondary hover:underline flex items-start" href="help-center.php">
+                            <a class="text-secondary hover:underline flex items-start" href="<?= baseUrl('/help-center') ?>">
                                 <span class="material-symbols-outlined mr-2 text-[18px]">article</span>
                                 Damages and repair policy
                             </a>
@@ -131,14 +131,14 @@ require_once __DIR__ . '/partials/header.php';
                 <h3 class="font-h3 text-xl mb-4 font-bold">Still need help?</h3>
                 <p class="text-sm opacity-90 mb-6 leading-relaxed">Our concierge team is available 24/7 to assist with your move-out logistics or billing questions.</p>
                 <div class="space-y-4">
-                    <button class="flex items-center justify-center w-full py-3 bg-secondary text-white font-button rounded-lg hover:brightness-110 transition-all font-semibold">
+                    <a href="<?= baseUrl('/concierge') ?>" class="flex items-center justify-center w-full py-3 bg-secondary text-white font-button rounded-lg hover:brightness-110 transition-all font-semibold">
                         <span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
                         Live Chat
-                    </button>
-                    <button class="flex items-center justify-center w-full py-3 bg-white/10 text-white font-button border border-white/20 rounded-lg hover:bg-white/20 transition-all font-semibold">
+                    </a>
+                    <a href="<?= baseUrl('/support') ?>" class="flex items-center justify-center w-full py-3 bg-white/10 text-white font-button border border-white/20 rounded-lg hover:bg-white/20 transition-all font-semibold">
                         <span class="material-symbols-outlined mr-2">mail</span>
                         Email Support
-                    </button>
+                    </a>
                 </div>
                 <div class="mt-8 pt-8 border-t border-white/10 text-center">
                     <p class="text-xs text-white/60 mb-2 uppercase tracking-widest font-bold">Call us directly</p>

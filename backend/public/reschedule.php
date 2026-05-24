@@ -280,7 +280,7 @@ require_once __DIR__ . '/partials/header.php';
         <div class="bg-slate-50 p-8 rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center text-center">
             <span class="material-symbols-outlined text-slate-300 text-4xl mb-4" style="font-variation-settings: 'opsz' 48;">support_agent</span>
             <p class="text-sm text-slate-500 font-medium mb-4">Need help with your delivery?</p>
-            <a class="text-secondary font-bold hover:underline" href="concierge.php">Chat with Support</a>
+            <a class="text-secondary font-bold hover:underline" href="<?= baseUrl('/concierge') ?>">Chat with Support</a>
         </div>
     </aside>
 </main>

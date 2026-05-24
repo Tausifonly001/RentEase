@@ -17,5 +17,8 @@
         {
             "name": "miita"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpstan/phpstan": "*"
+    }
 }

@@ -53,34 +53,35 @@ final class ApiSecurity
         }
 
         // ---------------------------------------------------------------
-        // Rate Limiting: Simple sliding window per IP (session-based)
+        // Rate Limiting: Simple sliding window per IP (file-based)
         // For production, use Redis/Memcached or a dedicated service.
         // ---------------------------------------------------------------
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
         $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $rateLimitKey = 'api_rate_' . md5($clientIp);
         $maxRequests = 60;   // max requests per window
         $windowSeconds = 60; // sliding window in seconds
         $now = time();
 
-        if (!isset($_SESSION[$rateLimitKey])) {
-            $_SESSION[$rateLimitKey] = ['count' => 0, 'window_start' => $now];
+        $cacheDir = sys_get_temp_dir() . '/rentease_ratelimit';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0777, true);
+        }
+        $cacheFile = $cacheDir . '/' . $rateLimitKey . '.json';
+
+        $rateData = ['count' => 0, 'window_start' => $now];
+        if (file_exists($cacheFile)) {
+            $data = json_decode(file_get_contents($cacheFile) ?: '', true);
+            if (is_array($data) && isset($data['count'], $data['window_start'])) {
+                $rateData = $data;
+            }
         }
 
-        $rateData = &$_SESSION[$rateLimitKey];
-
-        // Reset window if expired
         if (($now - $rateData['window_start']) >= $windowSeconds) {
             $rateData = ['count' => 0, 'window_start' => $now];
         }
 
         $rateData['count']++;
-
-        // Unlock session immediately to allow concurrent requests
-        session_write_close();
+        file_put_contents($cacheFile, json_encode($rateData), LOCK_EX);
 
         if ($rateData['count'] > $maxRequests) {
             http_response_code(429);

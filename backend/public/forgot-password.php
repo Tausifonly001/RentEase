@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="glass border border-white/40 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-blue-900/5">
             <div class="mb-8">
-                <a href="login.php" class="inline-flex items-center text-sm font-bold text-secondary hover:gap-2 transition-all mb-6 group">
+                <a href="<?= baseUrl('/login') ?>" class="inline-flex items-center text-sm font-bold text-secondary hover:gap-2 transition-all mb-6 group">
                     <span class="material-symbols-outlined text-base mr-1 transition-transform group-hover:-translate-x-1">arrow_back</span>
                     Back to Login
                 </a>
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <footer class="mt-10 text-center">
                 <p class="text-slate-500 text-sm">
                     Remember your password? 
-                    <a href="login.php" class="text-secondary font-bold hover:underline">Sign In</a>
+                    <a href="<?= baseUrl('/login') ?>" class="text-secondary font-bold hover:underline">Sign In</a>
                 </p>
             </footer>
         </div>

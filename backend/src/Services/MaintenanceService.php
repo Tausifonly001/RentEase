@@ -86,5 +86,25 @@ final class MaintenanceService extends BaseSupabaseService
 
         return is_array($response['body']) ? $response['body'] : [];
     }
+
+    /**
+     * Maintenance requests for rentals of products owned by a vendor.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getVendorRequests(string $vendorId): array
+    {
+        $path = '/rest/v1/maintenance_requests?select=*,profiles(full_name,email),rentals!inner(products!inner(name,vendor_id))';
+        $path .= '&rentals.products.vendor_id=eq.' . rawurlencode($vendorId);
+        $path .= '&order=created_at.desc';
+
+        $response = $this->request('GET', $path, $this->serviceHeaders());
+
+        if ($response['status'] < 200 || $response['status'] >= 300) {
+            throw new \RuntimeException('Failed to fetch vendor maintenance requests');
+        }
+
+        return is_array($response['body']) ? $response['body'] : [];
+    }
 }
 

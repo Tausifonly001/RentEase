@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 use RentEase\Services\AuthService;
 use RentEase\Support\Csrf;
+use RentEase\Support\Session;
 
 require __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $csrfToken = Csrf::token();
-$error = null;
+$error = Session::getFlash('error', $_GET['error'] ?? null);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
@@ -20,8 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$email || empty($password) || empty($fullName)) {
             $error = 'All fields are required. Please check your inputs.';
-        } elseif (strlen($password) < 6) {
-            $error = 'Password must be at least 6 characters long.';
+        } elseif (strlen($password) < 8) {
+            $error = 'Password must be at least 8 characters long.';
+        } elseif (!preg_match('/[0-9]/', $password)) {
+            $error = 'Password must contain at least one number.';
+        } elseif (!preg_match('/[^a-zA-Z0-9]/', $password)) {
+            $error = 'Password must contain at least one special character.';
         } else {
             try {
                 $payload = [
@@ -219,7 +224,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth.php?provider=' . $id) ?>'" 
+                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>'" 
                                 class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
                                 <span class="text-sm font-bold text-slate-700"><?= $provider['name'] ?></span>

@@ -32,7 +32,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 
@@ -225,7 +225,7 @@ require_once __DIR__ . '/partials/header.php';
 
         <!-- Navigation Buttons -->
         <div class="mt-8 flex justify-between items-center">
-            <button onclick="window.location.href='dashboard.php'" class="px-8 py-4 font-bold text-primary bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+            <button onclick="window.location.href='<?= baseUrl('/dashboard') ?>'" class="px-8 py-4 font-bold text-primary bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
                 Cancel
             </button>
             <div class="flex gap-4">
@@ -403,7 +403,7 @@ async function submitReschedule() {
         
         const result = await response.json();
         if (result.success) {
-            window.location.href = 'dashboard.php?msg=reschedule_success';
+            window.location.href = '<?= baseUrl('/dashboard') ?>?msg=reschedule_success';
         } else {
             alert(result.error || 'Failed to reschedule.');
             btn.disabled = false;

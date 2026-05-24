@@ -46,7 +46,7 @@ require_once __DIR__ . '/partials/header.php';
                         <div>
                             <h4 class="font-bold text-primary mb-1">Live Chat</h4>
                             <p class="text-sm text-slate-500">Available 24/7 for urgent issues</p>
-                            <button class="text-secondary text-sm font-bold mt-2 hover:underline">Start Chatting →</button>
+                            <a href="concierge.php" class="text-secondary text-sm font-bold mt-2 hover:underline inline-block">Start Chatting →</a>
                         </div>
                     </div>
 
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.replace('bg-primary', 'bg-emerald-500');
                 
                 setTimeout(() => {
-                    window.location.href = 'dashboard.php?msg=ticket_created';
+                    window.location.href = '<?= baseUrl('/dashboard') ?>?msg=ticket_created';
                 }, 1500);
             } else {
                 alert(result.error || 'Failed to submit ticket');

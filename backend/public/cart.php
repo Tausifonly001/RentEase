@@ -130,17 +130,23 @@ foreach ($cart as $id => $item) {
     }
 }
 ?>
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php 
+$pageTitle = 'Your Cart - RentEase';
+$pageDescription = 'Review and checkout your premium furniture and appliance rentals.';
+require __DIR__ . '/partials/header.php'; 
+?>
 
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg md:py-xl">
     <!-- Minimal Header & Stepper -->
-    <div class="mb-lg">
-        <a class="inline-flex items-center text-secondary hover:text-on-secondary-container transition-colors mb-sm font-button text-button" href="<?= baseUrl('/browse') ?>">
-            <span class="material-symbols-outlined text-sm mr-xs">arrow_back</span>
-            Back to Browse
+    <div class="mb-12 text-center max-w-3xl mx-auto">
+        <a class="inline-flex items-center text-teal-600 hover:text-teal-700 transition-colors mb-6 font-bold text-sm bg-teal-50 px-4 py-2 rounded-full" href="<?= baseUrl('/browse') ?>">
+            <span class="material-symbols-outlined text-sm mr-2">arrow_back</span>
+            Continue Shopping
         </a>
-        <h1 class="font-h1 text-h1 text-on-surface mb-md">Lease Cart & Checkout</h1>
-        
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Your Basket</h1>
+        <p class="text-slate-500 font-medium">Review your items and complete your shipping details.</p>
+    </div>
+
     <?php if ($error): ?>
         <div class="bento-item mb-8 p-4 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3 text-red-700 text-sm font-semibold shadow-sm">
             <span class="material-symbols-outlined">error</span>
@@ -165,26 +171,26 @@ foreach ($cart as $id => $item) {
         <?php else: ?>
 
         <!-- Progress Stepper -->
-        <div class="flex items-center w-full max-w-2xl">
-            <div class="flex items-center relative">
-                <div class="h-8 w-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-button text-button z-10">
-                    <span class="material-symbols-outlined text-[16px]">check</span>
+        <div class="flex items-center w-full max-w-2xl mx-auto mb-12">
+            <div class="flex flex-col items-center relative z-10">
+                <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg shadow-teal-500/30 border-4 border-white">
+                    <span class="material-symbols-outlined text-[20px]">shopping_basket</span>
                 </div>
-                <div class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-label-caps text-label-caps text-secondary">SHIPPING</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-teal-600 uppercase">CART</div>
             </div>
-            <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-outline-variant/50"></div>
-            <div class="flex items-center relative">
-                <div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-button text-button z-10">
-                    2
+            <div class="flex-auto border-t-2 border-dashed border-teal-500/30"></div>
+            <div class="flex flex-col items-center relative z-10">
+                <div class="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-bold shadow-sm border-4 border-white">
+                    <span class="material-symbols-outlined text-[20px]">local_shipping</span>
                 </div>
-                <div class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-label-caps text-label-caps text-on-surface-variant">PAYMENT</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-slate-400 uppercase">SHIPPING</div>
             </div>
-            <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-outline-variant/50"></div>
-            <div class="flex items-center relative">
-                <div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-button text-button z-10">
-                    3
+            <div class="flex-auto border-t-2 border-dashed border-slate-200"></div>
+            <div class="flex flex-col items-center relative z-10">
+                <div class="h-10 w-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center font-bold shadow-sm border-4 border-white">
+                    <span class="material-symbols-outlined text-[20px]">credit_card</span>
                 </div>
-                <div class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-label-caps text-label-caps text-on-surface-variant">CONFIRM</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-slate-400 uppercase">PAYMENT</div>
             </div>
         </div>
     </div>
@@ -205,36 +211,43 @@ foreach ($cart as $id => $item) {
                     </div>
                     Delivery Options
                 </h2>
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div>
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Preferred Delivery Date</label>
-                        <div class="relative">
-                            <input type="date" name="delivery_date" required class="w-full border-outline-variant rounded-lg p-3 text-body-md text-on-surface focus:ring-secondary focus:border-secondary" />
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preferred Delivery Date</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors">calendar_month</span>
+                            <input type="date" name="delivery_date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium" />
                         </div>
                     </div>
                     <div>
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Preferred Time Slot</label>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            <label class="border border-outline-variant rounded-lg p-3 cursor-pointer hover:border-secondary hover:bg-surface-container-low transition-colors duration-200 has-[:checked]:border-secondary has-[:checked]:bg-surface-container">
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preferred Time Slot</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label class="border-2 border-slate-100 rounded-xl p-4 cursor-pointer hover:border-teal-200 hover:bg-teal-50/50 transition-all duration-200 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-50/50 group relative overflow-hidden">
                                 <input type="radio" name="delivery_time" value="09:00 - 12:00" class="hidden" required />
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-on-surface-variant text-sm">light_mode</span>
-                                    <span class="font-body-md text-on-surface">09:00 - 12:00</span>
+                                <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
+                                    <span class="material-symbols-outlined text-2xl">light_mode</span>
+                                    <span class="font-bold text-sm whitespace-nowrap">Morning</span>
+                                    <span class="text-[10px] font-bold tracking-widest opacity-60">9AM - 12PM</span>
                                 </div>
+                                <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
-                            <label class="border border-outline-variant rounded-lg p-3 cursor-pointer hover:border-secondary hover:bg-surface-container-low transition-colors duration-200 has-[:checked]:border-secondary has-[:checked]:bg-surface-container">
+                            <label class="border-2 border-slate-100 rounded-xl p-4 cursor-pointer hover:border-teal-200 hover:bg-teal-50/50 transition-all duration-200 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-50/50 group relative overflow-hidden">
                                 <input type="radio" name="delivery_time" value="12:00 - 15:00" class="hidden" required />
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-on-surface-variant text-sm">wb_sunny</span>
-                                    <span class="font-body-md text-on-surface">12:00 - 15:00</span>
+                                <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
+                                    <span class="material-symbols-outlined text-2xl">wb_sunny</span>
+                                    <span class="font-bold text-sm whitespace-nowrap">Afternoon</span>
+                                    <span class="text-[10px] font-bold tracking-widest opacity-60">12PM - 3PM</span>
                                 </div>
+                                <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
-                            <label class="border border-outline-variant rounded-lg p-3 cursor-pointer hover:border-secondary hover:bg-surface-container-low transition-colors duration-200 has-[:checked]:border-secondary has-[:checked]:bg-surface-container">
+                            <label class="border-2 border-slate-100 rounded-xl p-4 cursor-pointer hover:border-teal-200 hover:bg-teal-50/50 transition-all duration-200 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-50/50 group relative overflow-hidden">
                                 <input type="radio" name="delivery_time" value="15:00 - 18:00" class="hidden" required />
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-on-surface-variant text-sm">routine</span>
-                                    <span class="font-body-md text-on-surface">15:00 - 18:00</span>
+                                <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
+                                    <span class="material-symbols-outlined text-2xl">routine</span>
+                                    <span class="font-bold text-sm whitespace-nowrap">Evening</span>
+                                    <span class="text-[10px] font-bold tracking-widest opacity-60">3PM - 6PM</span>
                                 </div>
+                                <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
                         </div>
                     </div>
@@ -249,14 +262,20 @@ foreach ($cart as $id => $item) {
                     </div>
                     Shipping Address
                 </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Street Address</label>
-                        <textarea rows="2" name="address" placeholder="Apt/Suite, Building Name, Street" required class="w-full border-outline-variant rounded-lg p-3 text-body-md placeholder-on-surface-variant/50 focus:ring-secondary focus:border-secondary"></textarea>
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Street Address</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400 group-focus-within:text-blue-500 transition-colors">home_work</span>
+                            <textarea rows="3" name="address" placeholder="Apt/Suite, Building Name, Street..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium resize-none"></textarea>
+                        </div>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Mobile Number</label>
-                        <input type="tel" name="mobile_number" placeholder="e.g. +1 555-0123" required class="w-full border-outline-variant rounded-lg p-3 text-body-md placeholder-on-surface-variant/50 focus:ring-secondary focus:border-secondary" />
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Mobile Number</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">call</span>
+                            <input type="tel" name="mobile_number" placeholder="e.g. +1 555-0123" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -269,15 +288,24 @@ foreach ($cart as $id => $item) {
                     </div>
                     KYC Verification
                 </h2>
-                <p class="text-body-sm text-on-surface-variant mb-4">Mandatory for background check before delivery approval.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <p class="text-sm font-medium text-slate-500 mb-6 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 flex items-start gap-3">
+                    <span class="material-symbols-outlined text-indigo-500 shrink-0">info</span>
+                    <span>Mandatory for background check before delivery approval. Your data is securely encrypted.</span>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Valid ID Number (Aadhaar/SSN/Passport)</label>
-                        <input type="text" name="id_number" placeholder="Enter valid ID number" required class="w-full border-outline-variant rounded-lg p-3 text-body-md text-on-surface placeholder-on-surface-variant/50 focus:ring-secondary focus:border-secondary" />
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Valid ID Number (Aadhaar/SSN/Passport)</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">badge</span>
+                            <input type="text" name="id_number" placeholder="Enter valid ID number" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium" />
+                        </div>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-body-sm font-medium text-on-surface-variant mb-xs">Employer Information (Optional)</label>
-                        <input type="text" name="work_verify" placeholder="Employer name / Work verified email" class="w-full border-outline-variant rounded-lg p-3 text-body-md placeholder-on-surface-variant/50 focus:ring-secondary focus:border-secondary" />
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Employer Information <span class="text-slate-400 font-normal normal-case tracking-normal ml-1">(Optional)</span></label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">work</span>
+                            <input type="text" name="work_verify" placeholder="Employer name / Work verified email" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -286,21 +314,21 @@ foreach ($cart as $id => $item) {
 
         <!-- Right Column: Order Summary -->
         <div class="w-full lg:w-1/3 bento-item">
-            <div class="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-24">
+            <div class="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-32">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold font-outfit">Order Summary</h2>
                 </div>
                 
                 <div class="space-y-4 mb-6 max-h-80 overflow-y-auto pr-2">
                     <?php foreach ($dbItems as $dbItem): ?>
-                        <div class="flex gap-4 group">
-                            <div class="w-20 h-20 bg-white/10 rounded-2xl overflow-hidden shrink-0 border border-white/5 shadow-inner transition-transform group-hover:scale-105">
-                                <img src="<?= e($dbItem['image_url'] ?? 'https://placehold.co/150') ?>" alt="<?= e($dbItem['name']) ?>" class="w-full h-full object-cover" />
+                        <div class="flex gap-4 group bg-white/5 p-3 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                            <div class="w-20 h-20 bg-white/10 rounded-xl overflow-hidden shrink-0 shadow-inner">
+                                <img src="<?= e($dbItem['image_url'] ?? 'https://placehold.co/150') ?>" alt="<?= e($dbItem['name']) ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
-                            <div class="flex-1">
+                            <div class="flex-1 py-1">
                                 <h3 class="text-white font-bold line-clamp-1 group-hover:text-teal-400 transition-colors"><?= e($dbItem['name']) ?></h3>
-                                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Monthly Rental</p>
-                                <p class="text-lg font-black text-teal-400 mt-1">$<?= number_format((float)($dbItem['monthly_price'] ?? 0), 2) ?>/mo</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Monthly Rental</p>
+                                <p class="text-lg font-black text-teal-400 mt-0.5">$<?= number_format((float)($dbItem['monthly_price'] ?? 0), 2) ?>/mo</p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -331,19 +359,19 @@ foreach ($cart as $id => $item) {
                     </div>
                 </div>
 
-                <button type="submit" class="flex items-center justify-center gap-2 bg-primary text-on-primary font-button px-6 py-4 rounded-xl shadow-md shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all w-full text-lg mb-3">
-                    <span class="material-symbols-outlined">lock</span>
-                    Proceed to Payment
+                <button type="submit" class="group flex items-center justify-center gap-2 bg-teal-500 text-white font-bold px-6 py-5 rounded-2xl shadow-xl shadow-teal-500/30 hover:bg-teal-400 active:scale-[0.98] transition-all w-full text-lg mb-3">
+                    <span class="material-symbols-outlined transition-transform group-hover:scale-110">lock</span>
+                    Secure Checkout
                 </button>
             </div>
         </div>
     </form>
     
     <!-- Clear Cart separate form -->
-    <div class="flex justify-end mt-4 w-full lg:w-2/3">
+    <div class="flex justify-end mt-6 w-full lg:w-2/3">
         <form action="<?= baseUrl('/cart') ?>" method="POST">
             <input type="hidden" name="action" value="clear">
-            <button type="submit" class="text-sm text-error underline hover:text-red-700 transition font-medium flex items-center gap-1">
+            <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition font-bold flex items-center gap-1 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl">
                 <span class="material-symbols-outlined text-[16px]">delete</span> Empty Cart
             </button>
         </form>

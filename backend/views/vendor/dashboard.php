@@ -10,9 +10,9 @@ use RentEase\Support\Csrf;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operations Console — RentEase</title>
+    <title>Vendor Console — RentEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script>
@@ -39,7 +39,7 @@ use RentEase\Support\Csrf;
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
-        .bento-item { opacity: 0; transform: translateY(20px); }
+        .bento-item { transform: translateY(20px); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
@@ -122,7 +122,7 @@ use RentEase\Support\Csrf;
                 </div>
                 <div class="mt-4">
                     <span class="text-3xl font-black text-emerald-600 font-outfit">$<?= e(number_format((float)($totalRevenue ?? 0), 2)) ?></span>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Total Revenue</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Monthly Revenue</p>
                 </div>
             </div>
             <!-- Stat 4 -->
@@ -133,7 +133,7 @@ use RentEase\Support\Csrf;
                     </div>
                 </div>
                 <div class="mt-4">
-                    <span class="text-3xl font-black text-slate-900 font-outfit">0</span>
+                    <span class="text-3xl font-black text-slate-900 font-outfit"><?= count($maintenanceReqs ?? []) ?></span>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Support Tickets</p>
                 </div>
             </div>
@@ -343,13 +343,24 @@ use RentEase\Support\Csrf;
                 <div class="bento-item glass-card p-6 rounded-[2.5rem] space-y-6">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-bold text-slate-900 font-outfit">Maintenance</h3>
-                        <span class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100">0 Tickets</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 text-[10px] font-bold border border-orange-100"><?= count($maintenanceReqs ?? []) ?> Tickets</span>
                     </div>
                     <div class="space-y-4">
+                        <?php if (empty($maintenanceReqs)): ?>
                         <div class="py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
                             <span class="material-symbols-outlined text-slate-300 text-3xl">task_alt</span>
                             <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">All Clear</p>
                         </div>
+                        <?php else: ?>
+                            <?php foreach (array_slice($maintenanceReqs, 0, 5) as $mr): ?>
+                                <?php if (!is_array($mr)) continue; ?>
+                                <div class="p-4 rounded-2xl bg-white/50 border border-slate-100 space-y-2">
+                                    <p class="text-sm font-bold text-slate-900 line-clamp-1"><?= e((string)($mr['rentals']['products']['name'] ?? 'Unknown item')) ?></p>
+                                    <p class="text-[11px] text-slate-500 line-clamp-2"><?= e((string)($mr['issue_description'] ?? '')) ?></p>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400"><?= e((string)($mr['status'] ?? 'OPEN')) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -360,19 +371,28 @@ use RentEase\Support\Csrf;
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // GSAP Entrance Animations
-        gsap.to(".bento-item", {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power4.out"
-        });
+        // GSAP Entrance Animations (fallback: content stays visible if GSAP blocked)
+        if (typeof gsap !== 'undefined') {
+            gsap.from('.bento-item', {
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power4.out',
+                clearProps: 'transform'
+            });
+        } else {
+            document.querySelectorAll('.bento-item').forEach(el => {
+                el.style.transform = 'none';
+            });
+        }
 
         // Floating Form Interaction
         window.editOffering = function(item) {
             const form = document.getElementById('product-form');
-            gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
+            if (typeof gsap !== 'undefined') {
+                gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
+            }
             
             document.getElementById('form-heading').innerText = 'Modify Subscription';
             document.getElementById('form-icon').innerText = 'edit_note';

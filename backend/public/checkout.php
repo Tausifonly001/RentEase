@@ -61,6 +61,17 @@ foreach ($cart as $id => $item) {
 $tax = $subtotal * 0.08;
 $total = $subtotal + $deposits + $delivery + $tax;
 
+$cartItemsForMetadata = [];
+foreach ($validCart as $id => $item) {
+    $cartItemsForMetadata[] = [
+        'id' => (string)$id,
+        'name' => $item['name'],
+        'monthly_price' => $item['monthly_price'],
+        'months' => $item['months'],
+        'image_url' => $item['image_url']
+    ];
+}
+
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
     if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
@@ -88,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                     'delivery_time' => $kyc['delivery_time'] ?? '09:00 AM - 12:00 PM',
                     'address' => $kyc['address'] ?? 'Not provided',
                     'mobile_number' => $kyc['mobile_number'] ?? 'Not provided',
-                    'cart_ids' => implode(',', array_keys($validCart))
+                    'cart_items' => json_encode($cartItemsForMetadata)
                 ]
             ];
 
@@ -109,8 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                     'stripe_session_id' => $session['id'],
                     'total_amount' => (float)$total,
                     'payment_status' => 'pending',
-                    'address' => $kyc['address'] ?? 'Not provided',
-                    'mobile_number' => $kyc['mobile_number'] ?? 'Not provided'
+                    'items' => $cartItemsForMetadata,
+                    'shipping_status' => 'pending'
                 ];
 
                 $orderHeaders = array_merge($serviceHeaders, ['Prefer' => 'return=representation']);
@@ -121,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
 
                 if ($orderId) {
                     $rentalService = new \RentEase\Services\RentalService($config);
+                    $rentalErrors = [];
                     foreach ($validCart as $prodId => $details) {
                         try {
                             $rentalRes = $rentalService->createBookingWithServiceRole([
@@ -147,16 +159,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                                 ]);
                             }
                         } catch (\Throwable $e) {
-                            // Log or handle individual item failure but don't stop the flow
+                            // SEC-006: Collect errors instead of swallowing silently
+                            $rentalErrors[] = htmlspecialchars($details['name'] ?? "Product #{$prodId}") . ': ' . $e->getMessage();
+                            error_log("Checkout rental creation failed for product {$prodId}: " . $e->getMessage());
                         }
                     }
+
+                    // If any rentals failed, show error and prevent redirect to Stripe
+                    if (!empty($rentalErrors)) {
+                        $error = 'Some items could not be reserved: ' . implode('; ', $rentalErrors) . '. Please try again or contact support.';
+                    }
+                } else {
+                    $error = 'We could not create your lease order. Please try again or contact support.';
                 }
 
-                $_SESSION['cart'] = [];
-                unset($_SESSION['checkout_kyc']);
+                // Only proceed to payment if all rentals were created successfully
+                if (empty($error)) {
+                    $_SESSION['cart'] = [];
+                    unset($_SESSION['checkout_kyc']);
 
-                header('Location: ' . $session['url']);
-                exit;
+                    header('Location: ' . $session['url']);
+                    exit;
+                }
             } else {
                 $error = 'Stripe initialization failure: ' . ($session['error']['message'] ?? 'Unknown API error.');
             }
@@ -176,13 +200,41 @@ $cartCount = count($cart);
  */
 
 ?>
-<?php require __DIR__ . '/partials/header.php'; ?>
+<?php 
+$pageTitle = 'Secure Checkout - RentEase';
+$pageDescription = 'Complete your rental request with secure checkout.';
+require __DIR__ . '/partials/header.php'; 
+?>
 
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg md:py-xl">
     <!-- Header & Progress -->
-    <div class="mb-lg reveal-element">
-        <h1 class="font-h1 text-h1 text-on-surface mb-md">Secure Order Validation</h1>
-        <p class="text-body-md text-on-surface-variant max-w-2xl">Review your lease selections and verification details before proceeding to secure payment.</p>
+    <div class="mb-12 text-center max-w-3xl mx-auto reveal-element">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Secure Order Validation</h1>
+        <p class="text-slate-500 font-medium">Review your lease selections and verification details before proceeding to secure payment.</p>
+    </div>
+
+    <!-- Progress Stepper -->
+    <div class="flex items-center w-full max-w-2xl mx-auto mb-12 reveal-element">
+        <div class="flex flex-col items-center relative z-10">
+            <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg shadow-teal-500/30 border-4 border-white">
+                <span class="material-symbols-outlined text-[16px]">check</span>
+            </div>
+            <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-teal-600 uppercase">CART</div>
+        </div>
+        <div class="flex-auto border-t-2 border-teal-500"></div>
+        <div class="flex flex-col items-center relative z-10">
+            <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg shadow-teal-500/30 border-4 border-white">
+                <span class="material-symbols-outlined text-[16px]">check</span>
+            </div>
+            <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-teal-600 uppercase">SHIPPING</div>
+        </div>
+        <div class="flex-auto border-t-2 border-dashed border-teal-500/30"></div>
+        <div class="flex flex-col items-center relative z-10">
+            <div class="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-bold shadow-sm border-4 border-white">
+                <span class="material-symbols-outlined text-[20px]">credit_card</span>
+            </div>
+            <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-slate-400 uppercase">PAYMENT</div>
+        </div>
     </div>
 
     <?php if ($error): ?>
@@ -205,19 +257,19 @@ $cartCount = count($cart);
                     </div>
                     Validated Selections
                 </h2>
-                <div class="divide-y divide-outline-variant/30">
+                <div class="divide-y divide-slate-100">
                     <?php foreach ($validCart as $id => $item): ?>
-                        <div class="py-4 flex items-center justify-between gap-4">
-                            <div class="flex items-center gap-4">
-                                <div class="h-20 w-20 rounded-xl overflow-hidden bg-surface-container-highest border border-outline-variant/30 shrink-0">
-                                    <img src="<?= e((string)($item['image_url'] ?? 'https://placehold.co/150')) ?>" alt="<?= e((string)$item['name']) ?>" class="h-full w-full object-cover">
+                        <div class="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group">
+                            <div class="flex items-center gap-5">
+                                <div class="h-24 w-24 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shrink-0">
+                                    <img src="<?= e((string)($item['image_url'] ?? 'https://placehold.co/150')) ?>" alt="<?= e((string)$item['name']) ?>" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 </div>
                                 <div>
-                                    <h4 class="font-body-md font-bold text-on-surface"><?= e((string)$item['name']) ?></h4>
-                                    <p class="text-label-caps text-on-surface-variant uppercase mt-1"><?= (int)$item['months'] ?> Month Rental Duration</p>
+                                    <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-600 transition-colors"><?= e((string)$item['name']) ?></h4>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1"><?= (int)$item['months'] ?> Month Rental Duration</p>
                                 </div>
                             </div>
-                            <span class="font-h3 text-h3 text-on-surface">$<?= number_format((float)$item['monthly_price'], 2) ?></span>
+                            <span class="text-2xl font-black text-slate-900 sm:text-right">$<?= number_format((float)$item['monthly_price'], 2) ?><span class="text-sm text-slate-400 font-medium tracking-normal block">/month</span></span>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -225,25 +277,45 @@ $cartCount = count($cart);
 
             <!-- KYC Section -->
             <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3 font-outfit">
-                    <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
-                        <span class="material-symbols-outlined">verified_user</span>
-                    </div>
-                    Verification Summary
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-3 font-outfit">
+                        <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
+                            <span class="material-symbols-outlined">verified_user</span>
+                        </div>
+                        Verification Summary
+                    </h2>
+                    <a href="<?= baseUrl('/cart') ?>" class="text-[10px] font-black uppercase tracking-widest text-teal-600 hover:text-teal-700 bg-teal-50 px-3 py-1.5 rounded-lg transition-colors">Edit Details</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
                     <div>
-                        <span class="text-label-caps text-on-surface-variant uppercase">Identity Reference</span>
-                        <p class="font-body-md font-semibold text-on-surface mt-1"><?= e((string)($kyc['id_number'] ?? 'Not provided')) ?></p>
+                        <span class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                            <span class="material-symbols-outlined text-[14px]">badge</span>
+                            Identity Reference
+                        </span>
+                        <p class="text-lg font-bold text-slate-900"><?= e((string)($kyc['id_number'] ?? 'Not provided')) ?></p>
                     </div>
                     <div>
-                        <span class="text-label-caps text-on-surface-variant uppercase">Delivery Arrival</span>
-                        <p class="font-body-md font-semibold text-on-surface mt-1"><?= e((string)($kyc['delivery_date'] ?? 'Asap')) ?> at <?= e((string)($kyc['delivery_time'] ?? '09:00 AM - 12:00 PM')) ?></p>
+                        <span class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                            <span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                            Delivery Arrival
+                        </span>
+                        <p class="text-lg font-bold text-slate-900"><?= e((string)($kyc['delivery_date'] ?? 'Asap')) ?></p>
+                        <p class="text-sm font-medium text-slate-500"><?= e((string)($kyc['delivery_time'] ?? '09:00 AM - 12:00 PM')) ?></p>
+                    </div>
+                    <div class="sm:col-span-2 pt-6 border-t border-slate-200">
+                        <span class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                            <span class="material-symbols-outlined text-[14px]">home_work</span>
+                            Shipping Address
+                        </span>
+                        <p class="text-base font-bold text-slate-900"><?= e((string)($kyc['address'] ?? 'Not provided')) ?></p>
                     </div>
                     <?php if (!empty($kyc['work_verify'])): ?>
-                        <div class="md:col-span-2">
-                            <span class="text-label-caps text-on-surface-variant uppercase">Employment Proof</span>
-                            <p class="font-body-md font-semibold text-on-surface mt-1"><?= e((string)$kyc['work_verify']) ?></p>
+                        <div class="sm:col-span-2 pt-6 border-t border-slate-200">
+                            <span class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                <span class="material-symbols-outlined text-[14px]">work</span>
+                                Employment Proof
+                            </span>
+                            <p class="text-base font-bold text-slate-900"><?= e((string)$kyc['work_verify']) ?></p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -252,45 +324,47 @@ $cartCount = count($cart);
 
         <!-- Right: Bill Summary -->
         <div class="reveal-element">
-            <div class="bento-item bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-24">
+            <div class="bento-item bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-32">
                 <h2 class="text-2xl font-bold mb-8 font-outfit">Bill Outlay</h2>
 
                 <div class="space-y-4 mb-6">
-                    <div class="flex justify-between">
-                        <span class="text-body-md text-on-surface-variant">Base Monthly Rate</span>
-                        <span class="font-body-md font-semibold text-on-surface">$<?= number_format($subtotal, 2) ?></span>
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
+                        <span class="text-sm font-medium text-slate-300">Base Monthly Rate</span>
+                        <span class="text-base font-bold text-white">$<?= number_format($subtotal, 2) ?></span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-body-md text-on-surface-variant">Refundable Deposit</span>
-                        <span class="font-body-md font-semibold text-on-surface">$<?= number_format($deposits, 2) ?></span>
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
+                        <span class="text-sm font-medium text-slate-300">Refundable Deposit</span>
+                        <span class="text-base font-bold text-teal-400">+$<?= number_format($deposits, 2) ?></span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-body-md text-on-surface-variant">Tech & Logistics Fee</span>
-                        <span class="font-body-md font-semibold text-on-surface">$<?= number_format($delivery, 2) ?></span>
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
+                        <span class="text-sm font-medium text-slate-300">Tech & Logistics Fee</span>
+                        <span class="text-base font-bold text-white">+$<?= number_format($delivery, 2) ?></span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-body-md text-on-surface-variant">Service Taxes (8%)</span>
-                        <span class="font-body-md font-semibold text-on-surface">$<?= number_format($tax, 2) ?></span>
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
+                        <span class="text-sm font-medium text-slate-300">Service Taxes (8%)</span>
+                        <span class="text-base font-bold text-white">+$<?= number_format($tax, 2) ?></span>
                     </div>
-                    <div class="pt-4 border-t border-outline-variant/30">
-                        <div class="flex justify-between items-baseline">
-                            <span class="font-h3 text-h3 text-on-surface">Total Due</span>
-                            <span class="font-h1 text-h1 text-secondary">$<?= number_format($total, 2) ?></span>
+                    <div class="pt-6 border-t border-white/10 mt-6">
+                        <div class="flex justify-between items-baseline mb-2">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Due Today</span>
+                            <span class="text-4xl font-black text-teal-400 font-outfit">$<?= number_format($total, 2) ?></span>
                         </div>
+                        <p class="text-xs text-slate-500 italic text-right mb-6">Includes 1st month + deposit</p>
                     </div>
                 </div>
 
                 <form action="<?= baseUrl('/checkout') ?>" method="POST">
                     <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                    <button type="submit" name="pay" value="1" class="flex items-center justify-center gap-2 bg-primary text-on-primary font-button px-6 py-4 rounded-xl shadow-md hover:bg-primary/90 active:scale-95 transition-all w-full text-lg">
-                        <span class="material-symbols-outlined">payments</span>
+                    <button type="submit" name="pay" value="1" class="group flex items-center justify-center gap-2 bg-teal-500 text-white font-bold px-6 py-5 rounded-2xl shadow-xl shadow-teal-500/30 hover:bg-teal-400 active:scale-[0.98] transition-all w-full text-lg">
+                        <span class="material-symbols-outlined transition-transform group-hover:scale-110">payments</span>
                         Pay with Stripe
                     </button>
                 </form>
                 
-                <p class="mt-4 text-center text-body-sm text-on-surface-variant">
-                    Securely encrypted transaction via Stripe.
-                </p>
+                <div class="mt-6 flex items-center justify-center gap-2 text-slate-400 bg-white/5 py-3 rounded-xl border border-white/5">
+                    <span class="material-symbols-outlined text-[16px] text-teal-500">lock</span>
+                    <span class="text-xs font-medium">Secure 256-bit encrypted transaction</span>
+                </div>
             </div>
         </div>
 

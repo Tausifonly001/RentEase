@@ -93,7 +93,7 @@ require_once __DIR__ . '/partials/header.php';
                     <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg">
                         Submit Feedback
                     </button>
-                    <a href="dashboard.php" class="block w-full text-center text-slate-400 font-bold py-4 mt-2 hover:text-slate-600 transition-all text-sm">
+                    <a href="<?= baseUrl('/dashboard') ?>" class="block w-full text-center text-slate-400 font-bold py-4 mt-2 hover:text-slate-600 transition-all text-sm">
                         Maybe Later
                     </a>
                 </div>
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 document.getElementById('survey-progress').style.width = '100%';
                 setTimeout(() => {
-                    window.location.href = 'dashboard.php?msg=feedback_submitted';
+                    window.location.href = '<?= baseUrl('/dashboard') ?>?msg=feedback_submitted';
                 }, 1000);
             } else {
                 alert(result.error || 'Failed to submit feedback.');

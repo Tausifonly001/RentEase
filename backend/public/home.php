@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use RentEase\Services\ProductService;
 use RentEase\Services\AuthService;
+use RentEase\Support\Csrf;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -18,6 +19,8 @@ try {
     $error = 'Unable to load products at this time.';
 }
 
+$pageTitle = 'RentEase — Premium Furniture & Appliance Rentals';
+$pageDescription = 'Transform your space without commitment. Rent premium furniture and appliances with flexible monthly plans, free delivery, and easy returns.';
 require __DIR__ . '/partials/header.php';
 ?>
 
@@ -33,15 +36,15 @@ require __DIR__ . '/partials/header.php';
             commitment. Flexible monthly rentals for high-quality pieces, delivered and assembled for you.</p>
         <div class="flex flex-wrap gap-sm mt-xs">
             <a href="<?= baseUrl('/shop') ?>"
-                class="bg-primary text-on-primary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-opacity-90 transition-all ambient-shadow-low hover:ambient-shadow-high">Explore
+                class="bg-primary text-on-primary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-opacity-90 transition-all shadow-ambient-low hover:shadow-ambient-high focus-visible:ring-2 ring-teal-500 outline-none">Explore
                 Catalog</a>
             <a href="<?= baseUrl('/shop') ?>"
-                class="border border-secondary text-secondary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-surface-container transition-all">View
+                class="border border-secondary text-secondary font-button text-button px-6 py-3 rounded-DEFAULT hover:bg-surface-container transition-all focus-visible:ring-2 ring-teal-500 outline-none">View
                 Packages</a>
         </div>
     </div>
-    <div class="w-full md:w-1/2 relative h-[400px] md:h-[500px] rounded-xl overflow-hidden ambient-shadow-low">
-        <img alt="Hero Image" class="w-full h-full object-cover"
+    <div class="w-full md:w-1/2 relative h-[400px] md:h-[500px] rounded-xl overflow-hidden shadow-ambient-low">
+        <img alt="Modern living room with premium furniture" class="w-full h-full object-cover" fetchpriority="high"
             src="https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=1000&auto=format&fit=crop" />
         <div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
     </div>
@@ -51,7 +54,7 @@ require __DIR__ . '/partials/header.php';
 <?php if ($error): ?>
     <section class="max-w-container-max mx-auto px-4 md:px-8 py-4">
         <div class="bg-error-container text-on-error-container p-4 rounded-lg flex items-center gap-3">
-            <span class="material-symbols-outlined">error</span>
+            <span class="material-symbols-outlined" aria-hidden="true">error</span>
             <p><?= htmlspecialchars($error) ?></p>
         </div>
     </section>
@@ -61,14 +64,14 @@ require __DIR__ . '/partials/header.php';
 <section class="w-full max-w-container-max mx-auto px-4 md:px-8 py-xl">
     <div class="flex justify-between items-end mb-lg">
         <h2 class="font-h2 text-h2 text-primary">Shop by Category</h2>
-        <a class="font-button text-button text-secondary flex items-center gap-xs hover:underline"
-            href="<?= baseUrl('/shop') ?>">View All <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+        <a class="font-button text-button text-secondary flex items-center gap-xs hover:underline focus-visible:ring-2 ring-teal-500 rounded outline-none"
+            href="<?= baseUrl('/shop') ?>">View All <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span></a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter auto-rows-[250px]">
         <!-- Living Room -->
-        <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-2 lg:col-span-2 row-span-2"
+        <a class="group relative rounded-xl overflow-hidden shadow-ambient-low hover:shadow-ambient-high transition-all md:col-span-2 lg:col-span-2 row-span-2 focus-visible:ring-2 ring-teal-500 outline-none"
             href="<?= baseUrl('/shop?category=Furniture') ?>">
-            <img alt="Living Room"
+            <img alt="Elegant living room furniture"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop" />
             <div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/10 to-transparent"></div>
@@ -80,9 +83,9 @@ require __DIR__ . '/partials/header.php';
             </div>
         </a>
         <!-- Bedroom -->
-        <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-1 lg:col-span-1 row-span-1"
+        <a class="group relative rounded-xl overflow-hidden shadow-ambient-low hover:shadow-ambient-high transition-all md:col-span-1 lg:col-span-1 row-span-1 focus-visible:ring-2 ring-teal-500 outline-none"
             href="<?= baseUrl('/shop?category=Bedroom') ?>">
-            <img alt="Bedroom"
+            <img alt="Comfortable bedroom setup"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1505691723518-36a5ac3be353?q=80&w=1000&auto=format&fit=crop" />
             <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
@@ -91,9 +94,9 @@ require __DIR__ . '/partials/header.php';
             </div>
         </a>
         <!-- Kitchen / Appliances -->
-        <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-1 lg:col-span-1 row-span-1"
+        <a class="group relative rounded-xl overflow-hidden shadow-ambient-low hover:shadow-ambient-high transition-all md:col-span-1 lg:col-span-1 row-span-1 focus-visible:ring-2 ring-teal-500 outline-none"
             href="<?= baseUrl('/shop?category=Appliances') ?>">
-            <img alt="Kitchen"
+            <img alt="Modern kitchen appliances"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=1000&auto=format&fit=crop" />
             <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
@@ -102,9 +105,9 @@ require __DIR__ . '/partials/header.php';
             </div>
         </a>
         <!-- Home Office -->
-        <a class="group relative rounded-xl overflow-hidden ambient-shadow-low hover:ambient-shadow-high transition-all md:col-span-2 lg:col-span-2 row-span-1"
+        <a class="group relative rounded-xl overflow-hidden shadow-ambient-low hover:shadow-ambient-high transition-all md:col-span-2 lg:col-span-2 row-span-1 focus-visible:ring-2 ring-teal-500 outline-none"
             href="<?= baseUrl('/shop?category=Office') ?>">
-            <img alt="Home Office"
+            <img alt="Productive home office space"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1000&auto=format&fit=crop" />
             <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
@@ -125,43 +128,43 @@ require __DIR__ . '/partials/header.php';
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
             <div
-                class="flex flex-col items-center text-center p-md bg-surface rounded-xl ambient-shadow-low relative overflow-hidden">
+                class="flex flex-col items-center text-center p-md bg-surface rounded-xl shadow-ambient-low relative overflow-hidden">
                 <div
                     class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mb-sm text-secondary">
-                    <span class="material-symbols-outlined text-3xl"
+                    <span class="material-symbols-outlined text-3xl" aria-hidden="true"
                         style="font-variation-settings: 'FILL' 1;">touch_app</span>
                 </div>
                 <h3 class="font-h3 text-h3 text-primary mb-2">1. Choose</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Browse our curated catalog of premium
                     furniture and high-end appliances to fit your space.</p>
                 <span
-                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none">1</span>
+                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none" aria-hidden="true">1</span>
             </div>
             <div
-                class="flex flex-col items-center text-center p-md bg-surface rounded-xl ambient-shadow-low relative overflow-hidden">
+                class="flex flex-col items-center text-center p-md bg-surface rounded-xl shadow-ambient-low relative overflow-hidden">
                 <div
                     class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mb-sm text-secondary">
-                    <span class="material-symbols-outlined text-3xl"
+                    <span class="material-symbols-outlined text-3xl" aria-hidden="true"
                         style="font-variation-settings: 'FILL' 1;">calendar_month</span>
                 </div>
                 <h3 class="font-h3 text-h3 text-primary mb-2">2. Schedule</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">Select your rental term (3, 6, or 12
                     months) and pick a convenient delivery date.</p>
                 <span
-                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none">2</span>
+                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none" aria-hidden="true">2</span>
             </div>
             <div
-                class="flex flex-col items-center text-center p-md bg-surface rounded-xl ambient-shadow-low relative overflow-hidden">
+                class="flex flex-col items-center text-center p-md bg-surface rounded-xl shadow-ambient-low relative overflow-hidden">
                 <div
                     class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mb-sm text-secondary">
-                    <span class="material-symbols-outlined text-3xl"
+                    <span class="material-symbols-outlined text-3xl" aria-hidden="true"
                         style="font-variation-settings: 'FILL' 1;">chair</span>
                 </div>
                 <h3 class="font-h3 text-h3 text-primary mb-2">3. Enjoy</h3>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">We deliver and assemble. When your term is
                     up, extend, swap, or return with zero hassle.</p>
                 <span
-                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none">3</span>
+                    class="absolute -bottom-4 -right-4 text-9xl font-black text-surface-container opacity-50 select-none" aria-hidden="true">3</span>
             </div>
         </div>
     </div>
@@ -181,47 +184,54 @@ require __DIR__ . '/partials/header.php';
             <p class="text-on-surface-variant py-8 col-span-full text-center">No featured products available.</p>
         <?php else: ?>
             <?php foreach (array_slice($allProducts, 0, 8) as $product): ?>
-                <div
-                    class="bg-surface rounded-lg ambient-shadow-low hover:ambient-shadow-high transition-shadow p-xs flex flex-col h-full border border-outline-variant">
-                    <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>"
-                        class="relative w-full aspect-square rounded-DEFAULT overflow-hidden bg-surface-container-lowest mb-sm group">
-                        <img alt="<?= htmlspecialchars($product['name']) ?>"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x300?text=No+Image') ?>"
-                            loading="lazy" />
-                        <?php if ($product['category'] === 'Appliances'): ?>
-                            <div
-                                class="absolute top-2 left-2 bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 rounded-sm uppercase">
-                                Fast Delivery</div>
-                        <?php endif; ?>
-                    </a>
-                    <div class="flex-grow px-2">
-                        <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>">
-                            <h3 class="font-body-lg text-body-lg font-medium text-primary line-clamp-1">
-                                <?= htmlspecialchars($product['name']) ?>
-                            </h3>
+                    <div class="group flex flex-col bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 relative">
+                        <!-- Image Area -->
+                        <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="relative aspect-[4/3] overflow-hidden bg-slate-50 block">
+                            <img alt="<?= htmlspecialchars($product['name']) ?>"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x300?text=No+Image') ?>"
+                                loading="lazy" />
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                            <!-- Badges -->
+                            <div class="absolute top-4 left-4 flex flex-col gap-2 items-start">
+                                <?php if ($product['category'] === 'Appliances'): ?>
+                                    <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-full shadow-sm">Fast Delivery</span>
+                                <?php endif; ?>
+                            </div>
                         </a>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
-                            <?= htmlspecialchars($product['category']) ?> - Premium quality for your home.
-                        </p>
-                    </div>
-                    <div class="px-2 pb-2 pt-4 flex items-center justify-between border-t border-outline-variant mt-sm">
-                        <div>
-                            <span
-                                class="font-h3 text-h3 text-primary font-bold">$<?= number_format($product['monthly_price'], 0) ?></span>
-                            <span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
+
+                        <!-- Content Area -->
+                        <div class="p-6 flex flex-col flex-grow bg-white z-10 relative">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2"><?= htmlspecialchars($product['category']) ?></p>
+                            <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="mb-4">
+                                <h3 class="font-bold text-xl text-slate-900 leading-tight group-hover:text-teal-600 transition-colors line-clamp-2">
+                                    <?= htmlspecialchars($product['name']) ?>
+                                </h3>
+                            </a>
+                            
+                            <div class="mt-auto flex items-end justify-between border-t border-slate-100 pt-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Monthly</p>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-2xl font-black text-slate-900 tracking-tighter">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
+                                    </div>
+                                </div>
+                                
+                                <form method="POST" action="<?= baseUrl('/cart') ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(Csrf::token()) ?>">
+                                    <input type="hidden" name="action" value="add">
+                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" aria-label="Add to cart"
+                                        class="h-12 w-12 rounded-2xl bg-slate-50 text-slate-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300 transform group-hover:rotate-12 active:scale-90">
+                                        <span class="material-symbols-outlined !text-xl">shopping_bag</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <form method="POST" action="<?= baseUrl('/cart') ?>">
-                            <input type="hidden" name="action" value="add">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit" aria-label="Add to cart"
-                                class="bg-secondary text-on-secondary w-10 h-10 rounded-full flex items-center justify-center hover:bg-opacity-90 transition-colors">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add</span>
-                            </button>
-                        </form>
                     </div>
-                </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

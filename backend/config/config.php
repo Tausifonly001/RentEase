@@ -8,7 +8,12 @@ return [
     'supabase_service_role_key' => (string) getenv('SUPABASE_SERVICE_ROLE_KEY'),
     'app_url' => (string) getenv('APP_URL'),
     'cookie_name' => 'rentease_access_token',
+    'refresh_cookie_name' => 'rentease_refresh_token',
     'csrf_cookie_name' => 'rentease_csrf_token',
+    'allow_signup_admin_fallback' => filter_var(
+        getenv('ALLOW_SIGNUP_ADMIN_FALLBACK') ?: 'false',
+        FILTER_VALIDATE_BOOLEAN
+    ),
     'cache_dir' => __DIR__ . '/../storage/cache',
     'cookie_secure' => strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') === false,
     'cookie_samesite' => 'Lax',

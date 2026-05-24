@@ -12,7 +12,7 @@ final class Validator
         $length = mb_strlen($value);
 
         if ($length < $minLength || $length > $maxLength) {
-            throw new \InvalidArgumentException(sprintf('Invalid %s', $key));
+            throw new ValidationException([$key => sprintf('Must be between %d and %d characters', $minLength, $maxLength)]);
         }
 
         return $value;
@@ -22,8 +22,23 @@ final class Validator
     {
         $value = trim((string) ($input[$key] ?? ''));
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email');
+            throw new ValidationException([$key => 'Invalid email address']);
         }
+        return $value;
+    }
+
+    public static function password(array $input, string $key = 'password'): string
+    {
+        $value = self::requiredString($input, $key, 8, 128);
+
+        if (!preg_match('/[0-9]/', $value)) {
+            throw new ValidationException([$key => 'Password must contain at least one number']);
+        }
+
+        if (!preg_match('/[^a-zA-Z0-9]/', $value)) {
+            throw new ValidationException([$key => 'Password must contain at least one special character']);
+        }
+
         return $value;
     }
 
@@ -31,7 +46,7 @@ final class Validator
     {
         $value = trim((string) ($input[$key] ?? ''));
         if (!preg_match('/^[0-9a-fA-F-]{36}$/', $value)) {
-            throw new \InvalidArgumentException(sprintf('Invalid %s', $key));
+            throw new ValidationException([$key => 'Invalid UUID']);
         }
         return $value;
     }
@@ -41,7 +56,7 @@ final class Validator
         $value = filter_var($input[$key] ?? null, FILTER_VALIDATE_INT);
 
         if ($value === false || $value < $min) {
-            throw new \InvalidArgumentException(sprintf('Invalid %s', $key));
+            throw new ValidationException([$key => sprintf('Must be an integer >= %d', $min)]);
         }
 
         return (int) $value;
@@ -56,11 +71,11 @@ final class Validator
         $end = trim((string) ($input[$endKey] ?? ''));
 
         if (!self::isIsoDate($start) || !self::isIsoDate($end)) {
-            throw new \InvalidArgumentException('Invalid dates supplied');
+            throw new ValidationException([$startKey => 'Invalid date', $endKey => 'Invalid date']);
         }
 
         if ($start > $end) {
-            throw new \InvalidArgumentException('End date must be after start date');
+            throw new ValidationException([$endKey => 'End date must be after start date']);
         }
 
         return [$start, $end];

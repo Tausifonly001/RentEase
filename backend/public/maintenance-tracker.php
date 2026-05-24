@@ -34,7 +34,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 

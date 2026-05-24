@@ -14,7 +14,7 @@ require_once __DIR__ . '/partials/header.php';
 
 // Redirect to login if not authenticated
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 ?>
@@ -35,7 +35,7 @@ if (!$currentUser) {
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
                 <span class="text-sm">Payment Methods</span>
             </a>
-            <a class="text-slate-600 px-4 py-3 flex items-center gap-3 hover:bg-slate-100 rounded-lg transition-all" href="dashboard.php">
+            <a class="text-slate-600 px-4 py-3 flex items-center gap-3 hover:bg-slate-100 rounded-lg transition-all" href="<?= baseUrl('/dashboard') ?>">
                 <span class="material-symbols-outlined">receipt_long</span>
                 <span class="text-sm">Rental History</span>
             </a>
@@ -143,7 +143,7 @@ if (!$currentUser) {
             <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                 <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                     <h3 class="text-sm font-bold text-primary uppercase tracking-widest">Recent Invoices</h3>
-                    <a class="text-teal-600 text-xs font-bold hover:underline underline-offset-4" href="dashboard.php">View All History</a>
+                    <a class="text-teal-600 text-xs font-bold hover:underline underline-offset-4" href="<?= baseUrl('/dashboard') ?>">View All History</a>
                 </div>
                 <div class="divide-y divide-slate-100">
                     <!-- Invoice 1 -->

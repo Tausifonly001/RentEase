@@ -32,10 +32,32 @@ final class ProductService extends BaseSupabaseService
         return is_array($response['body']) ? $response['body'] : [];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function catalogForVendor(string $vendorId, int $page = 1, int $perPage = 50): array
+    {
+        $page = max(1, $page);
+        $perPage = min(50, max(1, $perPage));
+        $offset = ($page - 1) * $perPage;
+
+        $path = '/rest/v1/products?select=id,name,category,monthly_price,total_stock,image_url,description,vendor_id';
+        $path .= '&vendor_id=eq.' . rawurlencode($vendorId);
+        $path .= '&order=created_at.desc&limit=' . $perPage . '&offset=' . $offset;
+
+        $response = $this->request('GET', $path, $this->serviceHeaders());
+        if ($response['status'] < 200 || $response['status'] >= 300) {
+            throw new \RuntimeException('Unable to load vendor products');
+        }
+
+        return is_array($response['body']) ? $response['body'] : [];
+    }
+
     /** @return array<string, mixed>|null */
     public function findById(int|string $id): ?array
     {
-        if ($id < 1) {
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if ($id === false || $id < 1) {
             throw new \InvalidArgumentException('Invalid product_id');
         }
 

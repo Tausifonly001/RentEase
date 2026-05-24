@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
+use RentEase\Middleware\ApiSecurity;
 use RentEase\Support\HttpClient;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 $authService = new AuthService($config);
 
@@ -85,18 +87,20 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    // POST /api/orders -> create order (internal use)
+    // POST /api/orders -> create order (requires auth)
+    if (!$currentUser) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized. Please log in.']);
+        exit;
+    }
+
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input)) {
         $input = $_POST;
     }
 
-    $userId = $input['user_id'] ?? $currentUser['id'] ?? null;
-    if (!$userId) {
-        http_response_code(401);
-        echo json_encode(['error' => 'User ID is required.']);
-        exit;
-    }
+    // SEC-004: Always derive user_id from authenticated session — never trust input
+    $userId = $currentUser['id'];
 
     $totalAmount = $input['total_amount'] ?? 0;
     $items = $input['items'] ?? [];

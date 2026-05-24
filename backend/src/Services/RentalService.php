@@ -161,9 +161,15 @@ final class RentalService extends BaseSupabaseService
      */
     public function requestReturn(int $rentalId, string $userId, string $jwt): array
     {
+        Validator::uuid(['user_id' => $userId], 'user_id');
+        $rentalId = filter_var($rentalId, FILTER_VALIDATE_INT);
+        if ($rentalId === false || $rentalId < 1) {
+            throw new \InvalidArgumentException('Invalid rental_id');
+        }
+
         $response = $this->request(
             'PATCH',
-            '/rest/v1/rentals?id=eq.' . $rentalId . '&user_id=eq.' . $userId,
+            '/rest/v1/rentals?id=eq.' . $rentalId . '&user_id=eq.' . urlencode($userId),
             $this->userHeaders($jwt),
             [
                 'status' => 'return_requested',
@@ -183,8 +189,14 @@ final class RentalService extends BaseSupabaseService
      */
     public function extendLease(int $rentalId, string $userId, int $extraDays, string $jwt): array
     {
+        Validator::uuid(['user_id' => $userId], 'user_id');
+        $rentalId = filter_var($rentalId, FILTER_VALIDATE_INT);
+        if ($rentalId === false || $rentalId < 1) {
+            throw new \InvalidArgumentException('Invalid rental_id');
+        }
+
         // First get the rental to find its end_date
-        $rentalUrl = '/rest/v1/rentals?id=eq.' . $rentalId . '&user_id=eq.' . $userId . '&select=*';
+        $rentalUrl = '/rest/v1/rentals?id=eq.' . $rentalId . '&user_id=eq.' . urlencode($userId) . '&select=*';
         $getRental = $this->request('GET', $rentalUrl, $this->userHeaders($jwt));
         
         if ($getRental['status'] < 200 || $getRental['status'] >= 300 || empty($getRental['body'])) {

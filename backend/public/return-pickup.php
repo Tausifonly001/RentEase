@@ -32,7 +32,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 
@@ -424,7 +424,7 @@ async function submitReturn() {
         
         const result = await response.json();
         if (result.success) {
-            window.location.href = 'dashboard.php?msg=return_scheduled';
+            window.location.href = '<?= baseUrl('/dashboard') ?>?msg=return_scheduled';
         } else {
             alert(result.error || 'Failed to schedule return.');
             btn.disabled = false;

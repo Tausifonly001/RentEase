@@ -8,41 +8,41 @@ use RentEase\Support\HttpClient;
 use RuntimeException;
 use PDO;
 
-final class ShiprocketService
+final class ShiprocketService extends BaseSupabaseService
 {
     private ?string $email;
     private ?string $password;
     private ?string $token = null;
-    private HttpClient $http;
-    private ?PDO $db = null;
 
-    public function __construct(PDO $db = null, ?HttpClient $http = null)
+    public function __construct(array $config, ?HttpClient $http = null)
     {
-        $this->email = getenv('SHIPROCKET_EMAIL') ?: 'test@rentease.com';
-        $this->password = getenv('SHIPROCKET_PASSWORD') ?: 'TestPassword123!';
-        $this->http = $http ?? new HttpClient();
-        $this->db = $db;
+        parent::__construct($config, $http);
+        $this->email = getenv('SHIPROCKET_EMAIL');
+        $this->password = getenv('SHIPROCKET_PASSWORD');
     }
 
     /**
-     * Authenticate with Shiprocket to retrieve the token. Now cached in Database.
+     * Authenticate with Shiprocket to retrieve the token. Now cached in Supabase.
      */
     public function authenticate(): ?string
     {
+        if (empty($this->email) || empty($this->password)) {
+            throw new RuntimeException('Shiprocket credentials not configured. Set SHIPROCKET_EMAIL and SHIPROCKET_PASSWORD in .env');
+        }
         if ($this->token) {
             return $this->token;
         }
 
-        // Try getting token from DB if DB connection exists
-        if ($this->db) {
-            $stmt = $this->db->prepare("SELECT token FROM shiprocket_auth_tokens WHERE expires_at > NOW() + INTERVAL '1 hour' ORDER BY id DESC LIMIT 1");
-            $stmt->execute();
-            $cached = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Try getting token from DB
+        $res = $this->request(
+            'GET',
+            '/rest/v1/shiprocket_auth_tokens?select=token&expires_at=gt.now()&order=id.desc&limit=1',
+            $this->serviceHeaders()
+        );
 
-            if ($cached) {
-                $this->token = $cached['token'];
-                return $this->token;
-            }
+        if (!empty($res['body']) && is_array($res['body'])) {
+            $this->token = $res['body'][0]['token'];
+            return $this->token;
         }
 
         $url = 'https://apiv2.shiprocket.in/v1/external/auth/login';
@@ -55,10 +55,14 @@ final class ShiprocketService
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body']['token'])) {
             $this->token = (string) $response['body']['token'];
             
-            if ($this->db) {
-                $stmt = $this->db->prepare("INSERT INTO shiprocket_auth_tokens (token, expires_at) VALUES (?, NOW() + INTERVAL '9 days')");
-                $stmt->execute([$this->token]);
-            }
+            // Persist to Supabase
+            $this->request(
+                'POST',
+                '/rest/v1/shiprocket_auth_tokens',
+                $this->serviceHeaders(),
+                ['token' => $this->token, 'expires_at' => date('Y-m-d H:i:s', strtotime('+9 days'))]
+            );
+
             return $this->token;
         }
 
@@ -68,13 +72,16 @@ final class ShiprocketService
     /**
      * Create an order in Shiprocket and record its DB entry automatically
      */
-    public function createOrder(array $orderData, int $localOrderId = null): array
+    public function createOrder(array $orderData, $localOrderId = null): array
     {
-        // 1. Check for duplicates in DB
-        if ($this->db && $localOrderId) {
-            $stmt = $this->db->prepare("SELECT shiprocket_order_id FROM order_shipments WHERE order_id = ?");
-            $stmt->execute([$localOrderId]);
-            if ($stmt->fetch()) {
+        // 1. Check for duplicates
+        if ($localOrderId) {
+            $res = $this->request(
+                'GET',
+                '/rest/v1/order_shipments?select=shiprocket_order_id&order_id=eq.' . $localOrderId,
+                $this->serviceHeaders()
+            );
+            if (!empty($res['body'])) {
                 throw new RuntimeException("Shipment for this order already exists.");
             }
         }
@@ -91,10 +98,19 @@ final class ShiprocketService
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body'])) {
             $result = $response['body'];
 
-            // 2. Persist tracking record to DB
-            if ($this->db && $localOrderId) {
-                $stmt = $this->db->prepare("INSERT INTO order_shipments (order_id, shiprocket_order_id, shiprocket_shipment_id, status) VALUES (?, ?, ?, 'NEW')");
-                $stmt->execute([$localOrderId, $result['order_id'], $result['shipment_id']]);
+            // 2. Persist tracking record
+            if ($localOrderId) {
+                $this->request(
+                    'POST',
+                    '/rest/v1/order_shipments',
+                    $this->serviceHeaders(),
+                    [
+                        'order_id' => $localOrderId,
+                        'shiprocket_order_id' => $result['order_id'],
+                        'shiprocket_shipment_id' => $result['shipment_id'],
+                        'status' => 'NEW'
+                    ]
+                );
             }
 
             return $result;
@@ -124,14 +140,18 @@ final class ShiprocketService
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body'])) {
             $data = $response['body'];
             
-            if (isset($data['awb_assign_status']) && $data['awb_assign_status'] == 1 && $this->db) {
-                $stmt = $this->db->prepare("UPDATE order_shipments SET awb_code = ?, courier_company_id = ?, courier_name = ?, status = 'AWB_GENERATED' WHERE shiprocket_shipment_id = ?");
-                $stmt->execute([
-                    $data['response']['data']['awb_code'],
-                    $data['response']['data']['courier_company_id'],
-                    $data['response']['data']['courier_name'],
-                    $shipmentId
-                ]);
+            if (isset($data['awb_assign_status']) && $data['awb_assign_status'] == 1) {
+                $this->request(
+                    'PATCH',
+                    '/rest/v1/order_shipments?shiprocket_shipment_id=eq.' . $shipmentId,
+                    $this->serviceHeaders(),
+                    [
+                        'awb_code' => $data['response']['data']['awb_code'],
+                        'courier_company_id' => $data['response']['data']['courier_company_id'],
+                        'courier_name' => $data['response']['data']['courier_name'],
+                        'status' => 'AWB_GENERATED'
+                    ]
+                );
             }
             return $data;
         }

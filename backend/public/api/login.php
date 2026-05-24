@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
+use RentEase\Middleware\ApiSecurity;
 
 require __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -21,13 +23,12 @@ try {
     $authService = new AuthService($config);
     $result = $authService->login($payload);
 
-    $token = (string) ($result['access_token'] ?? '');
-    $expires = (int) ($result['expires_in'] ?? 3600);
-    if ($token === '') {
+    if (empty($result['access_token'])) {
         throw new RuntimeException('Authentication failed');
     }
 
-    $authService->setAuthCookie($token, $expires);
+    $remember = !empty($payload['remember']);
+    $authService->persistSession($result, $remember);
     echo json_encode(['ok' => true, 'user' => $result['user'] ?? null], JSON_THROW_ON_ERROR);
 } catch (InvalidArgumentException $e) {
     http_response_code(422);

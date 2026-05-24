@@ -48,7 +48,7 @@ include_once __DIR__ . '/partials/header.php';
                 </header>
 
                 <!-- Messaging Area -->
-                <div class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50/30 dark:bg-slate-950/30 chat-scrollbar">
+                <div id="chat-messages" class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50/30 dark:bg-slate-950/30 chat-scrollbar">
                     <!-- Date Separator -->
                     <div class="flex justify-center">
                         <span class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Today</span>
@@ -67,23 +67,12 @@ include_once __DIR__ . '/partials/header.php';
                         </div>
                     </div>
 
-                    <!-- User Message -->
-                    <div class="flex flex-row-reverse gap-3 max-w-[85%] ml-auto">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center text-slate-600 dark:text-slate-400">
-                            <span class="material-symbols-outlined text-sm">person</span>
-                        </div>
-                        <div class="space-y-1 text-right">
-                            <div class="bg-teal-600 text-white p-4 rounded-2xl rounded-tr-none shadow-sm">
-                                <p class="text-sm">Hi! I have a question about my current rental.</p>
-                            </div>
-                            <span class="text-[10px] text-slate-400 px-1">10:26 AM</span>
-                        </div>
-                    </div>
+
 
                     <!-- Status Update -->
-                    <div class="flex justify-center">
+                    <div id="initial-status" class="flex justify-center">
                         <div class="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-800/30 px-4 py-2 rounded-xl">
-                            <span class="material-symbols-outlined text-teal-600 text-sm">sync</span>
+                            <span class="material-symbols-outlined text-teal-600 text-sm animate-spin">sync</span>
                             <span class="text-xs text-teal-900 dark:text-teal-100 font-medium">Concierge is connecting you to a specialist...</span>
                         </div>
                     </div>
@@ -101,16 +90,16 @@ include_once __DIR__ . '/partials/header.php';
 
                 <!-- Input Area -->
                 <footer class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl px-4 py-2 border border-transparent focus-within:border-teal-600 focus-within:ring-1 focus-within:ring-teal-600 transition-all">
-                        <button class="p-2 text-slate-500 hover:text-teal-600">
+                    <form id="chat-form" class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl px-4 py-2 border border-transparent focus-within:border-teal-600 focus-within:ring-1 focus-within:ring-teal-600 transition-all">
+                        <button type="button" class="p-2 text-slate-500 hover:text-teal-600">
                             <span class="material-symbols-outlined">attachment</span>
                         </button>
-                        <input type="text" class="flex-grow bg-transparent border-none focus:ring-0 text-sm text-slate-900 dark:text-white py-2" placeholder="Type your message here...">
-                        <button class="bg-teal-600 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:bg-teal-500 transition-all active:scale-95 shadow-sm">
+                        <input type="text" id="chat-input" class="flex-grow bg-transparent border-none focus:ring-0 text-sm text-slate-900 dark:text-white py-2" placeholder="Type your message here..." required>
+                        <button type="submit" id="chat-submit" class="bg-teal-600 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:bg-teal-500 transition-all active:scale-95 shadow-sm">
                             <span class="text-sm font-bold">Send</span>
                             <span class="material-symbols-outlined text-sm">send</span>
                         </button>
-                    </div>
+                    </form>
                 </footer>
             </section>
 
@@ -152,5 +141,142 @@ include_once __DIR__ . '/partials/header.php';
         </div>
     </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const submitBtn = document.getElementById('chat-submit');
+    
+    // Quick Replies
+    const quickReplies = document.querySelectorAll('.px-4.py-1\\.5.rounded-full');
+    quickReplies.forEach(btn => {
+        btn.addEventListener('click', () => {
+            chatInput.value = btn.innerText;
+            if (chatForm.requestSubmit) {
+                chatForm.requestSubmit();
+            } else {
+                chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+            }
+        });
+    });
+
+    function appendUserMessage(text) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const html = `
+            <div class="flex flex-row-reverse gap-3 max-w-[85%] ml-auto">
+                <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center text-slate-600 dark:text-slate-400">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                </div>
+                <div class="space-y-1 text-right">
+                    <div class="bg-teal-600 text-white p-4 rounded-2xl rounded-tr-none shadow-sm">
+                        <p class="text-sm whitespace-pre-wrap">${escapeHtml(text)}</p>
+                    </div>
+                    <span class="text-[10px] text-slate-400 px-1">${time}</span>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', html);
+        scrollToBottom();
+    }
+
+    function appendConciergeMessage(text) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const html = `
+            <div class="flex gap-3 max-w-[85%]">
+                <div class="w-8 h-8 rounded-full bg-teal-600 flex-shrink-0 flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-sm">support_agent</span>
+                </div>
+                <div class="space-y-1">
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl rounded-tl-none shadow-sm">
+                        <p class="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${escapeHtml(text)}</p>
+                    </div>
+                    <span class="text-[10px] text-slate-400 px-1">${time}</span>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', html);
+        scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+        const html = `
+            <div id="typing-indicator" class="flex justify-center">
+                <div class="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-800/30 px-4 py-2 rounded-xl">
+                    <span class="material-symbols-outlined text-teal-600 text-sm animate-spin">sync</span>
+                    <span class="text-xs text-teal-900 dark:text-teal-100 font-medium">Concierge is typing...</span>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', html);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) indicator.remove();
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const message = chatInput.value.trim();
+        if (!message) return;
+        
+        // Disable input
+        chatInput.value = '';
+        chatInput.disabled = true;
+        submitBtn.disabled = true;
+        
+        appendUserMessage(message);
+        
+        // Remove existing connect status if exists
+        const initialStatus = document.getElementById('initial-status');
+        if(initialStatus) initialStatus.remove();
+        
+        showTypingIndicator();
+        
+        try {
+            const response = await fetch('api/chat.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            });
+            
+            removeTypingIndicator();
+            
+            if (response.ok) {
+                const data = await response.json();
+                appendConciergeMessage(data.reply || "Sorry, I couldn't process that.");
+            } else {
+                appendConciergeMessage("I'm currently experiencing technical difficulties. Please try again later.");
+            }
+        } catch (error) {
+            removeTypingIndicator();
+            appendConciergeMessage("Network error. Please check your connection.");
+        } finally {
+            chatInput.disabled = false;
+            submitBtn.disabled = false;
+            chatInput.focus();
+        }
+    });
+});
+</script>
 
 <?php include_once __DIR__ . '/partials/footer.php'; ?>

@@ -3,6 +3,14 @@
 declare(strict_types=1);
 
 if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
     session_start();
 }
 
@@ -13,8 +21,15 @@ $dotenv->safeLoad();
 
 $config = require __DIR__ . '/config/config.php';
 
+// Make config globally accessible (needed by controllers instantiated via Router)
+$GLOBALS['config'] = $config;
+
 require_once __DIR__ . '/src/Support/helpers.php';
 
+// =============================================================================
+// Fallback: Register RentEase namespace autoloader directly
+// Guards against Composer autoloader issues in some environments (XAMPP, etc.)
+// =============================================================================
 spl_autoload_register(static function (string $class): void {
     $prefix = 'RentEase\\';
     $baseDir = __DIR__ . '/src/';

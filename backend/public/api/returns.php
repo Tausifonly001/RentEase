@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
+use RentEase\Middleware\ApiSecurity;
 use RentEase\Support\HttpClient;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 $authService = new AuthService($config);
 
@@ -34,7 +36,7 @@ if ($method === 'POST') {
     }
 
     $orderId = $input['order_id'] ?? null;
-    $returnStatus = $input['return_status'] ?? 'pending'; // pending, approved, completed
+    $returnStatus = 'pending'; // Fix: Users can only request a return, never approve it.
 
     if (!$orderId) {
         http_response_code(400);

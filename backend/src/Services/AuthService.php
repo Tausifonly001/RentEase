@@ -15,7 +15,7 @@ final class AuthService extends BaseSupabaseService
     public function signup(array $payload): array
     {
         $email = Validator::email($payload, 'email');
-        $password = Validator::requiredString($payload, 'password', 6, 128);
+        $password = Validator::password($payload, 'password');
         $fullName = Validator::requiredString($payload, 'full_name', 2, 100);
 
         $response = $this->request('POST', '/auth/v1/signup', $this->anonHeaders(), [
@@ -27,7 +27,8 @@ final class AuthService extends BaseSupabaseService
         $msg = strtolower((string)($response['body']['msg'] ?? $response['body']['message'] ?? $response['body']['error'] ?? ''));
         $isRateLimited = ($response['status'] === 429) || (strpos($msg, 'rate limit') !== false);
 
-        if ($isRateLimited) {
+        $allowAdminFallback = (bool) ($this->config['allow_signup_admin_fallback'] ?? false);
+        if ($isRateLimited && $allowAdminFallback) {
             $adminResponse = $this->request('POST', '/auth/v1/admin/users', $this->serviceHeaders(), [
                 'email' => $email,
                 'password' => $password,
@@ -50,7 +51,7 @@ final class AuthService extends BaseSupabaseService
     public function login(array $payload): array
     {
         $email = Validator::email($payload, 'email');
-        $password = Validator::requiredString($payload, 'password', 6, 128);
+        $password = Validator::password($payload, 'password');
 
         $response = $this->request(
             'POST',
@@ -67,31 +68,44 @@ final class AuthService extends BaseSupabaseService
     public function validateToken(string $jwt): ?array
     {
         if ($jwt === '') {
-            return null;
+            return $this->attemptRefreshFromCookie();
         }
 
-        $response = $this->request('GET', '/auth/v1/user', $this->userHeaders($jwt));
-        if ($response['status'] >= 200 && $response['status'] < 300) {
-            $user = $response['body'];
-            
-            // Fetch role from profiles table
-            $profilePath = '/rest/v1/profiles?select=role&id=eq.' . $user['id'] . '&limit=1';
-            $profileRes = $this->request('GET', $profilePath, $this->serviceHeaders());
-            
-            error_log("AuthService: Profile Fetch - Status: " . ($profileRes['status'] ?? 'N/A') . " ID: " . $user['id']);
-            
-            if ($profileRes['status'] >= 200 && $profileRes['status'] < 300 && !empty($profileRes['body'][0])) {
-                $user['role'] = $profileRes['body'][0]['role'] ?? 'user';
-                error_log("AuthService: Profile Found - Role: " . $user['role']);
-            } else {
-                error_log("AuthService: Profile NOT Found or Fetch Failed. Response: " . json_encode($profileRes['body'] ?? []));
-                $user['role'] = 'user'; // Fallback
-            }
-            
-            return $user;
+        $user = $this->fetchUser($jwt);
+        if ($user !== null) {
+            return $this->attachRole($user);
         }
 
-        return null;
+        return $this->attemptRefreshFromCookie();
+    }
+
+    /**
+     * Persist access + optional refresh tokens after login/OAuth.
+     *
+     * @param array<string, mixed> $session
+     */
+    public function persistSession(array $session, bool $remember = false): void
+    {
+        $token = (string) ($session['access_token'] ?? '');
+        if ($token === '') {
+            return;
+        }
+
+        $expiresIn = (int) ($session['expires_in'] ?? 3600);
+        if ($remember) {
+            $expiresIn = max($expiresIn, 60 * 60 * 24 * 30);
+        }
+
+        $this->setAuthCookie($token, $expiresIn);
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['_auth_current_jwt'] = $token;
+
+        $refresh = (string) ($session['refresh_token'] ?? '');
+        if ($remember && $refresh !== '') {
+            $this->setRefreshCookie($refresh, 60 * 60 * 24 * 30);
+        }
     }
 
     public function setAuthCookie(string $token, int $expiresIn): void
@@ -99,6 +113,18 @@ final class AuthService extends BaseSupabaseService
         $maxAge = max(60, $expiresIn);
         setcookie((string) $this->config['cookie_name'], $token, [
             'expires' => time() + $maxAge,
+            'path' => '/',
+            'secure' => (bool) $this->config['cookie_secure'],
+            'httponly' => true,
+            'samesite' => (string) $this->config['cookie_samesite'],
+        ]);
+    }
+
+    public function setRefreshCookie(string $refreshToken, int $expiresIn): void
+    {
+        $name = (string) ($this->config['refresh_cookie_name'] ?? 'rentease_refresh_token');
+        setcookie($name, $refreshToken, [
+            'expires' => time() + max(60, $expiresIn),
             'path' => '/',
             'secure' => (bool) $this->config['cookie_secure'],
             'httponly' => true,
@@ -115,69 +141,199 @@ final class AuthService extends BaseSupabaseService
             'httponly' => true,
             'samesite' => (string) $this->config['cookie_samesite'],
         ]);
+
+        $refreshName = (string) ($this->config['refresh_cookie_name'] ?? 'rentease_refresh_token');
+        setcookie($refreshName, '', [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'secure' => (bool) $this->config['cookie_secure'],
+            'httponly' => true,
+            'samesite' => (string) $this->config['cookie_samesite'],
+        ]);
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['_auth_current_jwt']);
     }
 
     /**
-     * Get the OAuth authorization URL.
-     *
-     * @param string $provider
-     * @param string $redirectUrl
-     * @return string
+     * OAuth authorize URL (PKCE when $codeChallenge is provided).
      */
-    public function getOAuthUrl(string $provider, string $redirectUrl): string
+    public function getOAuthUrl(string $provider, string $redirectUrl, ?string $codeChallenge = null): string
     {
-        return $this->config['supabase_url'] . '/auth/v1/authorize?provider=' . $provider . '&redirect_to=' . urlencode($redirectUrl);
+        $query = [
+            'provider' => $provider,
+            'redirect_to' => $redirectUrl,
+        ];
+
+        if ($codeChallenge !== null && $codeChallenge !== '') {
+            $query['code_challenge'] = $codeChallenge;
+            $query['code_challenge_method'] = 's256';
+        }
+
+        return $this->config['supabase_url'] . '/auth/v1/authorize?' . http_build_query($query);
     }
 
     /**
-     * Exchange a code for a session (PKCE or standard OAuth).
-     *
-     * @param string $code
      * @return array<string, mixed>
      */
-    public function exchangeCodeForSession(string $code): array
+    public function exchangeCodeForSession(string $code, string $codeVerifier): array
     {
         $response = $this->request('POST', '/auth/v1/token?grant_type=pkce', $this->anonHeaders(), [
             'auth_code' => $code,
+            'code_verifier' => $codeVerifier,
         ]);
 
         $this->assertSuccess($response, 'OAuth exchange failed');
         return $response['body'];
     }
-    
+
     /**
-     * Check if an email exists in the profiles table and return the user ID.
+     * Generate PKCE verifier + S256 challenge for OAuth.
      *
-     * @param string $email
-     * @return string|null
+     * @return array{0: string, 1: string}
      */
+    public static function generatePkcePair(): array
+    {
+        $verifier = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $challenge = rtrim(strtr(base64_encode(hash('sha256', $verifier, true)), '+/', '-_'), '=');
+
+        return [$verifier, $challenge];
+    }
+
+    /**
+     * Clear cached role/auth data for a user (call after role changes).
+     */
+    public static function clearUserCaches(string $userId): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        unset($_SESSION['user_role_' . $userId]);
+
+        if (isset($_SESSION['_auth_cached_user']['id']) && $_SESSION['_auth_cached_user']['id'] === $userId) {
+            unset(
+                $_SESSION['_auth_cached_user'],
+                $_SESSION['_auth_cached_token'],
+                $_SESSION['_auth_cache_expiry']
+            );
+        }
+    }
+
+    /** @return array<string, mixed>|null */
     public function getUserIdByEmail(string $email): ?string
     {
         $path = '/rest/v1/profiles?select=id&email=eq.' . urlencode($email) . '&limit=1';
         $response = $this->request('GET', $path, $this->serviceHeaders());
-        
+
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body'][0])) {
             return $response['body'][0]['id'];
         }
-        
+
+        return null;
+    }
+
+    public function adminUpdatePassword(string $userId, string $newPassword): void
+    {
+        Validator::password(['password' => $newPassword], 'password');
+
+        $path = '/auth/v1/admin/users/' . $userId;
+        $response = $this->request('PUT', $path, $this->serviceHeaders(), [
+            'password' => $newPassword,
+        ]);
+
+        $this->assertSuccess($response, 'Failed to update user password');
+    }
+
+    /**
+     * Resolve role from profiles table (source of truth).
+     *
+     * @param array<string, mixed> $user
+     */
+    public static function resolveRole(array $user): string
+    {
+        return (string) ($user['role'] ?? 'user');
+    }
+
+    /** @return array<string, mixed>|null */
+    private function fetchUser(string $jwt): ?array
+    {
+        $response = $this->request('GET', '/auth/v1/user', $this->userHeaders($jwt));
+        if ($response['status'] >= 200 && $response['status'] < 300) {
+            return is_array($response['body']) ? $response['body'] : null;
+        }
+
         return null;
     }
 
     /**
-     * Update a user's password using the Admin API.
-     *
-     * @param string $userId
-     * @param string $newPassword
-     * @return void
+     * @param array<string, mixed> $user
+     * @return array<string, mixed>
      */
-    public function adminUpdatePassword(string $userId, string $newPassword): void
+    private function attachRole(array $user): array
     {
-        $path = '/auth/v1/admin/users/' . $userId;
-        $response = $this->request('PUT', $path, $this->serviceHeaders(), [
-            'password' => $newPassword
-        ]);
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        $this->assertSuccess($response, 'Failed to update user password');
+        $userId = (string) ($user['id'] ?? '');
+        if ($userId !== '' && isset($_SESSION['user_role_' . $userId])) {
+            $user['role'] = $_SESSION['user_role_' . $userId];
+            return $user;
+        }
+
+        $profilePath = '/rest/v1/profiles?select=role&id=eq.' . rawurlencode($userId) . '&limit=1';
+        $profileRes = $this->request('GET', $profilePath, $this->serviceHeaders());
+
+        if ($profileRes['status'] >= 200 && $profileRes['status'] < 300 && !empty($profileRes['body'][0])) {
+            $user['role'] = $profileRes['body'][0]['role'] ?? 'user';
+        } else {
+            $user['role'] = 'user';
+        }
+
+        if ($userId !== '') {
+            $_SESSION['user_role_' . $userId] = $user['role'];
+        }
+
+        return $user;
+    }
+
+    /** @return array<string, mixed>|null */
+    private function attemptRefreshFromCookie(): ?array
+    {
+        $refreshName = (string) ($this->config['refresh_cookie_name'] ?? 'rentease_refresh_token');
+        $refreshToken = (string) ($_COOKIE[$refreshName] ?? '');
+        if ($refreshToken === '') {
+            return null;
+        }
+
+        $response = $this->request(
+            'POST',
+            '/auth/v1/token?grant_type=refresh_token',
+            $this->anonHeaders(),
+            ['refresh_token' => $refreshToken]
+        );
+
+        if ($response['status'] < 200 || $response['status'] >= 300) {
+            return null;
+        }
+
+        $body = $response['body'];
+        if (!is_array($body)) {
+            return null;
+        }
+
+        $this->persistSession($body, true);
+
+        $newJwt = (string) ($body['access_token'] ?? '');
+        if ($newJwt === '') {
+            return null;
+        }
+
+        $user = $this->fetchUser($newJwt);
+        return $user !== null ? $this->attachRole($user) : null;
     }
 
     /**

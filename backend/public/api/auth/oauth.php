@@ -7,21 +7,22 @@ require __DIR__ . '/../../../bootstrap.php';
 
 $provider = $_GET['provider'] ?? null;
 if (!$provider) {
-    header('Location: ../../login.php?error=Missing provider');
+    header('Location: ' . baseUrl('/login') . '?error=Missing provider');
     exit;
 }
 
 $authService = new AuthService($config);
 
-// Construct the full callback URL
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'];
-$callbackUrl = $protocol . '://' . $host . '/rentease/auth-callback.php';
+$callbackUrl = rtrim((string) ($config['app_url'] ?? ''), '/') . '/auth-callback';
 
 try {
-    $url = $authService->getOAuthUrl($provider, $callbackUrl);
+    [$verifier, $challenge] = AuthService::generatePkcePair();
+    $_SESSION['oauth_code_verifier'] = $verifier;
+    $_SESSION['oauth_provider'] = $provider;
+
+    $url = $authService->getOAuthUrl($provider, $callbackUrl, $challenge);
     header('Location: ' . $url);
 } catch (Throwable $e) {
-    header('Location: ../../login.php?error=' . urlencode($e->getMessage()));
+    header('Location: ' . baseUrl('/login') . '?error=' . urlencode($e->getMessage()));
 }
 exit;

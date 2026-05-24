@@ -1,18 +1,30 @@
 let map, marker, destinationMarker;
 let deliverySubscription;
+let mapInitialized = false;
 
 function initMap() {
-    const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // Default to NYC if no data
-    
     if (typeof google === 'undefined') {
         console.error('Google Maps API not loaded.');
         document.getElementById('map-container').innerHTML = '<div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-500 font-bold">Map unavailable (check API key)</div>';
         return;
     }
 
+    // Show a loading skeleton while waiting for initial coordinates
+    document.getElementById('map-container').innerHTML = '<div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400 font-medium animate-pulse">Locating agent...</div>';
+
+    startRealtimeTracking();
+}
+
+function renderMap(lat, lng) {
+    if (mapInitialized) return;
+    
+    document.getElementById('map-container').innerHTML = '';
+    
+    const initialLocation = { lat, lng };
+
     map = new google.maps.Map(document.getElementById("map-container"), {
         zoom: 15,
-        center: defaultLocation,
+        center: initialLocation,
         disableDefaultUI: true,
         zoomControl: true,
         styles: [
@@ -111,7 +123,7 @@ function initMap() {
     });
 
     marker = new google.maps.Marker({
-        position: defaultLocation,
+        position: initialLocation,
         map: map,
         icon: {
             url: 'https://cdn-icons-png.flaticon.com/512/2830/2830305.png',
@@ -128,15 +140,25 @@ function initMap() {
         });
         
         const bounds = new google.maps.LatLngBounds();
-        bounds.extend(defaultLocation);
+        bounds.extend(initialLocation);
         bounds.extend(window.destinationCoords);
         map.fitBounds(bounds);
+        
+        const listener = google.maps.event.addListener(map, "idle", function() { 
+            if (map.getZoom() > 16) map.setZoom(16); 
+            google.maps.event.removeListener(listener); 
+        });
     }
 
-    startRealtimeTracking();
+    mapInitialized = true;
 }
 
 function updateMap(lat, lng) {
+    if (!mapInitialized) {
+        renderMap(lat, lng);
+        return;
+    }
+    
     const newPos = { lat, lng };
     
     // Smooth transition
@@ -149,12 +171,6 @@ function updateMap(lat, lng) {
         
         // Auto adjust bounds but don't zoom in too close
         map.fitBounds(bounds);
-        
-        // Ensure zoom isn't too tight if they are close
-        const listener = google.maps.event.addListener(map, "idle", function() { 
-            if (map.getZoom() > 16) map.setZoom(16); 
-            google.maps.event.removeListener(listener); 
-        });
     } else {
         map.panTo(newPos);
     }

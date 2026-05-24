@@ -14,7 +14,7 @@ $activeTab = Request::get('tab', 'overview');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operations Console — RentEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script>
@@ -41,7 +41,7 @@ $activeTab = Request::get('tab', 'overview');
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
-        .bento-item { opacity: 0; transform: translateY(20px); }
+        .bento-item { transform: translateY(20px); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
@@ -192,7 +192,7 @@ $activeTab = Request::get('tab', 'overview');
                                     </div>
                                     <div>
                                         <p class="text-sm font-bold text-slate-900 line-clamp-1"><?= e($m['issue_description'] ?? 'No description') ?></p>
-                                        <p class="text-[10px] text-slate-400 font-medium"><?= e($m['products']['name'] ?? 'Unknown Product') ?></p>
+                                        <p class="text-[10px] text-slate-400 font-medium"><?= e($m['rentals']['products']['name'] ?? 'Unknown Product') ?></p>
                                     </div>
                                 </div>
                                 <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600 text-[9px] font-bold uppercase"><?= e($m['status'] ?? 'unknown') ?></span>
@@ -547,7 +547,7 @@ $activeTab = Request::get('tab', 'overview');
                                 <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400">ID: <?= $mr['id'] ?></span>
                             </div>
                             <div>
-                                <p class="text-sm font-bold text-slate-900"><?= e($mr['products']['name'] ?? 'N/A') ?></p>
+                                <p class="text-sm font-bold text-slate-900"><?= e($mr['rentals']['products']['name'] ?? 'N/A') ?></p>
                                 <p class="text-[11px] text-slate-500 line-clamp-2 mt-1"><?= e($mr['issue_description'] ?? 'No description') ?></p>
                             </div>
                             <div class="flex items-center gap-3 pt-2 border-t border-slate-50">
@@ -578,14 +578,21 @@ $activeTab = Request::get('tab', 'overview');
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // GSAP Entrance
-        gsap.to(".bento-item", {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power4.out"
-        });
+        // GSAP Entrance (fallback: content stays visible if GSAP blocked)
+        if (typeof gsap !== 'undefined') {
+            gsap.from('.bento-item', {
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power4.out',
+                clearProps: 'transform'
+            });
+        } else {
+            document.querySelectorAll('.bento-item').forEach(el => {
+                el.style.transform = 'none';
+            });
+        }
 
         // Tab Switching Logic
         window.switchTab = function(tabName) {
@@ -602,6 +609,12 @@ $activeTab = Request::get('tab', 'overview');
             const targetContent = document.getElementById('tab-' + tabName);
 
             if (activeContent === targetContent) return;
+
+            if (typeof gsap === 'undefined') {
+                activeContent.classList.remove('active');
+                targetContent.classList.add('active');
+                return;
+            }
 
             gsap.to(activeContent, {
                 opacity: 0,
@@ -622,7 +635,9 @@ $activeTab = Request::get('tab', 'overview');
         window.editOffering = function(item) {
             switchTab('inventory');
             const form = document.getElementById('product-form');
-            gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
+            if (typeof gsap !== 'undefined') {
+                gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
+            }
             
             document.getElementById('form-heading').innerText = 'Modify Subscription';
             document.getElementById('product-action').value = 'update_product';

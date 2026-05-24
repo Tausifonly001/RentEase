@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                     <span class="material-symbols-outlined text-4xl text-emerald-500 mb-4">task_alt</span>
                     <h3 class="text-emerald-900 font-bold mb-2">Success!</h3>
                     <p class="text-emerald-700 text-sm mb-6"><?= htmlspecialchars($message) ?></p>
-                    <a href="login.php" class="inline-block py-3 px-6 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors">
+                    <a href="<?= baseUrl('/login') ?>" class="inline-block py-3 px-6 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors">
                         Go to Login
                     </a>
                 </div>

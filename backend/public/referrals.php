@@ -15,7 +15,7 @@ $jwt = $_COOKIE[$config['cookie_name']] ?? '';
 $user = $authService->validateToken($jwt);
 
 if (!$user) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 

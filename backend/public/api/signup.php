@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
+use RentEase\Middleware\ApiSecurity;
 
 require __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -22,7 +24,7 @@ try {
     $result = $authService->signup($payload);
 
     if (!empty($result['access_token'])) {
-        $authService->setAuthCookie((string) $result['access_token'], (int) ($result['expires_in'] ?? 3600));
+        $authService->persistSession($result, false);
     }
 
     echo json_encode(['ok' => true, 'user' => $result['user'] ?? null], JSON_THROW_ON_ERROR);

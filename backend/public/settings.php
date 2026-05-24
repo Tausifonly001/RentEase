@@ -17,7 +17,7 @@ require_once __DIR__ . '/partials/header.php';
 
 // Redirect to login if not authenticated
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 

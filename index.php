@@ -32,47 +32,52 @@ use RentEase\Routing\Router;
 use RentEase\Controllers\AdminController;
 use RentEase\Controllers\ShopController;
 use RentEase\Controllers\VendorController;
+use RentEase\Support\ValidationException;
 
 $router = new Router();
 
-// Phase 2/3 ADR Routes (Add new routes here)
+// API Routes
+$router->post('/api/signup', function() use ($config) { require __DIR__ . '/backend/public/api/signup.php'; });
+$router->post('/api/login', function() use ($config) { require __DIR__ . '/backend/public/api/login.php'; });
+$router->get('/api/auth/oauth', function() use ($config) { require __DIR__ . '/backend/public/api/auth/oauth.php'; });
+$router->get('/api/products', function() use ($config) { require __DIR__ . '/backend/public/api/products.php'; });
+$router->get('/api/furniture', function() use ($config) { require __DIR__ . '/backend/public/api/furniture.php'; });
+$router->post('/api/checkout', function() use ($config) { require __DIR__ . '/backend/public/api/checkout.php'; });
+$router->post('/api/book-rental', function() use ($config) { require __DIR__ . '/backend/public/api/book-rental.php'; });
+$router->get('/api/orders/{id}', function($id) use ($config) { $_GET['id'] = $id; require __DIR__ . '/backend/public/api/orders.php'; });
+$router->get('/api/orders', function() use ($config) { require __DIR__ . '/backend/public/api/orders.php'; });
+$router->post('/api/returns', function() use ($config) { require __DIR__ . '/backend/public/api/returns.php'; });
+$router->post('/api/maintenance-request', function() use ($config) { require __DIR__ . '/backend/public/api/maintenance-request.php'; });
+$router->post('/api/update-profile', function() use ($config) { require __DIR__ . '/backend/public/api/update-profile.php'; });
+$router->post('/api/webhook/stripe', function() use ($config) { require __DIR__ . '/backend/public/api/webhook/stripe.php'; });
+$router->post('/api/webhook/shiprocket', function() use ($config) { require __DIR__ . '/backend/public/api/webhook/shiprocket.php'; });
+$router->post('/api/support/ticket', function() use ($config) { require __DIR__ . '/backend/public/api/support/ticket.php'; });
+$router->post('/api/chat', function() use ($config) { require __DIR__ . '/backend/public/api/chat.php'; });
+$router->get('/api/logistics/status', function() use ($config) { require __DIR__ . '/backend/public/api/logistics/status.php'; });
+$router->post('/api/logistics/reschedule', function() use ($config) { require __DIR__ . '/backend/public/api/logistics/reschedule.php'; });
+$router->post('/api/logistics/return-pickup', function() use ($config) { require __DIR__ . '/backend/public/api/logistics/return-pickup.php'; });
+$router->post('/api/logistics/survey', function() use ($config) { require __DIR__ . '/backend/public/api/logistics/survey.php'; });
+
+// Controller Routes
 $router->get('/admin', [AdminController::class, 'dashboard']);
 $router->post('/admin', [AdminController::class, 'action']);
-
 $router->get('/browse', [ShopController::class, 'browse']);
 $router->get('/shop', [ShopController::class, 'browse']);
 $router->post('/browse', [ShopController::class, 'action']);
-
 $router->get('/vendor-panel', [VendorController::class, 'dashboard']);
 $router->post('/vendor-panel', [VendorController::class, 'action']);
 
-$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-
-// Construct a normalized URI for the router to match against
-$normalizedUri = '/' . $cleanPath; // $cleanPath already has base path and .php extension stripped
-
-// Temporarily override the base path handling in Router since we already cleaned it
-if ($router->dispatch($normalizedUri, $requestMethod)) {
-    // If the router handled the request, stop execution of legacy routing
-    exit;
-}
-
-// Define the route mapping
-$routes = [
+// Map simple string routes to files
+$viewRoutes = [
     'home' => 'home.php',
-    'browse' => 'browse.php',
     'product-detail' => 'product-detail.php',
     'cart' => 'cart.php',
     'dashboard' => 'dashboard.php',
     'checkout' => 'checkout.php',
     'orders' => 'orders.php',
-    'admin' => 'admin.php',
-    'stripe_webhook' => 'stripe_webhook.php',
     'login' => 'login.php',
     'signup' => 'signup.php',
     'logout' => 'logout.php',
-    
-    // New Support & Logistics Pages
     'rewards' => 'rewards.php',
     'referrals' => 'referrals.php',
     'partner' => 'partner.php',
@@ -98,58 +103,46 @@ $routes = [
     'maintenance' => 'maintenance-tracker.php',
     'payments' => 'payment-methods.php',
     'coming-soon' => 'coming-soon.php',
-    'success' => 'success.php'
+    'success' => 'success.php',
+    'agent-tracking' => 'agent-tracking.php',
+    'auth-callback' => 'auth-callback.php',
 ];
 
-// Handle specific API patterns
-if (strpos($path, '/api/') === 0) {
-    $apiFile = __DIR__ . '/backend/public' . $path;
-    if (file_exists($apiFile) && !is_dir($apiFile)) {
-        require $apiFile;
-        exit;
-    }
-    $apiFileWithPhp = __DIR__ . '/backend/public' . $path . '.php';
-    if (file_exists($apiFileWithPhp)) {
-        require $apiFileWithPhp;
-        exit;
-    }
-    
-    // Special case for orders API with ID
-    if (strpos($path, '/api/orders/') === 0) {
-        $parts = explode('/', trim($path, '/'));
-        if (count($parts) === 3 && $parts[0] === 'api' && $parts[1] === 'orders') {
-            $_GET['id'] = $parts[2];
-            require __DIR__ . '/backend/public/api/orders.php';
-            exit;
-        }
-    }
+foreach ($viewRoutes as $route => $file) {
+    $router->get('/' . $route, function() use ($file, $config) {
+        require __DIR__ . '/backend/public/' . $file;
+    });
+    $router->post('/' . $route, function() use ($file, $config) {
+        require __DIR__ . '/backend/public/' . $file;
+    });
 }
 
-// Special case for old hardcoded API paths
-if ($path === '/api/checkout' || $path === '/api/checkout.php') {
-    require __DIR__ . '/backend/public/api/checkout.php';
-    exit;
-}
-if ($path === '/api/webhook/stripe' || $path === '/api/webhook/stripe.php') {
-    require __DIR__ . '/backend/public/api/webhook/stripe.php';
-    exit;
-}
-if ($path === '/api/returns' || $path === '/api/returns.php') {
-    require __DIR__ . '/backend/public/api/returns.php';
-    exit;
-}
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$normalizedUri = '/' . $cleanPath; 
 
-// Final check against routes map
-if (isset($routes[$cleanPath])) {
-    $targetFile = __DIR__ . '/backend/public/' . $routes[$cleanPath];
-    if (file_exists($targetFile)) {
-        require $targetFile;
+try {
+    if (!$router->dispatch($normalizedUri, $requestMethod)) {
+        http_response_code(404);
+        require __DIR__ . '/backend/public/404.php';
+    }
+} catch (ValidationException $e) {
+    if (strpos($normalizedUri, '/api/') === 0) {
+        http_response_code(422);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $e->getMessage(), 'details' => $e->getErrors()]);
         exit;
     }
+    // For non-API, could redirect with flash
+    \RentEase\Support\Session::flash('error', 'Validation failed: ' . implode(', ', $e->getErrors()));
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit;
+} catch (\Throwable $e) {
+    if (strpos($normalizedUri, '/api/') === 0) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $e->getMessage()]);
+        exit;
+    }
+    throw $e;
 }
-
-// Route not found
-http_response_code(404);
-header('Content-Type: text/plain; charset=utf-8');
-echo 'Route not found';
 

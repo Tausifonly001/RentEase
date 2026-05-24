@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use RentEase\Middleware\RoleMiddleware;
 use RentEase\Services\AuthService;
 use RentEase\Services\LogisticsService;
+
+RoleMiddleware::requireRole('admin', $config);
 
 $authService = new AuthService($config);
 $logisticsService = new LogisticsService($config);
@@ -13,22 +16,8 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$currentUser = null;
-$token = '';
-try {
-    $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
-    if ($token) {
-        $userData = $authService->validateToken($token);
-        if ($userData) {
-            $currentUser = $userData;
-        }
-    }
-} catch (Throwable $ignored) {}
-
-if (!$currentUser) {
-    header('Location: login.php');
-    exit;
-}
+$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+$currentUser = $authService->validateToken($token);
 
 $pageTitle = 'Agent Tracking - RentEase';
 require_once __DIR__ . '/partials/header.php';

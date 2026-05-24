@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 // OWASP Security: Only accept POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     exit("Method Not Allowed");
 }
@@ -14,7 +14,7 @@ $webhookSecret = $_ENV['SHIPROCKET_WEBHOOK_TOKEN'] ?? '';
 $apiKey = $headers['x-api-key'] ?? ($headers['X-Api-Key'] ?? null);
 
 if (!$apiKey || $apiKey !== $webhookSecret) {
-    error_log("Unauthorized Shiprocket webhook attempt. IP: " . $_SERVER['REMOTE_ADDR']);
+    error_log("Unauthorized Shiprocket webhook attempt. IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
     http_response_code(401);
     exit("Unauthorized");
 }
@@ -28,30 +28,60 @@ if (!$data || !isset($data['awb'])) {
 }
 
 try {
-    // Use PDO directly from ENV loaded via bootstrap.php
-    $dsn = "pgsql:host=" . $_ENV['DB_HOST'] . ";port=" . ($_ENV['DB_PORT'] ?? '5432') . ";dbname=" . $_ENV['DB_NAME'];
-    $db = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
+    $http = new \RentEase\Support\HttpClient();
+    $serviceHeaders = [
+        'apikey' => (string) $config['supabase_service_role_key'],
+        'Authorization' => 'Bearer ' . $config['supabase_service_role_key'],
+        'Accept' => 'application/json',
+        'Prefer' => 'return=representation'
+    ];
 
     // Sanitize input
-    $awb = filter_var($data['awb'], FILTER_SANITIZE_STRING);
-    $status = filter_var($data['current_status'], FILTER_SANITIZE_STRING);
-    $statusCode = filter_var($data['sr_status'], FILTER_SANITIZE_STRING);
+    $awb = trim((string)($data['awb'] ?? ''));
+    $status = trim((string)($data['current_status'] ?? ''));
+    $statusCode = trim((string)($data['sr_status'] ?? ''));
 
-    $stmt = $db->prepare("UPDATE order_shipments SET status = ?, status_code = ?, updated_at = NOW() WHERE awb_code = ?");
-    $stmt->execute([$status, $statusCode, $awb]);
+    // 1. Update order_shipments
+    $updateShipmentRes = $http->request(
+        'PATCH',
+        $config['supabase_url'] . '/rest/v1/order_shipments?awb_code=eq.' . urlencode($awb),
+        $serviceHeaders,
+        [
+            'status' => $status,
+            'status_code' => $statusCode,
+            'updated_at' => date('c') // ISO 8601
+        ]
+    );
 
-    // If delivered, handle website-specific logic (e.g., mark order as COMPLETED)
+    if ($updateShipmentRes['status'] >= 400) {
+        throw new RuntimeException("Failed to update shipment: " . json_encode($updateShipmentRes['body']));
+    }
+
+    // 2. If delivered, mark order as COMPLETED
     if ($statusCode == '7') { // 7 = Delivered in Shiprocket
-        $stmt = $db->prepare("UPDATE orders SET status = 'COMPLETED' WHERE id IN (SELECT order_id FROM order_shipments WHERE awb_code = ?)");
-        $stmt->execute([$awb]);
+        // Get order_id from shipment first
+        $getShipmentRes = $http->request(
+            'GET',
+            $config['supabase_url'] . '/rest/v1/order_shipments?select=order_id&awb_code=eq.' . urlencode($awb),
+            $serviceHeaders
+        );
+
+        if (!empty($getShipmentRes['body']) && is_array($getShipmentRes['body'])) {
+            $orderId = $getShipmentRes['body'][0]['order_id'] ?? null;
+            if ($orderId) {
+                $updateOrderRes = $http->request(
+                    'PATCH',
+                    $config['supabase_url'] . '/rest/v1/orders?id=eq.' . urlencode((string)$orderId),
+                    $serviceHeaders,
+                    ['status' => 'COMPLETED']
+                );
+            }
+        }
     }
 
     http_response_code(200);
-    echo json_encode(["message" => "Webhook processed successfully"]);
-} catch (Exception $e) {
+    echo json_encode(["ok" => true, "message" => "Webhook processed successfully"]);
+} catch (Throwable $e) {
     error_log("Webhook processing error: " . $e->getMessage());
     http_response_code(500);
     exit("Internal Server Error");

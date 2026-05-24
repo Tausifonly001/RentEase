@@ -5,10 +5,12 @@ declare(strict_types=1);
 use RentEase\Services\ProductService;
 use RentEase\Services\AuthService;
 use RentEase\Services\StripeService;
+use RentEase\Middleware\ApiSecurity;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 $authService = new AuthService($config);
 $productService = new ProductService($config);

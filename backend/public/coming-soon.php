@@ -28,7 +28,7 @@ require_once __DIR__ . '/partials/header.php';
         <p class="text-xl text-slate-500 mb-12 leading-relaxed font-medium">We're working hard to bring you this feature. Our team of designers and engineers is currently polishing the final details to ensure a premium experience.</p>
 
         <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <a href="dashboard.php" class="w-full md:w-auto px-10 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 flex items-center justify-center gap-2">
+            <a href="<?= baseUrl('/dashboard') ?>" class="w-full md:w-auto px-10 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">dashboard</span>
                 Back to Dashboard
             </a>

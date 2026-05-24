@@ -178,7 +178,7 @@ require_once __DIR__ . '/partials/header.php';
             <section class="reveal-element">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6 tracking-tight">Quick Actions</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <a href="<?= baseUrl('/support') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
+                    <a href="<?= baseUrl('/request-maintenance') ?>" class="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-50 hover:border-teal-100 transition-all group">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">build</span>
                         </div>
@@ -202,7 +202,7 @@ require_once __DIR__ . '/partials/header.php';
                         </div>
                         <span class="text-sm font-bold text-slate-900">Give Feedback</span>
                     </a>
-                    <?php if (($currentUser['role'] ?? 'user') === 'admin'): ?>
+                    <?php if (AuthService::resolveRole($currentUser) === 'admin'): ?>
                     <a href="<?= baseUrl('/admin') ?>" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:bg-teal-600 transition-all group shadow-lg">
                         <div class="w-12 h-12 rounded-full bg-white shadow-sm text-slate-900 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined">admin_panel_settings</span>

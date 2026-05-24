@@ -1,4 +1,8 @@
-<?php require __DIR__ . '/../../public/partials/header.php'; ?>
+<?php 
+$pageTitle = 'RentEase - Browse Premium Rentals';
+$pageDescription = 'Explore our catalog of premium furniture and appliances with flexible monthly plans. Free delivery and easy returns.';
+require __DIR__ . '/../../public/partials/header.php'; 
+?>
 
 <!-- Main Content Area -->
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg mb-xl">
@@ -121,63 +125,64 @@
                 <!-- Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
                     <?php foreach ($products as $product): ?>
-                        <div
-                            class="bg-surface rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-outline-variant/50 overflow-hidden flex flex-col group relative">
-                            <!-- Wishlist Button -->
-                            <form method="POST" class="absolute top-3 right-3 z-10">
+                        <div class="group flex flex-col bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-all duration-500 relative">
+                            <!-- Image Area -->
+                            <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="relative aspect-[4/3] overflow-hidden bg-slate-50 block">
+                                <img alt="<?= htmlspecialchars($product['name']) ?>"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x300?text=No+Image') ?>"
+                                    loading="lazy" />
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                <!-- Badges -->
+                                <div class="absolute top-4 left-4 flex flex-col gap-2 items-start">
+                                    <?php if ($product['category'] === 'Appliances'): ?>
+                                        <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-full shadow-sm">Fast Delivery</span>
+                                    <?php endif; ?>
+                                </div>
+                            </a>
+
+                            <!-- Wishlist Button - Floating -->
+                            <form method="POST" class="absolute top-4 right-4 z-10">
                                 <input type="hidden" name="csrf_token" value="<?= RentEase\Support\Csrf::token() ?>">
                                 <input type="hidden" name="toggle_wishlist" value="1">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                 <?php $isInWishlist = in_array((int) $product['id'], $wishlistIds); ?>
                                 <button type="submit"
-                                    class="h-8 w-8 bg-surface/80 backdrop-blur rounded-full flex items-center justify-center transition-colors <?= $isInWishlist ? 'text-error bg-error-container' : 'text-on-surface hover:text-error hover:bg-error-container' ?>">
-                                    <span class="material-symbols-outlined text-sm"
+                                    class="h-10 w-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm <?= $isInWishlist ? 'text-red-500' : 'text-slate-400 hover:text-red-500' ?>">
+                                    <span class="material-symbols-outlined !text-xl"
                                         style="font-variation-settings: 'FILL' <?= $isInWishlist ? '1' : '0' ?>;">favorite</span>
                                 </button>
                             </form>
 
-                            <!-- Image -->
-                            <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>"
-                                class="relative h-48 bg-surface-container-low overflow-hidden block">
-                                <img alt="<?= htmlspecialchars($product['name']) ?>"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x300?text=No+Image') ?>"
-                                    loading="lazy" />
-                                <?php if ($product['category'] === 'Appliances'): ?>
-                                    <div
-                                        class="absolute top-2 left-2 bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-caps text-label-caps border border-outline-variant">
-                                        Fast Delivery
+                            <!-- Content Area -->
+                            <div class="p-6 flex flex-col flex-grow bg-white z-10 relative">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2"><?= htmlspecialchars($product['category']) ?></p>
+                                <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="mb-4">
+                                    <h3 class="font-bold text-xl text-slate-900 leading-tight group-hover:text-teal-600 transition-colors line-clamp-2">
+                                        <?= htmlspecialchars($product['name']) ?>
+                                    </h3>
+                                </a>
+                                
+                                <div class="mt-auto flex items-end justify-between border-t border-slate-100 pt-4">
+                                    <div>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Monthly</p>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-2xl font-black text-slate-900 tracking-tighter">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
+                                        </div>
                                     </div>
-                                <?php endif; ?>
-                            </a>
-
-                            <!-- Info -->
-                            <div class="p-4 flex flex-col flex-grow">
-                                <div class="flex justify-between items-start mb-2">
-                                    <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>">
-                                        <h3 class="font-h3 text-body-lg text-on-surface font-semibold line-clamp-2">
-                                            <?= htmlspecialchars($product['name']) ?></h3>
-                                    </a>
+                                    
+                                    <form method="POST" action="<?= baseUrl('/cart') ?>">
+                                        <input type="hidden" name="action" value="add">
+                                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit"
+                                            class="h-12 w-12 rounded-2xl bg-slate-50 text-slate-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors duration-300 transform group-hover:rotate-12 active:scale-90">
+                                            <span class="material-symbols-outlined !text-xl">shopping_bag</span>
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="mt-auto pt-4 flex flex-col gap-1">
-                                    <div class="flex items-baseline gap-1">
-                                        <span
-                                            class="font-h3 text-h3 text-primary font-bold">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
-                                        <span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
-                                    </div>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">Category:
-                                        <?= htmlspecialchars($product['category']) ?></span>
-                                </div>
-                                <form method="POST" action="<?= baseUrl('/cart') ?>" class="mt-4">
-                                    <input type="hidden" name="action" value="add">
-                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit"
-                                        class="w-full bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary font-button text-button py-2 rounded-DEFAULT transition-colors duration-200 flex items-center justify-center gap-2">
-                                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-                                        Add to Cart
-                                    </button>
-                                </form>
                             </div>
                         </div>
                     <?php endforeach; ?>

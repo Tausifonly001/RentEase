@@ -45,7 +45,11 @@ class Request
     }
 
     /**
-     * Sanitize input data
+     * Sanitize input data.
+     *
+     * NOTE: Only trims whitespace. HTML encoding (htmlspecialchars) must be
+     * applied at **render time**, not at input time, to avoid double-encoding
+     * when data is persisted to the database and later displayed.
      *
      * @param mixed $data The data to sanitize
      * @return mixed
@@ -60,9 +64,7 @@ class Request
         }
 
         if (is_string($data)) {
-            $data = trim($data);
-            $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-            return $data;
+            return trim($data);
         }
 
         return $data;

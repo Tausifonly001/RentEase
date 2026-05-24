@@ -33,7 +33,7 @@ try {
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
-    header('Location: login.php');
+    header('Location: ' . baseUrl('/login'));
     exit;
 }
 
@@ -65,7 +65,7 @@ require_once __DIR__ . '/partials/header.php';
             <span class="material-symbols-outlined text-6xl text-slate-200 mb-6">local_shipping</span>
             <h1 class="text-3xl font-bold text-primary mb-4">No Active Deliveries</h1>
             <p class="text-slate-500 max-w-md mx-auto mb-8 font-medium">You don't have any deliveries or pickups currently in progress.</p>
-            <a href="dashboard.php" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-primary/20">
+            <a href="<?= baseUrl('/dashboard') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-primary/20">
                 Go to Dashboard
                 <span class="material-symbols-outlined">arrow_forward</span>
             </a>

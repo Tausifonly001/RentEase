@@ -10,7 +10,7 @@ final class AuthMiddleware
 {
     /**
      * @param array<string, mixed> $config
-     * @return array<string, mixed>
+     * @return array{token: string, user: array<string, mixed>}
      */
     public static function requireUser(array $config): array
     {
@@ -22,9 +22,25 @@ final class AuthMiddleware
             throw new \RuntimeException('Unauthorized');
         }
 
+        $activeToken = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+
         return [
-            'token' => $token,
+            'token' => $activeToken,
             'user' => $user,
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     * @return array{token: string, user: array<string, mixed>}
+     */
+    public static function requireUserOrRedirect(array $config, string $loginPath = '/login'): array
+    {
+        try {
+            return self::requireUser($config);
+        } catch (\RuntimeException) {
+            header('Location: ' . baseUrl($loginPath));
+            exit;
+        }
     }
 }

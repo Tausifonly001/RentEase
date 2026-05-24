@@ -3,12 +3,14 @@
 declare(strict_types=1);
 
 use RentEase\Middleware\AuthMiddleware;
+use RentEase\Middleware\ApiSecurity;
 use RentEase\Services\RentalService;
 use RentEase\Support\Csrf;
 
 require __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

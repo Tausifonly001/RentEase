@@ -2,28 +2,24 @@
 
 declare(strict_types=1);
 
-use RentEase\Services\AuthService;
+use RentEase\Middleware\ApiSecurity;
+use RentEase\Middleware\AuthMiddleware;
 use RentEase\Services\LogisticsService;
 use RentEase\Services\RentalService;
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ApiSecurity::enforce($config);
 
-$authService = new AuthService($config);
 $logisticsService = new LogisticsService($config);
 $rentalService = new RentalService($config);
 
-$currentUser = null;
-$token = '';
 try {
-    $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
-    if ($token) {
-        $currentUser = $authService->validateToken($token);
-    }
-} catch (\Throwable $ignored) {}
-
-if (!$currentUser) {
+    $auth = AuthMiddleware::requireUser($config);
+    $currentUser = $auth['user'];
+    $token = $auth['token'];
+} catch (\RuntimeException) {
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized user. Please log in first.']);
     exit;

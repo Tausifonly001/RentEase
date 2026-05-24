@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 use RentEase\Services\AuthService;
 use RentEase\Support\Csrf;
+use RentEase\Support\Session;
 
 require __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $csrfToken = Csrf::token();
-$error = null;
+$error = Session::getFlash('error', $_GET['error'] ?? null);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
@@ -23,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $loginResult = $authService->login(['email' => $email, 'password' => $password]);
                 $token = (string) ($loginResult['access_token'] ?? '');
-                $expires = (int) ($loginResult['expires_in'] ?? 3600);
 
                 if ($token !== '') {
-                    $authService->setAuthCookie($token, $expires);
+                    $rememberMe = !empty($_POST['remember']);
+                    $authService->persistSession($loginResult, $rememberMe);
                     header('Location: ' . baseUrl('/'));
                     exit;
                 } else {
@@ -179,7 +180,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth.php?provider=' . $id) ?>'" 
+                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>'" 
                                 class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
                                 <span class="text-sm font-bold text-slate-700"><?= $provider['name'] ?></span>

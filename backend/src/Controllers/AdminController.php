@@ -7,6 +7,7 @@ namespace RentEase\Controllers;
 use RentEase\Services\AuthService;
 use RentEase\Services\ProductService;
 use RentEase\Services\MaintenanceService;
+use RentEase\Middleware\RoleMiddleware;
 use RentEase\Support\HttpClient;
 use RentEase\Support\Csrf;
 use RentEase\Support\Request;
@@ -40,8 +41,8 @@ class AdminController
      */
     public function dashboard(): void
     {
-        // RoleMiddleware ensures the user is an admin.
-        
+        RoleMiddleware::requireRole('admin', $this->config);
+
         $success = Request::get('success');
         $error = Request::get('error');
 
@@ -97,7 +98,7 @@ class AdminController
         // Fetch maintenance requests
         $maintenanceReqs = [];
         try {
-            $mReqsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/maintenance_requests?select=*,profiles(full_name),products(name)', $this->serviceHeaders);
+            $mReqsRes = $this->http->request('GET', $this->config['supabase_url'] . '/rest/v1/maintenance_requests?select=*,profiles(full_name),rentals(products(name))&order=created_at.desc', $this->serviceHeaders);
             $body = $mReqsRes['body'] ?? [];
             $maintenanceReqs = (is_array($body) && array_is_list($body)) ? $body : [];
         } catch (\Exception $e) {
@@ -131,6 +132,8 @@ class AdminController
      */
     public function action(): void
     {
+        RoleMiddleware::requireRole('admin', $this->config);
+
         if (!Csrf::validate(Request::post('csrf_token', ''))) {
             $this->redirectWithError("Security validation failed. Please try again.");
         }
@@ -285,6 +288,7 @@ class AdminController
         $data = ['role' => $role];
 
         $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/profiles?id=eq.' . urlencode((string)$id), $this->serviceHeaders, $data);
+        AuthService::clearUserCaches((string) $id);
         $this->redirectWithSuccess("User role updated successfully.");
     }
 

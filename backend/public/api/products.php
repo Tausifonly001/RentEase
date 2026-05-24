@@ -7,7 +7,11 @@ use RentEase\Services\ProductPipelineService;
 require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
+
+$allowedOrigin = (string) ($config['app_url'] ?? '');
+if ($allowedOrigin !== '') {
+    header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+}
 
 $category = $_GET['category'] ?? null;
 if ($category === '') {

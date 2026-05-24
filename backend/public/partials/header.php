@@ -243,13 +243,105 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
                 </div>
             </div>
 
-            <!-- Appliances -->
+            <!-- Appliances (Simple Link) -->
             <a class="text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-semibold relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all after:duration-300" href="<?= baseUrl('/shop?category=Appliances') ?>">Appliances</a>
             
-            <!-- Packages -->
-            <a class="text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-semibold relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-teal-500 hover:after:w-full after:transition-all after:duration-300" href="<?= baseUrl('/shop') ?>">Packages</a>
-            
-            <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium" href="<?= baseUrl('/') ?>">How it Works</a>
+            <!-- Packages with Mega Menu -->
+            <div class="h-full flex items-center group/menu relative">
+                <a class="text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors py-8 font-semibold flex items-center gap-1 focus-visible:text-teal-600 outline-none" href="<?= baseUrl('/shop') ?>">
+                    Packages
+                    <span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover/menu:rotate-180">expand_more</span>
+                </a>
+                
+                <!-- Mega Menu Dropdown -->
+                <div class="absolute top-[80px] left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-500 translate-y-4 group-hover/menu:translate-y-0 overflow-hidden">
+                    <div class="grid grid-cols-12 gap-0">
+                        <div class="col-span-4 p-8 bg-slate-50 dark:bg-slate-800/50">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Room Packages</h3>
+                            <ul class="space-y-4">
+                                <li><a href="<?= baseUrl('/shop?package=studio') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-2 group/link"><span class="w-2 h-2 rounded-full bg-slate-200 group-hover/link:bg-teal-500 transition-colors"></span> Studio Setup</a></li>
+                                <li><a href="<?= baseUrl('/shop?package=1bhk') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-2 group/link"><span class="w-2 h-2 rounded-full bg-slate-200 group-hover/link:bg-teal-500 transition-colors"></span> 1 BHK Complete</a></li>
+                                <li><a href="<?= baseUrl('/shop?package=2bhk') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-2 group/link"><span class="w-2 h-2 rounded-full bg-slate-200 group-hover/link:bg-teal-500 transition-colors"></span> 2 BHK Premium</a></li>
+                                <li><a href="<?= baseUrl('/shop?package=office') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-2 group/link"><span class="w-2 h-2 rounded-full bg-slate-200 group-hover/link:bg-teal-500 transition-colors"></span> WFH Starter</a></li>
+                            </ul>
+                            <a href="<?= baseUrl('/shop') ?>" class="inline-block mt-8 text-sm font-bold text-teal-600 hover:text-teal-700 underline underline-offset-4 decoration-2">Browse All Packages &rarr;</a>
+                        </div>
+                        <div class="col-span-8 p-8 flex gap-6">
+                            <a href="<?= baseUrl('/shop?package=studio') ?>" class="block w-1/2 group/card relative rounded-2xl overflow-hidden aspect-[4/3]">
+                                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800" alt="Studio Package" class="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                                    <span class="bg-teal-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded w-fit mb-2">Most Popular</span>
+                                    <h4 class="text-white font-bold text-lg">Essential Studio Pack</h4>
+                                    <p class="text-white/80 text-sm">Everything you need from $89/mo</p>
+                                </div>
+                            </a>
+                            <a href="<?= baseUrl('/shop?package=2bhk') ?>" class="block w-1/2 group/card relative rounded-2xl overflow-hidden aspect-[4/3]">
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800" alt="2BHK Package" class="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                                    <span class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded w-fit mb-2">Premium</span>
+                                    <h4 class="text-white font-bold text-lg">2 BHK Luxe Setup</h4>
+                                    <p class="text-white/80 text-sm">Elevate your home from $199/mo</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How it Works with Mega Menu -->
+            <div class="h-full flex items-center group/menu relative">
+                <a class="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors py-8 font-medium flex items-center gap-1 focus-visible:text-teal-600 outline-none" href="<?= baseUrl('/') ?>">
+                    How it Works
+                    <span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover/menu:rotate-180">expand_more</span>
+                </a>
+                
+                <!-- Mega Menu Dropdown -->
+                <div class="absolute top-[80px] right-0 w-[calc(100vw-2rem)] max-w-3xl bg-white dark:bg-slate-900 rounded-3xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] border border-slate-100 dark:border-slate-800 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-500 translate-y-4 group-hover/menu:translate-y-0 overflow-hidden">
+                    <div class="grid grid-cols-12 gap-0">
+                        <div class="col-span-5 p-8 bg-slate-50 dark:bg-slate-800/50">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Discover RentEase</h3>
+                            <ul class="space-y-4">
+                                <li><a href="<?= baseUrl('/about') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-3"><span class="material-symbols-outlined text-lg text-slate-400">info</span> About Us</a></li>
+                                <li><a href="<?= baseUrl('/support') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-3"><span class="material-symbols-outlined text-lg text-slate-400">help</span> Help Center / FAQ</a></li>
+                                <li><a href="<?= baseUrl('/support') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-3"><span class="material-symbols-outlined text-lg text-slate-400">local_shipping</span> Delivery & Returns</a></li>
+                                <li><a href="<?= baseUrl('/concierge') ?>" class="text-slate-700 dark:text-slate-300 hover:text-teal-600 font-medium flex items-center gap-3"><span class="material-symbols-outlined text-lg text-slate-400">support_agent</span> Live Concierge</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-span-7 p-8">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">The Process</h3>
+                            <div class="flex flex-col gap-6">
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center flex-shrink-0">
+                                        <span class="material-symbols-outlined">touch_app</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">1. Choose Your Style</h4>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">Browse premium pieces or complete packages that fit your aesthetic.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center flex-shrink-0">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">2. Flexible Subscription</h4>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">Select 3, 6, or 12-month terms. The longer you rent, the less you pay.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-600 flex items-center justify-center flex-shrink-0">
+                                        <span class="material-symbols-outlined">local_shipping</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">3. Free Delivery & Setup</h4>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">We deliver and assemble everything for free. Just sit back and relax.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="hidden md:flex gap-6 items-center text-slate-700 dark:text-slate-200">

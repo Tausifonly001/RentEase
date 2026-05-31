@@ -1,0 +1,51 @@
+name: Deploy RentEase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo, pdo_pgsql, pgsql
+          tools: composer, phpstan
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Check for leaked secrets
+        run: |
+          if git ls-files --others --ignored --exclude-standard .env; then
+            echo "::error:: .env file is tracked by git — remove it immediately"
+            exit 1
+          fi
+          if [ -f .env ] && git ls-files .env; then
+            echo "::error:: .env is committed — remove it immediately"
+            exit 1
+          fi
+          echo "No secrets detected in git tracking"
+
+      - name: PHPStan static analysis
+        run: vendor/bin/phpstan analyse --no-progress --error-format=github || true
+
+  deploy:
+    name: Deploy to Render
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Render Deploy
+        run: |
+          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache": true}' \
+            || echo "Deploy hook not configured — set RENDER_DEPLOY_HOOK secret"

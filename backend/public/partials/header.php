@@ -72,9 +72,14 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>" />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#14b8a6" />
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>" />
     <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="<?= baseUrl('/favicon.svg') ?>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>" />
+    <link rel="apple-touch-icon" href="<?= baseUrl('/favicon.svg') ?>" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -88,7 +93,15 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
                     },
                     colors: {
                         primary: '#111111',
-                        accent: '#2563eb',
+                        accent: '#14b8a6',
+                        'accent-dark': '#0d9488',
+                        'accent-darker': '#0f766e',
+                        'accent-soft': '#ccfbf1',
+                        'accent-bg': '#f0fdfa',
+                        'brand-ink': '#0f172a',
+                    },
+                    boxShadow: {
+                        'glow': '0 12px 40px -8px rgba(20, 184, 166, 0.35)',
                     }
                 }
             }

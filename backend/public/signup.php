@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
                 $authService->signup($payload);
 
-                // Send Welcome Email via Resend
                 try {
                     $resend = new \RentEase\Services\Email\ResendService($config);
                     $resend->send(
@@ -48,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("Welcome email failed: " . $e->getMessage());
                 }
 
-                // Send Push Notification via OneSignal
                 try {
                     $onesignal = new \RentEase\Services\NotificationService($config);
                     $onesignal->sendPush([$email], 'Welcome to RentEase!', 'Your account has been created successfully.');
@@ -58,209 +56,184 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $loginResult = $authService->login(['email' => $email, 'password' => $password]);
                 $token = (string) ($loginResult['access_token'] ?? '');
-                $expires = (int) ($loginResult['expires_in'] ?? 3600);
 
                 if ($token !== '') {
-                    $authService->setAuthCookie($token, $expires);
+                    $authService->persistSession($loginResult, true);
                 }
 
                 header('Location: ' . baseUrl('/'));
                 exit;
             } catch (Throwable $e) {
-                $error = 'Signup failed: ' . $e->getMessage();
+                $error = 'Signup failed. That email may already be in use or your password is too weak.';
             }
         }
     }
 }
 
-// OAuth Providers from configuration
 $oauthProviders = $config['enabled_oauth_providers'] ?? [];
+$pageTitle = 'Create Account — RentEase';
+$pageDescription = 'Join RentEase to rent premium furniture, track deliveries, and earn member rewards.';
+
+require __DIR__ . '/partials/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en" class="min-h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - RentEase Premium</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#041627",
-                        secondary: "#006a65",
-                        background: "#f8f9ff",
-                        "surface-container": "#e5eeff",
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .auth-card {
-            box-shadow: 0 20px 50px rgba(4, 22, 39, 0.08);
-        }
-    </style>
-</head>
-<body class="min-h-full bg-background font-sans antialiased text-primary">
-    
-    <div class="flex min-h-full">
-        <!-- Left Side: Interactive Branding -->
-        <div class="hidden lg:flex lg:w-1/2 relative bg-primary items-center justify-center overflow-hidden">
-            <div class="absolute inset-0 opacity-20">
-                <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary rounded-full blur-[120px]"></div>
-                <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-teal-500 rounded-full blur-[120px]"></div>
-            </div>
-            
-            <div class="relative z-10 text-center px-12">
-                <a href="<?= baseUrl('/') ?>" class="inline-block mb-12">
-                    <span class="text-5xl font-normal text-white tracking-tighter">Rent<span class="text-secondary">Ease</span></span>
-                </a>
-                <h2 class="text-4xl font-normal text-white mb-6 leading-tight">Join the Premium Rental Marketplace.</h2>
-                <p class="text-slate-400 text-lg max-w-md mx-auto">Create an account to start your journey with curated furniture and luxury living spaces.</p>
-                
-                <div class="mt-16 grid grid-cols-2 gap-4">
-                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-left backdrop-blur-sm">
-                        <span class="material-symbols-outlined text-secondary mb-3">auto_awesome</span>
-                        <h4 class="text-white font-light text-sm mb-1">Curated Styles</h4>
-                        <p class="text-slate-500 text-xs font-light">Designer-picked furniture collections.</p>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-left backdrop-blur-sm">
-                        <span class="material-symbols-outlined text-secondary mb-3">verified_user</span>
-                        <h4 class="text-white font-light text-sm mb-1">Total Security</h4>
-                        <p class="text-slate-500 text-xs font-light">Insured rentals and secure payments.</p>
-                    </div>
+
+<div class="flex flex-1 min-h-[calc(100vh-80px)] page-fade">
+
+    <!-- Right (signup places brand on right to differentiate from login): form panel on left -->
+    <main class="flex flex-col justify-center w-full lg:w-1/2 px-5 sm:px-12 lg:px-24 bg-white relative order-2 lg:order-1">
+        <div class="w-full max-w-md mx-auto py-12">
+
+            <header class="mb-8">
+                <span class="badge badge-accent mb-4">Create your account</span>
+                <h1 class="text-4xl font-bold text-slate-900 mb-2 tracking-tight">Join RentEase</h1>
+                <p class="text-slate-500">Start renting premium furniture in minutes. No commitments, cancel anytime.</p>
+            </header>
+
+            <?php if ($error): ?>
+                <div class="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-100 flex gap-3 items-start text-rose-700 text-sm" role="alert">
+                    <span class="material-symbols-outlined text-rose-500 mt-0.5 flex-shrink-0">error</span>
+                    <p class="leading-relaxed"><?= htmlspecialchars($error) ?></p>
                 </div>
-            </div>
-        </div>
+            <?php endif; ?>
 
-        <!-- Right Side: Signup Form -->
-        <div class="flex flex-col justify-start sm:justify-center w-full lg:w-1/2 px-5 sm:px-12 lg:px-24 bg-white relative min-w-0">
-            <div class="absolute top-8 left-5 lg:hidden">
-                <a href="<?= baseUrl('/') ?>" class="text-2xl font-normal text-primary tracking-tighter">RentEase</a>
-            </div>
+            <form action="<?= baseUrl('/signup') ?>" method="POST" class="space-y-4" novalidate>
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
-            <div id="signup-container" class="w-full max-w-md mx-auto pt-24 pb-12 sm:py-12 min-w-0">
-                <header class="mb-10">
-                    <h1 class="text-3xl font-normal text-primary mb-2">Create Account</h1>
-                    <p class="text-slate-500">Join RentEase and elevate your living space today.</p>
-                </header>
-
-                <?php if ($error): ?>
-                    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 flex gap-3 items-center text-red-700 text-sm animate-shake font-light">
-                        <span class="material-symbols-outlined text-red-500">error</span>
-                        <p><?= htmlspecialchars($error) ?></p>
-                    </div>
-                <?php endif; ?>
-
-                <form action="<?= baseUrl('/signup') ?>" method="POST" class="space-y-5">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
-                    
-                    <div>
-                        <label for="full_name" class="block text-sm font-light text-primary mb-2">Full Name</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">person</span>
-                            <input type="text" id="full_name" name="full_name" required 
-                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none text-slate-900"
-                                placeholder="John Doe"
-                                value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-light text-primary mb-2">Email Address</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">mail</span>
-                            <input type="email" id="email" name="email" required 
-                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none text-slate-900"
-                                placeholder="name@company.com"
-                                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-light text-primary mb-2">Password</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
-                            <input type="password" id="password" name="password" required 
-                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none text-slate-900"
-                                placeholder="At least 6 characters">
-                        </div>
-                    </div>
-
-                    <div class="flex items-start gap-3">
-                        <div class="flex items-center h-5 mt-0.5">
-                            <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-secondary border-slate-300 rounded focus:ring-secondary cursor-pointer">
-                        </div>
-                        <div class="text-sm font-light">
-                            <label for="terms" class="text-slate-500 leading-relaxed">I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-secondary font-normal hover:underline">Terms of Service</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-secondary font-normal hover:underline">Privacy Policy</a>.</label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-normal rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
-                        Create Account
-                    </button>
-                </form>
-
-                <!-- Social Signup -->
-                <div class="mt-8">
-                    <div class="relative flex items-center mb-8">
-                        <div class="flex-grow border-t border-slate-200"></div>
-                        <span class="flex-shrink mx-4 text-xs font-light text-slate-400 uppercase tracking-widest">Or sign up with</span>
-                        <div class="flex-grow border-t border-slate-200"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>'" 
-                                class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
-                                <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
-                                <span class="text-sm font-light text-slate-700"><?= $provider['name'] ?></span>
-                            </button>
-                        <?php endforeach; ?>
+                <div class="form-field">
+                    <label for="full_name" class="form-label">Full name</label>
+                    <div class="input-group">
+                        <span class="input-group-icon material-symbols-outlined" aria-hidden="true">person</span>
+                        <input type="text" id="full_name" name="full_name" required autocomplete="name"
+                               class="form-input"
+                               placeholder="Jane Cooper"
+                               value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
                     </div>
                 </div>
 
-                <footer class="mt-10 text-center">
-                    <p class="text-slate-500 text-sm font-light">
-                        Already have an account? 
-                        <a href="<?= baseUrl('/login') ?>" class="text-secondary font-normal hover:underline">Sign in instead</a>
-                    </p>
-                </footer>
+                <div class="form-field">
+                    <label for="email" class="form-label">Email address</label>
+                    <div class="input-group">
+                        <span class="input-group-icon material-symbols-outlined" aria-hidden="true">mail</span>
+                        <input type="email" id="email" name="email" required autocomplete="email"
+                               class="form-input"
+                               placeholder="name@company.com"
+                               value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-icon material-symbols-outlined" aria-hidden="true">lock</span>
+                        <input type="password" id="password" name="password" required autocomplete="new-password"
+                               class="form-input"
+                               placeholder="At least 8 characters"
+                               minlength="8"
+                               oninput="const v=this.value; const r=/^(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/; document.getElementById('pw-strength').textContent = !v ? '' : (r.test(v) ? '✓ Strong password' : 'Use 8+ chars, 1 number, 1 special character'); document.getElementById('pw-strength').className = 'mt-2 text-xs ' + (r.test(v) ? 'text-emerald-600' : 'text-amber-600');">
+                        <button type="button" onclick="const p=document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('span').textContent = p.type === 'password' ? 'visibility_off' : 'visibility';" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-700 rounded transition-colors" tabindex="-1" aria-label="Toggle password visibility">
+                            <span class="material-symbols-outlined text-lg">visibility_off</span>
+                        </button>
+                    </div>
+                    <p id="pw-strength" class="mt-2 text-xs text-slate-500"></p>
+                </div>
+
+                <div class="pt-1">
+                    <label class="form-check items-start">
+                        <input type="checkbox" id="terms" name="terms" required class="mt-0.5">
+                        <span class="form-check-label leading-relaxed">
+                            I agree to the
+                            <a href="<?= baseUrl('/terms') ?>" class="text-teal-600 font-medium hover:text-teal-700">Terms of Service</a>
+                            and
+                            <a href="<?= baseUrl('/privacy') ?>" class="text-teal-600 font-medium hover:text-teal-700">Privacy Policy</a>.
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-pill btn-pill-lg w-full mt-3">
+                    Create account
+                    <span class="material-symbols-outlined text-base" aria-hidden="true">arrow_forward</span>
+                </button>
+            </form>
+
+            <?php if (!empty($oauthProviders)): ?>
+            <div class="mt-10">
+                <div class="relative flex items-center mb-6">
+                    <div class="flex-grow border-t border-slate-200"></div>
+                    <span class="flex-shrink mx-4 text-xs font-medium text-slate-400 uppercase tracking-widest">Or sign up with</span>
+                    <div class="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <?php foreach ($oauthProviders as $id => $provider): ?>
+                        <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>'"
+                                class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all group w-full font-medium text-sm text-slate-700">
+                            <img src="<?= $provider['icon'] ?>" alt="" class="w-5 h-5 group-hover:scale-110 transition-transform">
+                            <?= $provider['name'] ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <footer class="mt-10 pt-8 border-t border-slate-100 text-center">
+                <p class="text-slate-500 text-sm">
+                    Already have an account?
+                    <a href="<?= baseUrl('/login') ?>" class="text-teal-600 font-semibold hover:text-teal-700">Sign in instead</a>
+                </p>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Brand panel (right side on desktop) -->
+    <aside class="hidden lg:flex lg:w-1/2 relative bg-slate-900 items-center justify-center overflow-hidden order-1 lg:order-2">
+        <div class="absolute top-[-15%] right-[-15%] w-[50%] h-[50%] bg-teal-500/30 rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-[-15%] left-[-15%] w-[50%] h-[50%] bg-emerald-500/20 rounded-full blur-[140px]"></div>
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%221%22 fill=%22white%22/></svg>');"></div>
+
+        <div class="relative z-10 text-center px-12 max-w-xl">
+            <a href="<?= baseUrl('/') ?>" class="inline-block mb-16 group">
+                <span class="text-5xl font-bold text-white tracking-tighter">Rent<span class="text-teal-400 group-hover:text-teal-300 transition-colors">Ease</span><span class="text-teal-400">.</span></span>
+            </a>
+
+            <h2 class="text-5xl font-bold text-white mb-6 leading-[1.05] tracking-tight">
+                Rent premium<br>furniture, <span class="text-teal-400">frictionlessly.</span>
+            </h2>
+            <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed mb-16">
+                Join thousands of urban professionals furnishing their homes without the commitment.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-left backdrop-blur-sm hover:bg-white/[0.06] transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                    </div>
+                    <h4 class="text-white font-semibold text-sm mb-1">Curated Styles</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Designer-picked collections.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-left backdrop-blur-sm hover:bg-white/[0.06] transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">verified_user</span>
+                    </div>
+                    <h4 class="text-white font-semibold text-sm mb-1">Total Security</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Insured rentals & RLS.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-left backdrop-blur-sm hover:bg-white/[0.06] transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                    </div>
+                    <h4 class="text-white font-semibold text-sm mb-1">Free Delivery</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">White-glove setup included.</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-left backdrop-blur-sm hover:bg-white/[0.06] transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center mb-3">
+                        <span class="material-symbols-outlined">workspace_premium</span>
+                    </div>
+                    <h4 class="text-white font-semibold text-sm mb-1">Member Rewards</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Earn on every rental.</p>
+                </div>
             </div>
         </div>
-    </div>
+    </aside>
+</div>
 
-    <script>
-        window.addEventListener('load', () => {
-            gsap.from('#signup-container', {
-                opacity: 0,
-                x: 20,
-                duration: 1,
-                ease: 'power3.out'
-            });
-
-            gsap.from('form > div, .relative.flex', {
-                opacity: 0,
-                y: 10,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: 'power3.out',
-                delay: 0.3
-            });
-        });
-    </script>
-</body>
-</html>
+<?php require __DIR__ . '/partials/footer.php'; ?>

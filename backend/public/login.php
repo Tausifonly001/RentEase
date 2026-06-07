@@ -48,11 +48,13 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta name="theme-color" content="#041527">
     <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -61,10 +63,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        ink: '#041527',
-                        accent: '#14b8a6',
-                    },
+                    colors: { ink: '#041527', accent: '#14b8a6' },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         serif: ['"Instrument Serif"', 'serif'],
@@ -74,212 +73,389 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        .auth-bg { background-color: #041527; }
-        .glass-card {
+        /* ========== BASE ========== */
+        html, body { height: 100%; overscroll-behavior: none; }
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #041527; color: #fff; }
+
+        /* ========== CINEMATIC BACKGROUND ========== */
+        .cinematic-wrap { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+        .cinematic-bg {
+            position: absolute; inset: -8%;
+            width: 116%; height: 116%;
+            object-fit: cover;
+            transform: scale(1.08);
+            will-change: transform;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes ken-burns {
+            0%   { transform: scale(1.08) translate(0%, 0%); }
+            100% { transform: scale(1.18) translate(-1.5%, -1%); }
+        }
+        .grade-overlay {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(20, 184, 166, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
+                linear-gradient(180deg, rgba(4, 21, 39, 0.55) 0%, rgba(4, 21, 39, 0.35) 50%, rgba(4, 21, 39, 0.85) 100%);
+        }
+        .vignette {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+        }
+        .grain {
+            position: absolute; inset: 0; pointer-events: none; opacity: 0.12; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+        .letterbox {
+            position: absolute; left: 0; right: 0; height: 6vh; max-height: 60px; min-height: 32px;
+            background: #000; z-index: 5;
+        }
+        .letterbox-top { top: 0; }
+        .letterbox-bottom { bottom: 0; }
+        @media (max-width: 1023px) { .letterbox { display: none; } }
+
+        /* ========== PARTICLES ========== */
+        .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .particle {
+            position: absolute; bottom: -10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 9999px;
+            animation: drift linear infinite;
+        }
+        @keyframes drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(20px, -50vh) scale(0.7); }
+            100% { transform: translate(-10px, -110vh) scale(0.3); }
+        }
+
+        /* ========== CURSOR GLOW ========== */
+        .cursor-glow {
+            position: fixed; left: 0; top: 0;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 60%);
+            border-radius: 9999px; pointer-events: none;
+            z-index: 1; will-change: transform;
+            transform: translate(-500px, -500px);
+        }
+
+        /* ========== WORD REVEAL ========== */
+        .word-reveal .word {
+            display: inline-block;
+            opacity: 0; transform: translateY(20px);
+            animation: wordIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes wordIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== GLASS CARD ========== */
+        .tilt-card {
             background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(28px) saturate(180%);
             -webkit-backdrop-filter: blur(28px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow:
                 0 1px 0 rgba(255, 255, 255, 0.9) inset,
-                0 30px 80px -20px rgba(0, 0, 0, 0.4),
+                0 30px 80px -20px rgba(0, 0, 0, 0.45),
                 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+            position: relative;
+            overflow: hidden;
         }
+        .card-highlight {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 50%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .tilt-card:hover .card-highlight { opacity: 1; }
+
+        /* ========== FORM FIELDS ========== */
+        .auth-field { position: relative; }
         .auth-input {
-            width: 100%; padding: 0.95rem 1rem 0.95rem 3rem;
-            background: rgba(255, 255, 255, 0.6);
+            width: 100%; padding: 1.1rem 1rem 1.1rem 3rem;
+            background: rgba(255, 255, 255, 0.5);
             border: 1.5px solid rgba(15, 23, 42, 0.08);
             border-radius: 14px;
             color: #0f172a;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
         }
-        .auth-input::placeholder { color: #94a3b8; }
-        .auth-input:hover { border-color: rgba(15, 23, 42, 0.15); }
-        .auth-input:focus {
+        .auth-input::placeholder { color: #94a3b8; transition: opacity 0.2s; }
+        .auth-field.is-focused .auth-input::placeholder { opacity: 0.4; }
+        .auth-input:hover { border-color: rgba(15, 23, 42, 0.18); background: rgba(255, 255, 255, 0.7); }
+        .auth-field.is-focused .auth-input {
             border-color: #14b8a6;
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12), 0 4px 12px rgba(20, 184, 166, 0.08);
         }
-        .auth-input.is-error { border-color: #f43f5e; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1); }
-        .floating-shape {
-            position: absolute; border-radius: 9999px;
-            filter: blur(40px); opacity: 0.5;
-            animation: float 18s ease-in-out infinite;
-            pointer-events: none;
+        .auth-field .field-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: 20px; pointer-events: none;
+            transition: color 0.3s, transform 0.3s;
         }
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -30px) scale(1.1); }
+        .auth-field.is-focused .field-icon { color: #14b8a6; transform: translateY(-50%) scale(1.1); }
+
+        /* ========== SUBMIT BUTTON ========== */
+        .btn-cinematic {
+            position: relative; overflow: hidden;
+            background: #041527; color: #fff;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .reveal-up { opacity: 0; transform: translateY(24px); animation: revealUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-        .delay-5 { animation-delay: 0.5s; }
+        .btn-cinematic::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        .btn-cinematic:hover { background: #0f172a; transform: translateY(-2px); box-shadow: 0 12px 30px -8px rgba(4,21,39,0.5); }
+        .btn-cinematic:hover::before { transform: translateX(100%); }
+        .btn-cinematic:active { transform: translateY(0); }
+        .btn-cinematic.is-loading { pointer-events: none; }
+        .btn-cinematic .btn-text, .btn-cinematic .btn-loader { transition: all 0.3s; }
+        .btn-cinematic .btn-loader {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: translateY(8px);
+        }
+        .btn-cinematic.is-loading .btn-text { opacity: 0; transform: translateY(-8px); }
+        .btn-cinematic.is-loading .btn-loader { opacity: 1; transform: translateY(0); }
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 9999px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========== SUBMIT TRANSITION ========== */
+        .is-submitting .cinematic-bg { transform: scale(1.4) !important; filter: blur(8px) brightness(0.7); }
+        .is-submitting { transition: filter 0.6s; }
+
+        /* ========== STAGGER ANIMATIONS ========== */
+        .stagger-in { opacity: 0; transform: translateY(20px); animation: staggerIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes staggerIn { to { opacity: 1; transform: translateY(0); } }
+        .s-1 { animation-delay: 0.1s; }
+        .s-2 { animation-delay: 0.2s; }
+        .s-3 { animation-delay: 0.3s; }
+        .s-4 { animation-delay: 0.4s; }
+        .s-5 { animation-delay: 0.5s; }
+        .s-6 { animation-delay: 0.6s; }
+        .s-7 { animation-delay: 0.7s; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1023px) {
+            .editorial-panel { display: none !important; }
+            .cinematic-wrap::after {
+                content: ''; position: absolute; inset: 0;
+                background: linear-gradient(180deg, rgba(4,21,39,0.85) 0%, rgba(4,21,39,0.7) 100%);
+            }
+        }
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            .editorial-headline { font-size: 4.5rem !important; }
+        }
+        @media (max-width: 640px) {
+            .auth-form-card { padding: 1.75rem !important; border-radius: 1.5rem !important; }
+            .editorial-mobile-headline { font-size: 2.5rem !important; }
+        }
+
+        /* ========== A11Y ========== */
         @media (prefers-reduced-motion: reduce) {
-            .reveal-up { opacity: 1; transform: none; animation: none; }
-            .floating-shape { animation: none; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .cinematic-bg { animation: none !important; transform: scale(1.05) !important; }
+            .stagger-in { opacity: 1; transform: none; }
+            .word-reveal .word { opacity: 1; transform: none; animation: none; }
+            .particle { display: none; }
+            .cursor-glow { display: none; }
+            .grain { opacity: 0.05; }
         }
     </style>
 </head>
-<body class="auth-bg min-h-screen overflow-x-hidden">
+<body class="min-h-screen overflow-x-hidden">
 
-    <!-- ============== FULL-BLEED LIFESTYLE BACKGROUND ============== -->
-    <div class="fixed inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=2000&q=80&auto=format&fit=crop"
+    <!-- ============ CINEMATIC BACKGROUND ============ -->
+    <div class="cinematic-wrap">
+        <img class="cinematic-bg"
+             src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=2200&q=85&auto=format&fit=crop"
              alt=""
-             class="w-full h-full object-cover"
              loading="eager"
-             onerror="this.src='https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=2000&q=80&auto=format&fit=crop'">
-        <!-- Soft dark gradient overlay (right side darker for form legibility) -->
-        <div class="absolute inset-0 bg-gradient-to-r from-ink/40 via-ink/30 to-ink/85"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-ink/30 via-transparent to-ink/60"></div>
+             onerror="this.src='https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=2200&q=85&auto=format&fit=crop'">
+        <div class="grade-overlay"></div>
+        <div class="vignette"></div>
+        <div class="grain"></div>
+        <div class="particles"></div>
+        <div class="letterbox letterbox-top"></div>
+        <div class="letterbox letterbox-bottom"></div>
     </div>
 
-    <!-- ============== FLOATING DECORATIVE ORBS ============== -->
-    <div class="floating-shape bg-teal-400/30 w-96 h-96 top-[-10%] right-[-5%]" style="animation-delay:-2s;"></div>
-    <div class="floating-shape bg-emerald-400/20 w-80 h-80 bottom-[-10%] left-[20%]" style="animation-delay:-8s;"></div>
+    <!-- ============ EDITORIAL BRAND PANEL (LEFT, DESKTOP) ============ -->
+    <aside class="editorial-panel relative z-10 hidden lg:flex flex-col justify-between w-1/2 px-12 xl:px-20 py-16 text-white">
 
-    <!-- ============== MINIMAL TOP BAR ============== -->
-    <header class="relative z-20 flex items-center justify-between px-6 lg:px-12 py-6">
-        <a href="<?= baseUrl('/') ?>" class="flex items-center gap-2 group">
-            <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <span class="text-white font-bold text-lg">R</span>
+        <!-- Top: brand mark + tagline pill -->
+        <div class="stagger-in s-1 flex items-center gap-3">
+            <a href="<?= baseUrl('/') ?>" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-105 transition-all">
+                    <span class="text-white font-bold text-lg">R</span>
+                </div>
+                <span class="text-white font-semibold text-lg tracking-tight">RentEase<span class="text-teal-400">.</span></span>
+            </a>
+            <span class="ml-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/8 backdrop-blur-md border border-white/15 text-[11px] font-medium tracking-widest uppercase text-white/80">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+                Member sign in
+            </span>
+        </div>
+
+        <!-- Center: massive headline + subhead -->
+        <div class="max-w-2xl">
+            <h1 class="editorial-headline text-7xl xl:text-8xl font-bold leading-[0.92] tracking-tighter">
+                <span class="word-reveal block">Your space,</span>
+                <span class="word-reveal block"><span class="font-serif italic font-normal text-teal-300">effortlessly</span></span>
+                <span class="word-reveal block">curated.</span>
+            </h1>
+            <p class="stagger-in s-4 mt-8 text-white/70 text-lg leading-relaxed max-w-md">
+                Continue managing your rentals, tracking deliveries, and unlocking member rewards — all in one place.
+            </p>
+        </div>
+
+        <!-- Bottom: stats strip with animated counters -->
+        <div class="stagger-in s-5 grid grid-cols-3 gap-6 max-w-xl pt-8 border-t border-white/10">
+            <div>
+                <div class="text-4xl font-bold tracking-tight"><span data-counter="12" data-suffix="k+">0</span></div>
+                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">Happy members</div>
             </div>
-            <span class="text-white font-semibold text-lg tracking-tight">RentEase<span class="text-teal-400">.</span></span>
-        </a>
-        <a href="<?= baseUrl('/signup') ?>" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-sm font-medium transition-all">
-            New here?
-            <span class="text-teal-300">Create an account</span>
-            <span class="material-symbols-outlined text-base">arrow_forward</span>
-        </a>
-    </header>
-
-    <!-- ============== MAIN: LEFT EDITORIAL + RIGHT GLASS FORM ============== -->
-    <main class="relative z-10 min-h-[calc(100vh-88px)] flex items-stretch">
-
-        <!-- LEFT: Editorial brand story -->
-        <section class="hidden lg:flex flex-col justify-between w-1/2 px-12 xl:px-20 py-12 text-white">
-            <div class="reveal-up delay-1 max-w-lg">
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-medium tracking-wide uppercase">
-                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                    Member sign in
-                </span>
-                <h1 class="mt-8 text-6xl xl:text-7xl font-bold leading-[0.95] tracking-tighter">
-                    Your space,<br>
-                    <span class="font-serif italic font-normal text-teal-300">effortlessly</span><br>
-                    curated.
-                </h1>
-                <p class="mt-6 text-white/70 text-lg leading-relaxed max-w-md">
-                    Continue managing your rentals, tracking deliveries, and unlocking member rewards — all in one place.
-                </p>
+            <div>
+                <div class="text-4xl font-bold tracking-tight"><span data-counter="98" data-suffix="%">0</span></div>
+                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">On-time delivery</div>
             </div>
-
-            <!-- Stats strip -->
-            <div class="reveal-up delay-3 grid grid-cols-3 gap-6 max-w-lg">
-                <div>
-                    <div class="text-3xl font-bold tracking-tight">12k+</div>
-                    <div class="text-white/50 text-xs uppercase tracking-widest mt-1">Happy members</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold tracking-tight">98%</div>
-                    <div class="text-white/50 text-xs uppercase tracking-widest mt-1">On-time delivery</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold tracking-tight">4.9<span class="text-teal-400">★</span></div>
-                    <div class="text-white/50 text-xs uppercase tracking-widest mt-1">Avg. rating</div>
-                </div>
+            <div>
+                <div class="text-4xl font-bold tracking-tight"><span data-counter="4.9" data-suffix="">0</span><span class="text-teal-400">★</span></div>
+                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">Avg. rating</div>
             </div>
-        </section>
+        </div>
+    </aside>
 
-        <!-- RIGHT: Glassmorphic form card -->
-        <section class="flex-1 flex items-center justify-center p-6 lg:p-12">
-            <div class="glass-card reveal-up delay-2 w-full max-w-md rounded-3xl p-8 lg:p-10">
+    <!-- ============ FORM PANEL (RIGHT) ============ -->
+    <main class="relative z-10 flex-1 flex flex-col">
 
-                <div class="mb-7">
-                    <h2 class="text-3xl font-bold text-ink tracking-tight">Welcome back</h2>
-                    <p class="text-slate-500 mt-1.5 text-sm">Sign in to continue to your dashboard.</p>
+        <!-- Top bar (mobile brand + desktop pill link) -->
+        <header class="stagger-in s-1 flex items-center justify-between px-6 lg:px-12 py-6">
+            <!-- Mobile: brand only -->
+            <a href="<?= baseUrl('/') ?>" class="lg:hidden flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                    <span class="text-white font-bold">R</span>
+                </div>
+                <span class="text-white font-semibold tracking-tight">RentEase<span class="text-teal-400">.</span></span>
+            </a>
+            <!-- Desktop: spacer -->
+            <div class="hidden lg:block"></div>
+            <a href="<?= baseUrl('/signup') ?>" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-sm font-medium transition-all hover:scale-[1.02]">
+                <span class="hidden sm:inline">New here?</span>
+                <span class="text-teal-300">Create an account</span>
+                <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+            </a>
+        </header>
+
+        <!-- Centered form area -->
+        <div class="flex-1 flex items-center justify-center p-5 sm:p-8 lg:p-12">
+            <div class="w-full max-w-md">
+
+                <!-- Mobile headline (hidden on desktop) -->
+                <div class="lg:hidden mb-8 text-center text-white stagger-in s-1">
+                    <h1 class="editorial-mobile-headline text-4xl sm:text-5xl font-bold leading-[1.05] tracking-tight">
+                        Welcome <span class="font-serif italic text-teal-300">back</span>
+                    </h1>
+                    <p class="mt-3 text-white/60 text-sm">Sign in to continue your journey</p>
                 </div>
 
-                <?php if ($error): ?>
-                    <div class="mb-5 p-3.5 rounded-2xl bg-rose-50/90 border border-rose-100 flex gap-2.5 items-start text-rose-700 text-sm" role="alert">
-                        <span class="material-symbols-outlined text-rose-500 text-lg mt-0.5 flex-shrink-0">error</span>
-                        <p class="leading-relaxed"><?= htmlspecialchars($error) ?></p>
+                <!-- GLASS FORM CARD -->
+                <div class="tilt-card auth-form-card rounded-3xl p-7 sm:p-9 lg:p-10 stagger-in s-2">
+                    <div class="card-highlight"></div>
+
+                    <div class="relative mb-6">
+                        <span class="inline-block text-[11px] font-bold tracking-widest uppercase text-teal-600 mb-2">Sign in</span>
+                        <h2 class="text-3xl font-bold text-ink tracking-tight">Welcome back</h2>
+                        <p class="text-slate-500 mt-1.5 text-sm">Enter your credentials to access your dashboard.</p>
                     </div>
-                <?php endif; ?>
 
-                <form action="<?= baseUrl('/login') ?>" method="POST" class="space-y-4" novalidate>
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                    <?php if ($error): ?>
+                        <div class="relative mb-5 p-3.5 rounded-2xl bg-rose-50/95 border border-rose-100 flex gap-2.5 items-start text-rose-700 text-sm stagger-in s-1" role="alert">
+                            <span class="material-symbols-outlined text-rose-500 text-lg mt-0.5 flex-shrink-0">error</span>
+                            <p class="leading-relaxed"><?= htmlspecialchars($error) ?></p>
+                        </div>
+                    <?php endif; ?>
 
-                    <div>
-                        <label for="email" class="block text-xs font-semibold text-slate-600 mb-1.5 tracking-wide uppercase">Email</label>
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xl pointer-events-none">mail</span>
+                    <form action="<?= baseUrl('/login') ?>" method="POST" class="relative space-y-4" novalidate data-cinematic-submit>
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+
+                        <div class="stagger-in s-3 auth-field">
+                            <span class="material-symbols-outlined field-icon">mail</span>
                             <input type="email" id="email" name="email" required autocomplete="email"
                                    class="auth-input"
                                    placeholder="you@company.com"
                                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                         </div>
-                    </div>
 
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label for="password" class="block text-xs font-semibold text-slate-600 tracking-wide uppercase">Password</label>
-                            <a href="<?= baseUrl('/forgot-password') ?>" class="text-xs font-medium text-teal-600 hover:text-teal-700">Forgot?</a>
-                        </div>
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xl pointer-events-none">lock</span>
+                        <div class="stagger-in s-4 auth-field">
+                            <span class="material-symbols-outlined field-icon">lock</span>
                             <input type="password" id="password" name="password" required autocomplete="current-password"
                                    class="auth-input"
                                    placeholder="Enter your password">
-                            <button type="button" onclick="const p=document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('span').textContent = p.type === 'password' ? 'visibility_off' : 'visibility';" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-700 rounded-lg transition-colors" tabindex="-1" aria-label="Toggle password visibility">
+                            <button type="button" onclick="const p=this.previousElementSibling; p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('span').textContent = p.type === 'password' ? 'visibility_off' : 'visibility';" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-700 rounded-lg transition-colors z-10" tabindex="-1" aria-label="Toggle password visibility">
                                 <span class="material-symbols-outlined text-lg">visibility_off</span>
                             </button>
                         </div>
+
+                        <div class="stagger-in s-5 flex items-center justify-between pt-1">
+                            <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+                                <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded accent-teal-500 cursor-pointer">
+                                <span class="text-sm text-slate-600 group-hover:text-ink transition-colors">Keep me signed in</span>
+                            </label>
+                            <a href="<?= baseUrl('/forgot-password') ?>" class="text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="stagger-in s-6 btn-cinematic w-full mt-2 inline-flex items-center justify-center gap-2 py-4 font-semibold rounded-2xl text-sm tracking-wide">
+                            <span class="btn-text inline-flex items-center gap-2">
+                                Sign in to your account
+                                <span class="material-symbols-outlined text-base">arrow_forward</span>
+                            </span>
+                            <span class="btn-loader">
+                                <span class="spinner"></span>
+                                <span class="ml-2">Signing you in…</span>
+                            </span>
+                        </button>
+                    </form>
+
+                    <?php if (!empty($oauthProviders)): ?>
+                    <div class="relative mt-7 stagger-in s-7 flex items-center gap-4">
+                        <div class="flex-1 h-px bg-slate-200"></div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">or continue with</span>
+                        <div class="flex-1 h-px bg-slate-200"></div>
                     </div>
 
-                    <label class="flex items-center gap-2.5 pt-1 cursor-pointer select-none">
-                        <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded accent-teal-500 cursor-pointer">
-                        <span class="text-sm text-slate-600">Keep me signed in for 30 days</span>
-                    </label>
+                    <div class="relative mt-4 stagger-in s-7 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-2.5">
+                        <?php foreach ($oauthProviders as $id => $provider): ?>
+                            <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>"
+                               class="flex items-center justify-center gap-2.5 py-3 px-3 bg-white border border-slate-200 hover:border-ink hover:bg-slate-50 rounded-2xl transition-all group">
+                                <img src="<?= $provider['icon'] ?>" alt="" class="w-4 h-4 group-hover:scale-110 transition-transform">
+                                <span class="text-sm font-semibold text-slate-700"><?= $provider['name'] ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
 
-                    <button type="submit" class="w-full mt-2 inline-flex items-center justify-center gap-2 py-3.5 bg-ink hover:bg-slate-800 text-white font-semibold rounded-2xl transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-ink/20">
-                        Sign in
-                        <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                </form>
-
-                <?php if (!empty($oauthProviders)): ?>
-                <div class="mt-6 flex items-center gap-4">
-                    <div class="flex-1 h-px bg-slate-200"></div>
-                    <span class="text-[11px] font-medium text-slate-400 uppercase tracking-widest">or continue with</span>
-                    <div class="flex-1 h-px bg-slate-200"></div>
+                    <p class="relative mt-6 text-center text-sm text-slate-500 stagger-in s-7">
+                        New to RentEase?
+                        <a href="<?= baseUrl('/signup') ?>" class="text-ink font-semibold hover:text-teal-600 transition-colors">Create an account</a>
+                    </p>
                 </div>
-
-                <div class="mt-5 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-2.5">
-                    <?php foreach ($oauthProviders as $id => $provider): ?>
-                        <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>"
-                           class="flex items-center justify-center gap-2.5 py-2.5 px-3 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-2xl transition-all group">
-                            <img src="<?= $provider['icon'] ?>" alt="" class="w-4 h-4 group-hover:scale-110 transition-transform">
-                            <span class="text-sm font-medium text-slate-700"><?= $provider['name'] ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
-
-                <p class="mt-7 text-center text-sm text-slate-500">
-                    New to RentEase?
-                    <a href="<?= baseUrl('/signup') ?>" class="text-ink font-semibold hover:text-teal-600">Create an account</a>
-                </p>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- No footer on auth pages (intentional, focused experience) -->
+    <script src="<?= baseUrl('/assets/js/auth-effects.js') ?>" defer></script>
 </body>
 </html>

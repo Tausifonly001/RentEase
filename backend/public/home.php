@@ -24,6 +24,13 @@ $pageDescription = 'Transform your space without commitment. Rent premium furnit
 require __DIR__ . '/partials/header.php';
 ?>
 
+<!-- Loader Animation -->
+<div id="loader" class="fixed inset-0 bg-white z-[60] flex items-center justify-center">
+    <div class="text-center">
+        <div class="text-4xl font-serif font-bold tracking-widest mb-4 text-ink">RENTEASE</div>
+        <div class="w-16 h-[1px] bg-champagne mx-auto origin-left transform scale-x-0" id="loader-line"></div>
+    </div>
+</div>
 
 <main class="w-full relative bg-white">
 
@@ -232,34 +239,37 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
             
             let ctx = gsap.context(() => {
-                // Hero entrance
+                // Loader + Hero entrance (single timeline like book opening)
                 const tl = gsap.timeline();
                 
-                // Text Reveal
-                tl.to('.text-mask-inner', {
-                    y: '0%',
-                    duration: 1.2,
-                    ease: 'power4.out',
-                    stagger: 0.15
-                });
-
-                // Image Reveal (Curtain effect)
-                tl.to('#hero-image-overlay', {
-                    clipPath: 'inset(0 0 0 100%)',
-                    duration: 1.5,
-                    ease: 'power4.inOut'
-                }, "-=1.0");
-
-                // Image Scale down
-                tl.to('#hero-img', {
-                    scale: 1,
-                    duration: 2.5,
-                    ease: 'power2.out'
-                }, "-=1.5");
-
-                // Fade up desc and ctas
-                tl.to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=2.0");
-                tl.to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=1.8");
+                // 1. Loader line expands (spine opens)
+                tl.to("#loader-line", { scaleX: 1, duration: 1, ease: "power2.inOut" })
+                // 2. Loader slides up (cover lifts)
+                  .to("#loader", { yPercent: -100, duration: 1.2, ease: "power4.inOut", delay: 0.2 })
+                // 3. Hero image zooms out (page settles) - starts during loader slide
+                  .from("#hero-img", { scale: 1.3, duration: 2, ease: "power2.out" }, "-=1")
+                // 4. Text mask reveal (content appears) - starts during loader slide
+                  .to('.text-mask-inner', {
+                      y: '0%',
+                      duration: 1.2,
+                      ease: 'power4.out',
+                      stagger: 0.15
+                  }, "-=1.5")
+                // 5. Image curtain reveal
+                  .to('#hero-image-overlay', {
+                      clipPath: 'inset(0 0 0 100%)',
+                      duration: 1.5,
+                      ease: 'power4.inOut'
+                  }, "-=1.0")
+                // 6. Image scale down (continues)
+                  .to('#hero-img', {
+                      scale: 1,
+                      duration: 2.5,
+                      ease: 'power2.out'
+                  }, "-=1.5")
+                // 7. Fade up desc and ctas
+                  .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=2.0")
+                  .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=1.8");
 
                 // Benefit cards
                 gsap.fromTo('.benefit-card', 

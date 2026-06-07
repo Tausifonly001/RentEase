@@ -7,81 +7,131 @@ $pageTitle = "About Us - RentEase";
 require __DIR__ . '/partials/header.php';
 ?>
 
-<main class="flex-grow">
-    <!-- Hero Section -->
-    <section class="relative py-24 bg-surface overflow-hidden">
-        <div class="max-w-container-max mx-auto px-4 md:px-8 relative z-10">
-            <div class="max-w-3xl">
-                <h1 class="font-h1 text-h1 md:text-6xl text-on-surface mb-6 leading-tight">
-                    Redefining <span class="text-secondary">Ownership</span> for the Modern World.
+<main class="w-full relative bg-white">
+
+    <!-- 1. EDITORIAL HERO SECTION -->
+    <section class="relative w-full min-h-[70vh] flex items-center px-6 lg:px-12 pt-32 pb-20 max-w-[1600px] mx-auto border-b border-zinc-200 overflow-hidden">
+        
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+            <div>
+                <h1 class="text-6xl md:text-7xl font-serif font-medium tracking-tight text-ink leading-[1.05] mb-8">
+                    Redefining<br>ownership.
                 </h1>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-                    At RentEase, we believe that life is about experiences, not just possessions. We're on a mission to make premium living accessible to everyone through flexible, sustainable, and hassle-free rentals.
+                <p class="text-xl text-zinc-500 font-light leading-relaxed mb-12 max-w-lg">
+                    At RentEase, we believe that life is about experiences, not just possessions. We're on a mission to make premium living accessible through flexible, sustainable, and hassle-free rentals.
                 </p>
-                <div class="flex gap-4">
-                    <a href="browse.php" class="bg-primary text-on-primary px-8 py-3 rounded-full font-button hover:shadow-lg transition-all">Explore Catalog</a>
-                    <a href="#our-story" class="border border-outline text-on-surface px-8 py-3 rounded-full font-button hover:bg-surface-container-low transition-all">Our Story</a>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <a href="<?= baseUrl('/shop') ?>" class="px-10 py-4 bg-ink text-white hover:bg-zinc-800 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors flex items-center justify-center outline-none focus-visible:ring-1 ring-ink border border-ink">
+                        Explore Catalog
+                    </a>
+                    <a href="#our-story" class="px-10 py-4 bg-transparent text-ink border border-zinc-300 hover:border-ink text-[11px] font-medium tracking-[0.2em] uppercase transition-colors flex items-center justify-center outline-none focus-visible:ring-1 ring-ink">
+                        Our Story
+                    </a>
                 </div>
             </div>
-        </div>
-        <!-- Decorative elements -->
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-secondary/5 -skew-x-12 translate-x-1/4"></div>
-    </section>
-
-    <!-- Our Values -->
-    <section class="py-20 bg-surface-container-lowest">
-        <div class="max-w-container-max mx-auto px-4 md:px-8">
-            <div class="text-center mb-16">
-                <h2 class="font-h2 text-h2 text-on-surface mb-4">The Values that Drive Us</h2>
-                <div class="w-20 h-1 bg-secondary mx-auto rounded-full"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-8 bg-surface rounded-2xl border border-outline-variant hover:border-secondary transition-colors group">
-                    <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-on-secondary transition-all">
-                        <span class="material-symbols-outlined">sustainability</span>
-                    </div>
-                    <h3 class="font-h3 text-xl text-on-surface mb-3">Sustainability</h3>
-                    <p class="text-on-surface-variant leading-relaxed">Reducing waste by promoting a circular economy. Why buy when you can share?</p>
-                </div>
-                <div class="p-8 bg-surface rounded-2xl border border-outline-variant hover:border-secondary transition-colors group">
-                    <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-on-secondary transition-all">
-                        <span class="material-symbols-outlined">bolt</span>
-                    </div>
-                    <h3 class="font-h3 text-xl text-on-surface mb-3">Flexibility</h3>
-                    <p class="text-on-surface-variant leading-relaxed">Life changes fast. Our rental terms adapt to your needs, whether it's 3 months or 3 years.</p>
-                </div>
-                <div class="p-8 bg-surface rounded-2xl border border-outline-variant hover:border-secondary transition-colors group">
-                    <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-lg flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-on-secondary transition-all">
-                        <span class="material-symbols-outlined">verified</span>
-                    </div>
-                    <h3 class="font-h3 text-xl text-on-surface mb-3">Quality</h3>
-                    <p class="text-on-surface-variant leading-relaxed">We only offer premium, well-maintained products that meet our rigorous standards.</p>
+            <div class="relative hidden lg:block">
+                <div class="aspect-[4/5] bg-surface relative">
+                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover grayscale-[20%]" alt="Premium Living Space">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats -->
-    <section class="py-20 bg-primary text-on-primary">
-        <div class="max-w-container-max mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-                <div class="text-4xl font-normal mb-2">10k+</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Active Users</div>
+    <!-- 2. OUR STORY -->
+    <section id="our-story" class="py-32 relative bg-surface border-b border-zinc-200">
+        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div class="order-2 lg:order-1 relative">
+                <div class="aspect-square bg-white relative max-w-md mx-auto p-4 border border-zinc-200">
+                    <img src="https://images.unsplash.com/photo-1542314831-c53cd4b85aca?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover grayscale-[30%]" alt="Founder Story">
+                </div>
+                <!-- Floating badge -->
+                <div class="absolute bottom-10 right-10 lg:-right-4 bg-white border border-zinc-200 p-8 shadow-sm">
+                    <div class="text-4xl font-serif font-medium text-ink mb-2">2023</div>
+                    <div class="text-[10px] text-zinc-400 font-medium uppercase tracking-[0.2em]">Year Founded</div>
+                </div>
             </div>
-            <div>
-                <div class="text-4xl font-normal mb-2">500+</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Premium Items</div>
-            </div>
-            <div>
-                <div class="text-4xl font-normal mb-2">24/7</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Support</div>
-            </div>
-            <div>
-                <div class="text-4xl font-normal mb-2">4.9/5</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">User Rating</div>
+            <div class="order-1 lg:order-2">
+                <h2 class="text-4xl md:text-5xl font-serif font-medium tracking-tight text-ink mb-10">
+                    Born from a<br><span class="text-zinc-400">nomadic spirit.</span>
+                </h2>
+                <div class="space-y-8 text-lg text-zinc-500 font-light leading-relaxed max-w-lg">
+                    <p>
+                        We started RentEase when we realized how much friction was involved in moving. Buying furniture, assembling it, and then figuring out what to do with it when moving again felt like a relic of the past.
+                    </p>
+                    <p>
+                        We envisioned a world where you could live in a beautifully furnished home without being tied down by your belongings. A service that adapts to your life, not the other way around.
+                    </p>
+                    <p>
+                        Today, we serve thousands of members who value flexibility, design, and sustainability over traditional ownership.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
+
+    <!-- 3. OUR VALUES -->
+    <section class="py-32 relative bg-white">
+        <div class="max-w-[1600px] mx-auto px-6 lg:px-12">
+            <div class="mb-24 max-w-2xl">
+                <h2 class="text-5xl md:text-6xl font-serif font-medium tracking-tight text-ink mb-6">
+                    Our Values.
+                </h2>
+                <p class="text-lg text-zinc-500 font-light leading-relaxed">The foundational principles that guide our curation, service, and vision for the future.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+                <!-- Value 1 -->
+                <div class="border-t border-zinc-200 pt-8">
+                    <div class="text-zinc-300 font-serif text-5xl mb-6">I.</div>
+                    <h3 class="text-2xl font-serif font-medium text-ink mb-4">Sustainability</h3>
+                    <p class="text-zinc-500 font-light leading-relaxed">
+                        Reducing waste by promoting a circular economy. Why buy when you can share? We extend the lifecycle of premium products, ensuring nothing goes to landfill prematurely.
+                    </p>
+                </div>
+                
+                <!-- Value 2 -->
+                <div class="border-t border-zinc-200 pt-8">
+                    <div class="text-zinc-300 font-serif text-5xl mb-6">II.</div>
+                    <h3 class="text-2xl font-serif font-medium text-ink mb-4">Flexibility</h3>
+                    <p class="text-zinc-500 font-light leading-relaxed">
+                        Life changes fast. Our rental terms adapt to your needs, whether it's 3 months or 3 years. Upgrade, swap, or return whenever your circumstances evolve.
+                    </p>
+                </div>
+                
+                <!-- Value 3 -->
+                <div class="border-t border-zinc-200 pt-8">
+                    <div class="text-zinc-300 font-serif text-5xl mb-6">III.</div>
+                    <h3 class="text-2xl font-serif font-medium text-ink mb-4">Quality</h3>
+                    <p class="text-zinc-500 font-light leading-relaxed">
+                        We only offer premium, well-maintained products that meet our rigorous aesthetic and functional standards. Every item is professionally cleaned and sanitized.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. STATS -->
+    <section class="py-32 relative border-t border-zinc-200 bg-surface">
+        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 grid grid-cols-2 md:grid-cols-4 gap-16 lg:gap-10 text-center relative z-10">
+            <div>
+                <div class="text-6xl lg:text-7xl font-serif font-medium text-ink mb-4">10k<span class="text-zinc-300">+</span></div>
+                <div class="text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">Active Members</div>
+            </div>
+            <div>
+                <div class="text-6xl lg:text-7xl font-serif font-medium text-ink mb-4">500<span class="text-zinc-300">+</span></div>
+                <div class="text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">Premium Items</div>
+            </div>
+            <div>
+                <div class="text-6xl lg:text-7xl font-serif font-medium text-ink mb-4">24/7</div>
+                <div class="text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">Concierge Support</div>
+            </div>
+            <div>
+                <div class="text-6xl lg:text-7xl font-serif font-medium text-ink mb-4">4.9<span class="text-zinc-300 text-4xl">/5</span></div>
+                <div class="text-zinc-500 uppercase tracking-[0.2em] text-[10px] font-medium">Average Rating</div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>

@@ -18,85 +18,92 @@ $pageTitle = "Support Concierge | RentEase";
 include_once __DIR__ . '/partials/header.php';
 ?>
 
-<main class="bg-slate-50 dark:bg-slate-950 min-h-screen py-12">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[750px]">
+<main class="bg-surface min-h-screen pt-40 pb-20 relative overflow-hidden">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-12 relative z-10">
+        
+        <div class="mb-12">
+            <h1 class="text-5xl md:text-6xl font-serif font-medium text-ink tracking-tight mb-4">Concierge</h1>
+            <p class="text-zinc-500 text-lg font-light">We're here to help you design your perfect space.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 h-[75vh] min-h-[600px]">
             <!-- Chat Window -->
-            <section class="lg:col-span-8 flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <section class="lg:col-span-8 flex flex-col bg-white border border-zinc-200 shadow-sm overflow-hidden">
                 <!-- Chat Header -->
-                <header class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+                <header class="px-8 py-6 border-b border-zinc-200 flex items-center justify-between bg-white">
                     <div class="flex items-center gap-4">
                         <div class="relative">
-                            <div class="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white">
+                            <div class="w-12 h-12 rounded-none bg-surface flex items-center justify-center text-ink border border-zinc-200">
                                 <span class="material-symbols-outlined">support_agent</span>
                             </div>
-                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-teal-400 rounded-full border-2 border-white dark:border-slate-900"></span>
+                            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white"></span>
                         </div>
                         <div>
-                            <h2 class="text-lg font-normal text-slate-900 dark:text-white">Support Concierge</h2>
-                            <p class="text-xs text-teal-600 font-light">Online</p>
+                            <h2 class="text-lg font-serif font-medium text-ink">RentEase Concierge</h2>
+                            <p class="text-xs text-zinc-400 font-medium tracking-wide flex items-center gap-1.5 uppercase">
+                                <span class="w-1.5 h-1.5 bg-green-500 animate-pulse"></span>
+                                Online
+                            </p>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-slate-500 transition-colors">
-                            <span class="material-symbols-outlined">search</span>
+                        <button class="p-2 hover:bg-surface text-zinc-400 hover:text-ink transition-colors outline-none focus-visible:ring-1 ring-ink">
+                            <span class="material-symbols-outlined font-light">search</span>
                         </button>
-                        <button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-slate-500 transition-colors">
-                            <span class="material-symbols-outlined">more_vert</span>
+                        <button class="p-2 hover:bg-surface text-zinc-400 hover:text-ink transition-colors outline-none focus-visible:ring-1 ring-ink">
+                            <span class="material-symbols-outlined font-light">more_vert</span>
                         </button>
                     </div>
                 </header>
 
                 <!-- Messaging Area -->
-                <div id="chat-messages" class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50/30 dark:bg-slate-950/30 chat-scrollbar">
+                <div id="chat-messages" class="flex-grow overflow-y-auto p-8 space-y-8 chat-scrollbar">
                     <!-- Date Separator -->
                     <div class="flex justify-center">
-                        <span class="bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1 rounded-full text-[10px] font-normal uppercase tracking-widest">Today</span>
+                        <span class="bg-white border border-zinc-200 text-zinc-400 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em]">Today</span>
                     </div>
 
                     <!-- Concierge Message -->
-                    <div class="flex gap-3 max-w-[85%]">
-                        <div class="w-8 h-8 rounded-full bg-teal-600 flex-shrink-0 flex items-center justify-center text-white">
+                    <div class="flex gap-4 max-w-[85%]">
+                        <div class="w-10 h-10 bg-surface flex-shrink-0 flex items-center justify-center text-ink border border-zinc-200">
                             <span class="material-symbols-outlined text-sm font-light">support_agent</span>
                         </div>
-                        <div class="space-y-1">
-                            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl rounded-tl-none shadow-sm">
-                                <p class="text-sm text-slate-700 dark:text-slate-300 font-light">Hello <?= htmlspecialchars($currentUser['user_metadata']['full_name'] ?? 'there') ?>! Welcome back to RentEase Support. How can I assist you today?</p>
+                        <div class="space-y-1.5">
+                            <div class="bg-surface border border-zinc-200 p-5 rounded-none shadow-sm">
+                                <p class="text-zinc-600 font-light leading-relaxed">Hello <?= htmlspecialchars($currentUser['user_metadata']['full_name'] ?? 'there') ?>! Welcome back to RentEase Support. How can I assist you today?</p>
                             </div>
-                            <span class="text-[10px] text-slate-400 px-1">10:24 AM</span>
+                            <span class="text-[10px] text-zinc-400 font-medium px-2 uppercase tracking-widest">10:24 AM</span>
                         </div>
                     </div>
 
-
-
                     <!-- Status Update -->
                     <div id="initial-status" class="flex justify-center">
-                        <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/30 px-4 py-2 rounded-xl">
-                            <span class="material-symbols-outlined text-emerald-600 text-sm font-light">smart_toy</span>
-                            <span class="text-xs text-emerald-900 dark:text-emerald-100 font-light">AI Concierge is online and ready to help</span>
+                        <div class="flex items-center gap-2 bg-white border border-zinc-200 px-5 py-2.5 shadow-sm">
+                            <span class="material-symbols-outlined text-ink text-sm font-light">smart_toy</span>
+                            <span class="text-[10px] text-zinc-500 uppercase tracking-widest font-medium">AI Concierge is online</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Replies -->
-                <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="px-4 py-1.5 rounded-full border border-teal-600 text-teal-600 font-light text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors">Billing Inquiry</button>
-                        <button class="px-4 py-1.5 rounded-full border border-teal-600 text-teal-600 font-light text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors">Maintenance Status</button>
-                        <button class="px-4 py-1.5 rounded-full border border-teal-600 text-teal-600 font-light text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors">Delivery Update</button>
-                        <button class="px-4 py-1.5 rounded-full border border-teal-600 text-teal-600 font-light text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors">Other</button>
+                <div class="px-8 py-5 bg-surface border-t border-zinc-200">
+                    <div class="flex gap-3 flex-wrap">
+                        <button class="px-5 py-2 bg-white border border-zinc-200 text-zinc-500 font-medium text-[10px] uppercase tracking-[0.1em] hover:text-ink hover:border-ink transition-colors outline-none focus-visible:ring-1 ring-ink">Billing Inquiry</button>
+                        <button class="px-5 py-2 bg-white border border-zinc-200 text-zinc-500 font-medium text-[10px] uppercase tracking-[0.1em] hover:text-ink hover:border-ink transition-colors outline-none focus-visible:ring-1 ring-ink">Maintenance Status</button>
+                        <button class="px-5 py-2 bg-white border border-zinc-200 text-zinc-500 font-medium text-[10px] uppercase tracking-[0.1em] hover:text-ink hover:border-ink transition-colors outline-none focus-visible:ring-1 ring-ink">Delivery Update</button>
+                        <button class="px-5 py-2 bg-white border border-zinc-200 text-zinc-500 font-medium text-[10px] uppercase tracking-[0.1em] hover:text-ink hover:border-ink transition-colors outline-none focus-visible:ring-1 ring-ink">Other</button>
                     </div>
                 </div>
 
                 <!-- Input Area -->
-                <footer class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                    <form id="chat-form" class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl px-4 py-2 border border-transparent focus-within:border-teal-600 focus-within:ring-1 focus-within:ring-teal-600 transition-all">
-                        <button type="button" class="p-2 text-slate-500 hover:text-teal-600">
-                            <span class="material-symbols-outlined">attachment</span>
+                <footer class="p-6 bg-white border-t border-zinc-200">
+                    <form id="chat-form" class="flex items-center gap-3 bg-surface border border-zinc-200 px-4 py-2 focus-within:border-ink transition-colors">
+                        <button type="button" class="p-2 text-zinc-400 hover:text-ink transition-colors outline-none focus-visible:text-ink">
+                            <span class="material-symbols-outlined font-light">attachment</span>
                         </button>
-                        <input type="text" id="chat-input" class="flex-grow bg-transparent border-none focus:ring-0 text-sm text-slate-900 dark:text-white py-2 font-light" placeholder="Type your message here..." required>
-                        <button type="submit" id="chat-submit" class="bg-teal-600 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:bg-teal-500 transition-all active:scale-95 shadow-sm">
-                            <span class="text-sm font-light">Send</span>
+                        <input type="text" id="chat-input" class="flex-grow bg-transparent border-none focus:ring-0 text-ink py-3 font-light placeholder-zinc-400 outline-none" placeholder="Type your message here..." required>
+                        <button type="submit" id="chat-submit" class="bg-ink hover:bg-zinc-800 text-white px-6 py-3 flex items-center gap-2 transition-all font-medium text-[11px] uppercase tracking-[0.2em] outline-none focus-visible:ring-1 ring-ink border border-ink">
+                            <span>Send</span>
                             <span class="material-symbols-outlined text-sm font-light">send</span>
                         </button>
                     </form>
@@ -104,43 +111,43 @@ include_once __DIR__ . '/partials/header.php';
             </section>
 
             <!-- Contextual Sidebar -->
-            <aside class="hidden lg:flex lg:col-span-4 flex-col gap-6">
+            <aside class="hidden lg:flex lg:col-span-4 flex-col gap-8">
                 <!-- Active Rentals -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h3 class="text-slate-900 dark:text-white font-normal mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-teal-600">inventory_2</span>
+                <div class="bg-white border border-zinc-200 p-8 shadow-sm">
+                    <h3 class="text-ink font-serif font-medium text-xl mb-6 flex items-center gap-3 border-b border-zinc-200 pb-4">
+                        <span class="material-symbols-outlined text-ink font-light">inventory_2</span>
                         Active Rentals
                     </h3>
                     <div class="space-y-4">
-                        <div class="flex gap-4 p-3 rounded-xl border border-slate-50 dark:border-slate-800 hover:border-teal-100 dark:hover:border-teal-900/30 transition-colors group">
-                            <div class="w-16 h-16 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
-                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOq3W0kiWCLELjfcWMen7ODze2YZA-2N34n3oJE66elrV0FTznx9HYGkJMrSvIqafPUbIWp01CMBTWs0ukSajdrFYa3cehsEfrSh_GaYcjRUJwn3Ih8Yf699jxtyAtNf6nwCLZ9w_yq49wy153MGN_V_SXCyi-Nh9TxTNkZXTkgMnGRQbrlgb2V7Xwhg0VhG9objCSdPOHN9iNsU0SZJaPw6fWlaPPZXAoXs4on0NAQCBtoe6E5BpLO7DX0a08_rBSCoFz6puQSWGJ" 
-                                     alt="Rental" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="flex gap-5 p-4 border border-zinc-200 bg-surface hover:border-ink transition-colors group cursor-pointer">
+                            <div class="w-20 h-24 overflow-hidden flex-shrink-0 relative">
+                                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200" 
+                                     alt="Rental" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             </div>
                             <div class="flex flex-col justify-center">
-                                <p class="font-light text-slate-900 dark:text-white text-sm">Emerald Velvet Sofa</p>
-                                <p class="text-[10px] text-slate-500 uppercase tracking-wider font-normal">Premium Tier</p>
+                                <p class="font-serif font-medium text-ink text-lg mb-2">Emerald Velvet Sofa</p>
+                                <p class="text-[9px] text-zinc-400 uppercase tracking-widest font-medium">Premium Tier</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Support Resources -->
-                <div class="bg-[#041627] text-white rounded-2xl p-6 shadow-lg overflow-hidden relative">
+                <div class="bg-ink border border-ink p-8 relative overflow-hidden group">
                     <div class="relative z-10">
-                        <p class="text-lg font-normal mb-2">Need a faster resolution?</p>
-                        <p class="text-sm text-slate-400 mb-6 font-light">Our help center has answers to 90% of common questions.</p>
-                        <a href="<?= baseUrl('/help-center') ?>" class="inline-flex items-center gap-2 text-teal-400 font-light text-sm hover:underline">
+                        <h3 class="text-white font-serif font-medium text-2xl mb-4">Need a faster resolution?</h3>
+                        <p class="text-sm text-zinc-400 leading-relaxed mb-8 font-light">Our help center has answers to 90% of common questions, curated for your convenience.</p>
+                        <a href="<?= baseUrl('/help-center') ?>" class="inline-flex items-center justify-center gap-2 text-ink bg-white hover:bg-zinc-200 px-6 py-4 transition-colors outline-none focus-visible:ring-1 ring-white font-medium text-[11px] uppercase tracking-[0.2em] w-full">
                             Browse Help Center
                             <span class="material-symbols-outlined text-sm font-light">arrow_forward</span>
                         </a>
                     </div>
-                    <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl opacity-10 rotate-12">help_center</span>
                 </div>
             </aside>
         </div>
     </div>
 </main>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -150,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('chat-submit');
     
     // Quick Replies
-    const quickReplies = document.querySelectorAll('.px-4.py-1\\.5.rounded-full');
+    const quickReplies = document.querySelectorAll('.px-5.py-2.bg-white.border');
     quickReplies.forEach(btn => {
         btn.addEventListener('click', () => {
             chatInput.value = btn.innerText;
@@ -165,15 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendUserMessage(text) {
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const html = `
-            <div class="flex flex-row-reverse gap-3 max-w-[85%] ml-auto">
-                <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center text-slate-600 dark:text-slate-400">
+            <div class="flex flex-row-reverse gap-4 max-w-[85%] ml-auto">
+                <div class="w-10 h-10 bg-ink flex-shrink-0 flex items-center justify-center text-white">
                     <span class="material-symbols-outlined text-sm font-light">person</span>
                 </div>
-                <div class="space-y-1 text-right">
-                    <div class="bg-teal-600 text-white p-4 rounded-2xl rounded-tr-none shadow-sm">
-                        <p class="text-sm whitespace-pre-wrap font-light">${escapeHtml(text)}</p>
+                <div class="space-y-1.5 text-right">
+                    <div class="bg-ink text-white p-5 border border-ink shadow-sm">
+                        <p class="font-light leading-relaxed whitespace-pre-wrap">${escapeHtml(text)}</p>
                     </div>
-                    <span class="text-[10px] text-slate-400 px-1">${time}</span>
+                    <span class="text-[10px] text-zinc-400 font-medium px-2 uppercase tracking-widest">${time}</span>
                 </div>
             </div>
         `;
@@ -184,15 +191,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendConciergeMessage(text) {
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const html = `
-            <div class="flex gap-3 max-w-[85%]">
-                <div class="w-8 h-8 rounded-full bg-teal-600 flex-shrink-0 flex items-center justify-center text-white">
+            <div class="flex gap-4 max-w-[85%]">
+                <div class="w-10 h-10 bg-surface flex-shrink-0 flex items-center justify-center text-ink border border-zinc-200">
                     <span class="material-symbols-outlined text-sm font-light">support_agent</span>
                 </div>
-                <div class="space-y-1">
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl rounded-tl-none shadow-sm">
-                        <p class="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-light">${escapeHtml(text)}</p>
+                <div class="space-y-1.5">
+                    <div class="bg-surface border border-zinc-200 p-5 shadow-sm">
+                        <p class="text-zinc-600 font-light leading-relaxed whitespace-pre-wrap">${escapeHtml(text)}</p>
                     </div>
-                    <span class="text-[10px] text-slate-400 px-1">${time}</span>
+                    <span class="text-[10px] text-zinc-400 font-medium px-2 uppercase tracking-widest">${time}</span>
                 </div>
             </div>
         `;
@@ -203,9 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showTypingIndicator() {
         const html = `
             <div id="typing-indicator" class="flex justify-center">
-                <div class="flex items-center gap-2 bg-teal-50 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-800/30 px-4 py-2 rounded-xl">
-                    <span class="material-symbols-outlined text-teal-600 text-sm animate-spin font-light">sync</span>
-                    <span class="text-xs text-teal-900 dark:text-teal-100 font-light">Concierge is typing...</span>
+                <div class="flex items-center gap-2 bg-white border border-zinc-200 px-5 py-2.5 shadow-sm">
+                    <span class="material-symbols-outlined text-ink text-sm animate-spin font-light">sync</span>
+                    <span class="text-[10px] text-zinc-500 uppercase tracking-widest font-medium">Concierge is typing...</span>
                 </div>
             </div>
         `;

@@ -63,9 +63,9 @@ require_once __DIR__ . '/partials/header.php';
     <?php if (!$activeDelivery): ?>
         <div class="text-center py-20 bg-white rounded-3xl shadow-sm border border-slate-100 reveal-element">
             <span class="material-symbols-outlined text-6xl text-slate-200 mb-6">local_shipping</span>
-            <h1 class="text-3xl font-bold text-primary mb-4">No Active Deliveries</h1>
-            <p class="text-slate-500 max-w-md mx-auto mb-8 font-medium">You don't have any deliveries or pickups currently in progress.</p>
-            <a href="<?= baseUrl('/dashboard') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-primary/20">
+            <h1 class="text-3xl font-normal text-primary mb-4">No Active Deliveries</h1>
+            <p class="text-slate-500 max-w-md mx-auto mb-8 font-normal">You don't have any deliveries or pickups currently in progress.</p>
+            <a href="<?= baseUrl('/dashboard') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-normal rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-primary/20">
                 Go to Dashboard
                 <span class="material-symbols-outlined">arrow_forward</span>
             </a>
@@ -78,18 +78,18 @@ require_once __DIR__ . '/partials/header.php';
         <!-- Header Section: Live Countdown -->
         <div class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-end reveal-element">
             <div>
-                <h1 class="text-4xl font-bold text-primary tracking-tight mb-2"><?= $isPickup ? 'Track Your Pickup' : 'Track Your Delivery' ?></h1>
-                <p class="text-slate-500 font-medium">Order #<?= htmlspecialchars((string)$orderNumber) ?> • Status: <span class="text-teal-600 font-bold"><?= str_replace('_', ' ', $status) ?></span></p>
+                <h1 class="text-4xl font-normal text-primary tracking-tight mb-2"><?= $isPickup ? 'Track Your Pickup' : 'Track Your Delivery' ?></h1>
+                <p class="text-slate-500 font-normal">Order #<?= htmlspecialchars((string)$orderNumber) ?> • Status: <span class="text-teal-600 font-normal"><?= str_replace('_', ' ', $status) ?></span></p>
             </div>
             <div class="bg-primary text-white p-8 rounded-3xl shadow-xl flex flex-col md:items-end relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000"></div>
-                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-teal-400 mb-2">Estimated Arrival</span>
+                <span class="text-[10px] font-normal uppercase tracking-[0.2em] text-teal-400 mb-2">Estimated Arrival</span>
                 <div class="flex items-baseline space-x-2">
-                    <span class="text-3xl md:text-4xl font-bold"><?= htmlspecialchars((string)($activeDelivery['time_slot'] ?? '10:30 AM - 11:45 AM')) ?></span>
+                    <span class="text-3xl md:text-4xl font-normal"><?= htmlspecialchars((string)($activeDelivery['time_slot'] ?? '10:30 AM - 11:45 AM')) ?></span>
                 </div>
                 <div class="flex items-center mt-3 text-teal-100/60">
-                    <span class="material-symbols-outlined text-sm mr-2">schedule</span>
-                    <p class="text-xs font-bold italic"><?= htmlspecialchars((string)($activeDelivery['scheduled_date'] ?? date('Y-m-d'))) ?></p>
+                    <span class="material-symbols-outlined text-sm mr-2 font-light">schedule</span>
+                    <p class="text-xs font-light italic"><?= htmlspecialchars((string)($activeDelivery['scheduled_date'] ?? date('Y-m-d'))) ?></p>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@ require_once __DIR__ . '/partials/header.php';
                     </div>
                     <div class="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg flex items-center border border-white/50">
                         <div class="w-2.5 h-2.5 bg-teal-500 rounded-full animate-pulse mr-3"></div>
-                        <span class="text-[10px] font-bold text-primary uppercase tracking-widest" id="lastUpdatedText">Live GPS Tracking</span>
+                        <span class="text-[10px] font-normal text-primary uppercase tracking-widest" id="lastUpdatedText">Live GPS Tracking</span>
                     </div>
                 </div>
 
@@ -116,9 +116,9 @@ require_once __DIR__ . '/partials/header.php';
                                 <img class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=driver" alt="Driver"/>
                             </div>
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Your Driver</p>
-                                <p class="text-xl font-bold text-primary">Marcus J.</p>
-                                <div class="flex items-center text-teal-600 text-xs font-bold mt-1">
+                                <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">Your Driver</p>
+                                <p class="text-xl font-normal text-primary">Marcus J.</p>
+                                <div class="flex items-center text-teal-600 text-xs font-light mt-1">
                                     <span class="material-symbols-outlined text-[14px] mr-1">star</span>
                                     <span>4.9 (2.4k deliveries)</span>
                                 </div>
@@ -131,9 +131,9 @@ require_once __DIR__ . '/partials/header.php';
                     <div class="bg-slate-50 p-6 rounded-3xl border-l-4 border-teal-500 shadow-sm flex flex-col justify-center">
                         <div class="flex items-center mb-2">
                             <span class="material-symbols-outlined text-teal-600 mr-2 text-xl">description</span>
-                            <span class="text-[10px] font-bold text-primary uppercase tracking-widest">Notes</span>
+                            <span class="text-[10px] font-normal text-primary uppercase tracking-widest">Notes</span>
                         </div>
-                        <p class="text-sm text-slate-600 italic leading-relaxed">"<?= htmlspecialchars((string)($activeDelivery['agent_notes'] ?? 'No special instructions provided.')) ?>"</p>
+                        <p class="text-sm text-slate-600 italic leading-relaxed font-light">"<?= htmlspecialchars((string)($activeDelivery['agent_notes'] ?? 'No special instructions provided.')) ?>"</p>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@ require_once __DIR__ . '/partials/header.php';
             <div class="lg:col-span-4 space-y-8">
                 <!-- Status Timeline -->
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal-element">
-                    <h3 class="text-xl font-bold text-primary mb-8 tracking-tight">Status</h3>
+                    <h3 class="text-xl font-normal text-primary mb-8 tracking-tight">Status</h3>
                     <div class="space-y-8 relative">
                         <?php 
                         $steps = [
@@ -168,17 +168,17 @@ require_once __DIR__ . '/partials/header.php';
                             <div class="relative flex items-start">
                                 <div class="w-8 h-8 rounded-full flex items-center justify-center z-10 shrink-0 <?= $isDone ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20' : ($isActive ? 'bg-teal-50 text-teal-500 border-2 border-teal-500 ring-4 ring-teal-50' : 'bg-slate-50 text-slate-300 border border-slate-100') ?>">
                                     <?php if ($isDone): ?>
-                                        <span class="material-symbols-outlined text-sm">check</span>
+                                        <span class="material-symbols-outlined text-sm font-light">check</span>
                                     <?php elseif ($isActive): ?>
                                         <div class="w-2 h-2 bg-teal-500 rounded-full animate-ping"></div>
                                     <?php else: ?>
-                                        <span class="material-symbols-outlined text-sm"><?= $step['icon'] ?></span>
+                                        <span class="material-symbols-outlined text-sm font-light"><?= $step['icon'] ?></span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="ml-6 pt-1">
-                                    <p class="text-sm font-bold <?= $isActive || $isDone ? 'text-primary' : 'text-slate-300' ?> uppercase tracking-widest mb-1"><?= $step['label'] ?></p>
+                                    <p class="text-sm font-light <?= $isActive || $isDone ? 'text-primary' : 'text-slate-300' ?> uppercase tracking-widest mb-1"><?= $step['label'] ?></p>
                                     <?php if ($isActive): ?>
-                                        <p class="text-xs text-teal-600 font-medium">Updated just now</p>
+                                        <p class="text-xs text-teal-600 font-light">Updated just now</p>
                                     <?php endif; ?>
                                 </div>
                                 <?php if (!$isLast): ?>
@@ -191,7 +191,7 @@ require_once __DIR__ . '/partials/header.php';
 
                 <!-- Items -->
                 <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal-element">
-                    <h3 class="text-xl font-bold text-primary mb-8 tracking-tight">Manifest</h3>
+                    <h3 class="text-xl font-normal text-primary mb-8 tracking-tight">Manifest</h3>
                     <?php 
                     $rental = $activeDelivery['rentals'] ?? null;
                     $product = $rental['products'] ?? null;
@@ -202,19 +202,19 @@ require_once __DIR__ . '/partials/header.php';
                                 <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?= htmlspecialchars((string)$product['image_url']) ?>" alt="Product"/>
                             </div>
                             <div class="flex-grow">
-                                <p class="text-sm font-bold text-slate-900 mb-0.5"><?= htmlspecialchars((string)$product['name']) ?></p>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SKU: <?= htmlspecialchars((string)($product['sku'] ?? 'N/A')) ?></p>
+                                <p class="text-sm font-light text-slate-900 mb-0.5"><?= htmlspecialchars((string)$product['name']) ?></p>
+                                <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">SKU: <?= htmlspecialchars((string)($product['sku'] ?? 'N/A')) ?></p>
                             </div>
                         </div>
                     <?php endif; ?>
                     
                     <div class="mt-10 pt-6 border-t border-slate-50 flex flex-col space-y-3">
-                        <a href="<?= baseUrl('/support') ?>" class="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
+                        <a href="<?= baseUrl('/support') ?>" class="w-full bg-primary text-white font-normal py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
                             <span class="material-symbols-outlined text-xl">support_agent</span>
                             Live Support
                         </a>
                         <?php if ($status !== 'COMPLETED'): ?>
-                            <a href="reschedule.php?id=<?= $activeDelivery['id'] ?>" class="w-full bg-white border-2 border-slate-100 text-slate-600 font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                            <a href="reschedule.php?id=<?= $activeDelivery['id'] ?>" class="w-full bg-white border-2 border-slate-100 text-slate-600 font-normal py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
                                 <span class="material-symbols-outlined text-xl">event_repeat</span>
                                 Reschedule
                             </a>

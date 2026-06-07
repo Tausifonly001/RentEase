@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
@@ -97,8 +97,8 @@ $success = null;
                 <span class="material-symbols-outlined text-4xl">verified</span>
             </div>
             <div>
-                <h2 class="text-3xl font-black mb-2 font-outfit">Transaction Successful</h2>
-                <p class="text-teal-50 font-medium leading-relaxed max-w-xl"><?= e($success) ?></p>
+                <h2 class="text-3xl font-normal mb-2 font-sans">Transaction Successful</h2>
+                <p class="text-teal-50 font-normal leading-relaxed max-w-xl"><?= e($success) ?></p>
             </div>
         </div>
     <?php endif; ?>
@@ -111,13 +111,13 @@ $success = null;
                 <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
                     <span class="material-symbols-outlined">history_edu</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-900 font-outfit">Active Leases</h2>
+                <h2 class="text-2xl font-normal text-slate-900 font-sans">Active Leases</h2>
             </div>
 
             <?php if (empty($rentals)): ?>
                 <div class="bg-surface-container-low rounded-xl p-xl text-center border border-outline-variant/30">
                     <span class="material-symbols-outlined text-outline text-4xl mb-2">inventory_2</span>
-                    <p class="text-on-surface-variant font-medium">No active product leases found.</p>
+                    <p class="text-on-surface-variant font-normal">No active product leases found.</p>
                     <a href="<?= baseUrl('/shop') ?>" class="inline-flex mt-4 text-secondary font-button hover:underline">Start browsing &rarr;</a>
                 </div>
             <?php else: ?>
@@ -130,17 +130,17 @@ $success = null;
                                     <img src="<?= e((string)($p['image_url'] ?? 'https://placehold.co/150')) ?>" alt="Lease Product" class="h-full w-full object-cover">
                                 </div>
                                 <div class="flex-1">
-                                    <h4 class="text-lg font-bold text-slate-900"><?= e((string)($p['name'] ?? 'Custom Product Lease')) ?></h4>
-                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1"><?= e((string)$rental['start_date']) ?> — <?= e((string)$rental['end_date']) ?></p>
+                                    <h4 class="text-lg font-normal text-slate-900"><?= e((string)($p['name'] ?? 'Custom Product Lease')) ?></h4>
+                                    <p class="text-xs font-light text-slate-400 uppercase tracking-widest mt-1"><?= e((string)$rental['start_date']) ?> — <?= e((string)$rental['end_date']) ?></p>
                                     <div class="mt-3">
-                                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100">
+                                        <span class="px-3 py-1 rounded-full text-[10px] font-normal uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100">
                                             <?= e((string)$rental['status']) ?>
                                         </span>
                                     </div>
                                     <?php if (isset($rentalDeliveries[$rental['id']])): ?>
                                         <div class="mt-4">
-                                            <a href="<?= baseUrl('/tracking?id=' . $rentalDeliveries[$rental['id']]['id']) ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
-                                                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                                            <a href="<?= baseUrl('/tracking?id=' . $rentalDeliveries[$rental['id']]['id']) ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-[10px] font-normal uppercase tracking-widest rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                                                <span class="material-symbols-outlined text-sm font-light">local_shipping</span>
                                                 Track Delivery
                                             </a>
                                         </div>
@@ -159,13 +159,13 @@ $success = null;
                 <div class="p-2 rounded-xl bg-emerald-50 text-emerald-600">
                     <span class="material-symbols-outlined">receipt_long</span>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-900 font-outfit">Payment History</h2>
+                <h2 class="text-2xl font-normal text-slate-900 font-sans">Payment History</h2>
             </div>
 
             <?php if (empty($orders)): ?>
                 <div class="bg-surface-container-low rounded-xl p-xl text-center border border-outline-variant/30">
                     <span class="material-symbols-outlined text-outline text-4xl mb-2">receipt_long</span>
-                    <p class="text-on-surface-variant font-medium">No payment history recorded.</p>
+                    <p class="text-on-surface-variant font-normal">No payment history recorded.</p>
                 </div>
             <?php else: ?>
                 <div class="grid gap-md">
@@ -173,22 +173,22 @@ $success = null;
                         <div class="bg-white/70 backdrop-blur-md rounded-3xl p-6 border border-slate-100 shadow-sm group hover:border-emerald-200 transition-all">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Receipt Number</span>
-                                    <p class="font-outfit text-sm font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 inline-block">
+                                    <span class="text-[10px] font-normal text-slate-400 uppercase tracking-widest block mb-1">Receipt Number</span>
+                                    <p class="font-sans text-sm font-light text-slate-900 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 inline-block">
                                         #<?= strtoupper(substr((string)$order['id'], 0, 8)) ?>
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-2xl font-black text-slate-900 font-outfit">$<?= number_format((float)$order['total_amount'], 2) ?></span>
+                                    <span class="text-2xl font-normal text-slate-900 font-sans">$<?= number_format((float)$order['total_amount'], 2) ?></span>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center mt-6">
-                                <span class="text-xs font-bold text-slate-400 italic">Validated on <?= date('M d, Y', strtotime((string)$order['created_at'])) ?></span>
-                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest <?= $order['payment_status'] === 'completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100' ?>">
+                                <span class="text-xs font-light text-slate-400 italic">Validated on <?= date('M d, Y', strtotime((string)$order['created_at'])) ?></span>
+                                <span class="px-3 py-1 rounded-full text-[10px] font-normal uppercase tracking-widest <?= $order['payment_status'] === 'completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100' ?>">
                                     <?= e((string)$order['payment_status']) ?>
                                 </span>
                                 <?php if (isset($orderDeliveries[$order['id']])): ?>
-                                    <a href="<?= baseUrl('/tracking?id=' . $orderDeliveries[$order['id']]['id']) ?>" class="ml-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-700 transition-all shadow-md shadow-emerald-500/20">
+                                    <a href="<?= baseUrl('/tracking?id=' . $orderDeliveries[$order['id']]['id']) ?>" class="ml-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-[9px] font-normal uppercase tracking-widest rounded-lg hover:bg-emerald-700 transition-all shadow-md shadow-emerald-500/20">
                                         <span class="material-symbols-outlined text-[14px]">distance</span>
                                         Live Track
                                     </a>

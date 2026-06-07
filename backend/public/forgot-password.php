@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Forgot Password | RentEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         accent: '#F59E0B'
                     },
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif']
+                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
@@ -75,37 +75,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-full max-w-md" id="forgot-password-container">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-primary tracking-tight mb-2">RentEase</h1>
-            <p class="text-slate-500 font-medium">Furniture & Appliance Rental Platform</p>
+            <p class="text-slate-500 font-normal">Furniture & Appliance Rental Platform</p>
         </div>
 
         <div class="glass border border-white/40 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-blue-900/5">
             <div class="mb-8">
-                <a href="<?= baseUrl('/login') ?>" class="inline-flex items-center text-sm font-bold text-secondary hover:gap-2 transition-all mb-6 group">
+                <a href="<?= baseUrl('/login') ?>" class="inline-flex items-center text-sm font-light text-secondary hover:gap-2 transition-all mb-6 group">
                     <span class="material-symbols-outlined text-base mr-1 transition-transform group-hover:-translate-x-1">arrow_back</span>
                     Back to Login
                 </a>
-                <h2 class="text-2xl font-bold text-primary mb-2">Forgot Password?</h2>
-                <p class="text-slate-500 text-sm leading-relaxed">Enter your email address and we'll send you a link to reset your password.</p>
+                <h2 class="text-2xl font-normal text-primary mb-2">Forgot Password?</h2>
+                <p class="text-slate-500 text-sm leading-relaxed font-light">Enter your email address and we'll send you a link to reset your password.</p>
             </div>
 
             <?php if ($error): ?>
                 <div class="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 animate-shake">
                     <span class="material-symbols-outlined text-red-500">error</span>
-                    <p class="text-red-700 text-sm font-medium"><?= htmlspecialchars($error) ?></p>
+                    <p class="text-red-700 text-sm font-light"><?= htmlspecialchars($error) ?></p>
                 </div>
             <?php endif; ?>
 
             <?php if ($message): ?>
                 <div class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
                     <span class="material-symbols-outlined text-emerald-500">check_circle</span>
-                    <p class="text-emerald-700 text-sm font-medium"><?= htmlspecialchars($message) ?></p>
+                    <p class="text-emerald-700 text-sm font-light"><?= htmlspecialchars($message) ?></p>
                 </div>
             <?php else: ?>
                 <form action="forgot-password.php" method="POST" class="space-y-6">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     
                     <div class="space-y-2">
-                        <label for="email" class="block text-sm font-semibold text-primary">Email Address</label>
+                        <label for="email" class="block text-sm font-light text-primary">Email Address</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">mail</span>
                             <input type="email" id="email" name="email" required 
@@ -115,16 +115,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
+                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-normal rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
                         Send Reset Link
                     </button>
                 </form>
             <?php endif; ?>
 
             <footer class="mt-10 text-center">
-                <p class="text-slate-500 text-sm">
+                <p class="text-slate-500 text-sm font-light">
                     Remember your password? 
-                    <a href="<?= baseUrl('/login') ?>" class="text-secondary font-bold hover:underline">Sign In</a>
+                    <a href="<?= baseUrl('/login') ?>" class="text-secondary font-normal hover:underline">Sign In</a>
                 </p>
             </footer>
         </div>

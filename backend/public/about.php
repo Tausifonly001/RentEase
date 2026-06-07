@@ -65,20 +65,20 @@ require __DIR__ . '/partials/header.php';
     <section class="py-20 bg-primary text-on-primary">
         <div class="max-w-container-max mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-                <div class="text-4xl font-bold mb-2">10k+</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm">Active Users</div>
+                <div class="text-4xl font-normal mb-2">10k+</div>
+                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Active Users</div>
             </div>
             <div>
-                <div class="text-4xl font-bold mb-2">500+</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm">Premium Items</div>
+                <div class="text-4xl font-normal mb-2">500+</div>
+                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Premium Items</div>
             </div>
             <div>
-                <div class="text-4xl font-bold mb-2">24/7</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm">Support</div>
+                <div class="text-4xl font-normal mb-2">24/7</div>
+                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">Support</div>
             </div>
             <div>
-                <div class="text-4xl font-bold mb-2">4.9/5</div>
-                <div class="text-primary-container/80 uppercase tracking-widest text-sm">User Rating</div>
+                <div class="text-4xl font-normal mb-2">4.9/5</div>
+                <div class="text-primary-container/80 uppercase tracking-widest text-sm font-light">User Rating</div>
             </div>
         </div>
     </section>

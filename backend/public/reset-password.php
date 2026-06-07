@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 declare(strict_types=1);
 
 use RentEase\Services\AuthService;
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
     <title>Reset Password | RentEase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                         accent: '#F59E0B'
                     },
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif']
+                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
@@ -85,30 +85,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
     <div class="w-full max-w-md" id="reset-password-container">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-primary tracking-tight mb-2">RentEase</h1>
-            <p class="text-slate-500 font-medium">Furniture & Appliance Rental Platform</p>
+            <p class="text-slate-500 font-normal">Furniture & Appliance Rental Platform</p>
         </div>
 
         <div class="glass border border-white/40 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-blue-900/5">
             <div class="mb-8">
-                <h2 class="text-2xl font-bold text-primary mb-2">New Password</h2>
-                <p class="text-slate-500 text-sm leading-relaxed">Please choose a strong password to secure your account.</p>
+                <h2 class="text-2xl font-normal text-primary mb-2">New Password</h2>
+                <p class="text-slate-500 text-sm leading-relaxed font-light">Please choose a strong password to secure your account.</p>
             </div>
 
             <?php if ($error && !$email): ?>
                 <div class="mb-6 p-6 bg-red-50 border border-red-100 rounded-[2rem] text-center">
                     <span class="material-symbols-outlined text-4xl text-red-500 mb-4">cancel</span>
-                    <h3 class="text-red-900 font-bold mb-2">Invalid Link</h3>
-                    <p class="text-red-700 text-sm mb-6"><?= htmlspecialchars($error) ?></p>
-                    <a href="forgot-password.php" class="inline-block py-3 px-6 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors">
+                    <h3 class="text-red-900 font-normal mb-2">Invalid Link</h3>
+                    <p class="text-red-700 text-sm mb-6 font-light"><?= htmlspecialchars($error) ?></p>
+                    <a href="forgot-password.php" class="inline-block py-3 px-6 bg-red-600 text-white font-normal rounded-xl hover:bg-red-700 transition-colors">
                         Request New Link
                     </a>
                 </div>
             <?php elseif ($message): ?>
                 <div class="mb-6 p-6 bg-emerald-50 border border-emerald-100 rounded-[2rem] text-center">
                     <span class="material-symbols-outlined text-4xl text-emerald-500 mb-4">task_alt</span>
-                    <h3 class="text-emerald-900 font-bold mb-2">Success!</h3>
-                    <p class="text-emerald-700 text-sm mb-6"><?= htmlspecialchars($message) ?></p>
-                    <a href="<?= baseUrl('/login') ?>" class="inline-block py-3 px-6 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors">
+                    <h3 class="text-emerald-900 font-normal mb-2">Success!</h3>
+                    <p class="text-emerald-700 text-sm mb-6 font-light"><?= htmlspecialchars($message) ?></p>
+                    <a href="<?= baseUrl('/login') ?>" class="inline-block py-3 px-6 bg-emerald-600 text-white font-normal rounded-xl hover:bg-emerald-700 transition-colors">
                         Go to Login
                     </a>
                 </div>
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                 <?php if ($error): ?>
                     <div class="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3">
                         <span class="material-symbols-outlined text-red-500">error</span>
-                        <p class="text-red-700 text-sm font-medium"><?= htmlspecialchars($error) ?></p>
+                        <p class="text-red-700 text-sm font-light"><?= htmlspecialchars($error) ?></p>
                     </div>
                 <?php endif; ?>
 
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                     
                     <div class="space-y-2">
-                        <label for="password" class="block text-sm font-semibold text-primary">New Password</label>
+                        <label for="password" class="block text-sm font-light text-primary">New Password</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
                             <input type="password" id="password" name="password" required 
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                     </div>
 
                     <div class="space-y-2">
-                        <label for="confirm_password" class="block text-sm font-semibold text-primary">Confirm Password</label>
+                        <label for="confirm_password" class="block text-sm font-light text-primary">Confirm Password</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">verified_user</span>
                             <input type="password" id="confirm_password" name="confirm_password" required 
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
+                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-normal rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
                         Update Password
                     </button>
                 </form>

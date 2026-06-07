@@ -6,86 +6,81 @@ require __DIR__ . '/../../public/partials/header.php';
 
 <!-- Main Content Area -->
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg mb-xl">
-    <!-- Breadcrumbs -->
-    <nav aria-label="Breadcrumb" class="flex text-on-surface-variant font-body-sm text-body-sm mb-lg">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a class="inline-flex items-center hover:text-secondary transition-colors" href="<?= baseUrl('/') ?>">
-                    Home
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
-                    <a class="hover:text-secondary transition-colors" href="<?= baseUrl('/browse') ?>">Rentals</a>
-                </div>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                    <span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
-                    <span
-                        class="text-on-surface font-medium"><?= $category ? htmlspecialchars($category) : 'All Products' ?></span>
-                </div>
-            </li>
-        </ol>
-    </nav>
+    <!-- Hero & Breadcrumbs -->
+    <div class="relative bg-slate-900 rounded-[2.5rem] p-10 md:p-16 mb-12 overflow-hidden reveal-fade">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=80" class="w-full h-full object-cover opacity-40 mix-blend-luminosity" alt="Browse Hero">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+        </div>
+        <div class="relative z-10">
+            <nav aria-label="Breadcrumb" class="flex text-white/60 font-light text-sm mb-6">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a class="inline-flex items-center hover:text-white transition-colors" href="<?= baseUrl('/') ?>">Home</a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+                            <a class="hover:text-white transition-colors" href="<?= baseUrl('/browse') ?>">Rentals</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+                            <span class="text-white font-normal"><?= $category ? htmlspecialchars($category) : 'All Products' ?></span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="text-4xl md:text-6xl font-normal text-white mb-4 tracking-tight">
+                <?= $category ? htmlspecialchars($category) : 'Curated Collection' ?>
+            </h1>
+            <p class="text-white/70 text-lg md:text-xl font-light max-w-xl">
+                Explore our catalog of premium pieces. Elevate your space with flexible, commitment-free monthly plans.
+            </p>
+        </div>
+    </div>
 
     <div class="flex flex-col md:flex-row gap-gutter">
         <!-- Sidebar Filters -->
         <aside class="w-full md:w-64 flex-shrink-0">
-            <div class="bg-surface rounded-lg border border-outline-variant p-sm sticky top-24">
-                <h2 class="font-h3 text-h3 text-on-surface mb-md">Filters</h2>
+            <div class="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm sticky top-24 reveal-fade" style="transition-delay: 100ms;">
+                <h2 class="text-xl font-normal text-slate-900 mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-teal-500">tune</span> Filters
+                </h2>
+                
                 <!-- Category Filter -->
-                <div class="mb-md">
-                    <h3 class="font-button text-button text-on-surface mb-xs">Category</h3>
-                    <div class="flex flex-col gap-2">
-                        <a href="<?= baseUrl('/browse') ?>" class="flex items-center gap-3 group">
-                            <div
-                                class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === null ? 'bg-secondary border-secondary' : '' ?>">
-                                <?php if ($category === null): ?>
-                                    <span class="material-symbols-outlined text-on-secondary text-sm">check</span>
-                                <?php endif; ?>
-                            </div>
-                            <span
-                                class="font-body-sm text-body-sm transition-colors <?= $category === null ? 'text-on-surface font-semibold' : 'text-on-surface-variant group-hover:text-on-surface' ?>">All
-                                Items</span>
+                <div class="mb-8">
+                    <h3 class="text-xs font-normal text-slate-400 uppercase tracking-widest mb-4">Categories</h3>
+                    <div class="flex flex-col gap-3">
+                        <a href="<?= baseUrl('/browse') ?>" class="spa-link flex items-center justify-between group" data-category="">
+                            <span class="text-sm transition-colors <?= $category === null ? 'text-slate-900 font-normal' : 'text-slate-500 font-light group-hover:text-slate-900' ?>">All Items</span>
+                            <?php if ($category === null): ?>
+                                <div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>
+                            <?php endif; ?>
                         </a>
-                        <a href="<?= baseUrl('/browse?category=Furniture') ?>" class="flex items-center gap-3 group">
-                            <div
-                                class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === 'Furniture' ? 'bg-secondary border-secondary' : '' ?>">
-                                <?php if ($category === 'Furniture'): ?>
-                                    <span class="material-symbols-outlined text-on-secondary text-sm">check</span>
-                                <?php endif; ?>
-                            </div>
-                            <span
-                                class="font-body-sm text-body-sm transition-colors <?= $category === 'Furniture' ? 'text-on-surface font-semibold' : 'text-on-surface-variant group-hover:text-on-surface' ?>">Furniture</span>
+                        <a href="<?= baseUrl('/browse?category=Furniture') ?>" class="spa-link flex items-center justify-between group" data-category="Furniture">
+                            <span class="text-sm transition-colors <?= $category === 'Furniture' ? 'text-slate-900 font-normal' : 'text-slate-500 font-light group-hover:text-slate-900' ?>">Furniture</span>
+                            <?php if ($category === 'Furniture'): ?>
+                                <div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>
+                            <?php endif; ?>
                         </a>
-                        <a href="<?= baseUrl('/browse?category=Appliances') ?>" class="flex items-center gap-3 group">
-                            <div
-                                class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-secondary transition-colors <?= $category === 'Appliances' ? 'bg-secondary border-secondary' : '' ?>">
-                                <?php if ($category === 'Appliances'): ?>
-                                    <span class="material-symbols-outlined text-on-secondary text-sm">check</span>
-                                <?php endif; ?>
-                            </div>
-                            <span
-                                class="font-body-sm text-body-sm transition-colors <?= $category === 'Appliances' ? 'text-on-surface font-semibold' : 'text-on-surface-variant group-hover:text-on-surface' ?>">Appliances</span>
+                        <a href="<?= baseUrl('/browse?category=Appliances') ?>" class="spa-link flex items-center justify-between group" data-category="Appliances">
+                            <span class="text-sm transition-colors <?= $category === 'Appliances' ? 'text-slate-900 font-normal' : 'text-slate-500 font-light group-hover:text-slate-900' ?>">Appliances</span>
+                            <?php if ($category === 'Appliances'): ?>
+                                <div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>
+                            <?php endif; ?>
                         </a>
                     </div>
                 </div>
 
-                <!-- Quick Perks -->
-                <div class="border-t border-outline-variant pt-md">
-                    <h3 class="font-button text-button text-on-surface mb-xs">Tenure Options</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button
-                            class="px-2 py-1 border border-secondary text-secondary rounded font-label-caps text-label-caps hover:bg-secondary hover:text-on-secondary transition-colors">3
-                            Mo</button>
-                        <button
-                            class="px-2 py-1 border border-outline-variant text-on-surface-variant rounded font-label-caps text-label-caps hover:border-secondary hover:text-secondary transition-colors">6
-                            Mo</button>
-                        <button
-                            class="px-2 py-1 border border-outline-variant text-on-surface-variant rounded font-label-caps text-label-caps hover:border-secondary hover:text-secondary transition-colors">12
-                            Mo</button>
+                <!-- Tenure Options -->
+                <div class="pt-6 border-t border-slate-100">
+                    <h3 class="text-xs font-normal text-slate-400 uppercase tracking-widest mb-4">Tenure (Months)</h3>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 text-xs font-normal border border-teal-500 bg-teal-50 text-teal-700 rounded-xl transition-colors">3</button>
+                        <button class="flex-1 py-2 text-xs font-normal border border-slate-200 text-slate-500 rounded-xl hover:border-teal-500 hover:text-teal-600 transition-colors">6</button>
+                        <button class="flex-1 py-2 text-xs font-normal border border-slate-200 text-slate-500 rounded-xl hover:border-teal-500 hover:text-teal-600 transition-colors">12</button>
                     </div>
                 </div>
             </div>
@@ -94,102 +89,131 @@ require __DIR__ . '/../../public/partials/header.php';
         <!-- Product Grid -->
         <div class="flex-grow">
             <!-- Toolbar -->
-            <div class="flex justify-between items-center mb-lg">
-                <span class="font-body-sm text-body-sm text-on-surface-variant"><?= count($products) ?> items
-                    found</span>
-                <div class="flex items-center gap-2">
-                    <span class="font-body-sm text-body-sm text-on-surface-variant">Sort by:</span>
-                    <select
-                        class="form-select font-body-sm text-body-sm border-outline-variant rounded-DEFAULT py-1 pl-2 pr-8 focus:ring-secondary focus:border-secondary text-on-surface bg-surface">
-                        <option>Recommended</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest Arrivals</option>
+            <div class="flex justify-between items-center mb-10 reveal-fade">
+                <span class="text-slate-500 font-light"><?= count($products) ?> items found</span>
+                <div class="flex items-center gap-3">
+                    <?php if ($category): ?>
+                        <input type="hidden" id="current-category" value="<?= htmlspecialchars($category) ?>">
+                    <?php endif; ?>
+                    <label for="sort" class="text-slate-500 font-light text-sm hidden sm:block">Sort by:</label>
+                    <select name="sort" id="sort-select" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-teal-500 focus:border-teal-500 block py-2.5 pl-4 pr-10 font-light shadow-sm outline-none cursor-pointer appearance-none relative">
+                        <?php $currentSort = $_GET['sort'] ?? ''; ?>
+                        <option value="" <?= $currentSort === '' ? 'selected' : '' ?>>Recommended</option>
+                        <option value="price_asc" <?= $currentSort === 'price_asc' ? 'selected' : '' ?>>Price: Low to High</option>
+                        <option value="price_desc" <?= $currentSort === 'price_desc' ? 'selected' : '' ?>>Price: High to Low</option>
+                        <option value="newest" <?= $currentSort === 'newest' ? 'selected' : '' ?>>Newest Arrivals</option>
                     </select>
                 </div>
             </div>
 
-            <?php if ($error): ?>
-                <div class="bg-error-container text-on-error-container p-4 rounded-lg flex items-center gap-3">
-                    <span class="material-symbols-outlined">error</span>
-                    <p><?= htmlspecialchars($error) ?></p>
-                </div>
-            <?php elseif (empty($products)): ?>
-                <div
-                    class="py-16 text-center text-on-surface-variant border border-dashed border-outline-variant rounded-xl bg-surface">
-                    <span class="material-symbols-outlined text-4xl mb-4">inventory_2</span>
-                    <h3 class="font-h3 text-xl mb-2 text-on-surface">No items found</h3>
-                    <p>We couldn't find any products in this category.</p>
-                </div>
-            <?php else: ?>
-                <!-- Grid -->
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                    <?php foreach ($products as $product): ?>
-                        <div class="product-card flex flex-col bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(4,22,39,0.03)] relative cursor-pointer" style="visibility: hidden;">
-                            <!-- Image Area -->
-                            <div class="relative aspect-square overflow-hidden bg-[#F8F9FA] flex items-center justify-center p-6 group/img" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . $product['id']) ?>'">
-                                <img alt="<?= htmlspecialchars($product['name']) ?>"
-                                    class="product-img w-full h-full object-contain mix-blend-multiply"
-                                    src="<?= htmlspecialchars($product['image_url'] ?? 'https://via.placeholder.com/400x400?text=No+Image') ?>"
-                                    loading="lazy" />
-                                
-                                <!-- Badges -->
-                                <div class="absolute top-3 left-3 flex flex-col gap-2 items-start z-10">
-                                    <?php if ($product['category'] === 'Appliances'): ?>
-                                        <span class="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-bold uppercase tracking-wider rounded-full shadow-sm">Fast Delivery</span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-
-                            <!-- Wishlist Button - Floating top right -->
-                            <form method="POST" class="absolute top-3 right-3 z-20">
-                                <input type="hidden" name="csrf_token" value="<?= RentEase\Support\Csrf::token() ?>">
-                                <input type="hidden" name="toggle_wishlist" value="1">
-                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                <?php $isInWishlist = in_array((int) $product['id'], $wishlistIds); ?>
-                                <button type="submit"
-                                    class="wishlist-btn h-8 w-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm <?= $isInWishlist ? 'text-red-500' : 'text-slate-400' ?>">
-                                    <span class="material-symbols-outlined !text-[18px] <?= $isInWishlist ? 'heart-beat' : '' ?>"
-                                        style="font-variation-settings: 'FILL' <?= $isInWishlist ? '1' : '0' ?>;">favorite</span>
-                                </button>
-                            </form>
-
-                            <!-- Content Area -->
-                            <div class="p-5 flex flex-col flex-grow bg-white z-10 relative border-t border-slate-50">
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"><?= htmlspecialchars($product['category']) ?></p>
-                                <a href="<?= baseUrl('/product-detail?id=' . $product['id']) ?>" class="mb-4">
-                                    <h3 class="product-title font-bold text-[16px] text-slate-900 leading-snug line-clamp-2">
-                                        <?= htmlspecialchars($product['name']) ?>
-                                    </h3>
-                                </a>
-                                
-                                <div class="mt-auto flex items-end justify-between pt-1">
-                                    <div>
-                                        <p class="text-[10px] font-medium text-slate-500 mb-0.5">Starting at</p>
-                                        <div class="flex items-baseline gap-1">
-                                            <span class="text-xl font-black text-slate-900 tracking-tight">$<?= number_format($product['monthly_price'] ?? 0, 0) ?></span>
-                                            <span class="text-xs text-slate-400 font-medium">/mo</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <form method="POST" action="<?= baseUrl('/cart') ?>" class="z-20">
-                                        <input type="hidden" name="action" value="add">
-                                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit"
-                                            class="add-to-cart-btn h-10 w-10 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-md">
-                                            <span class="material-symbols-outlined !text-[18px]">add_shopping_cart</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+            <div id="ajax-grid-container" class="relative min-h-[400px] transition-opacity duration-300">
+                <!-- Top Toolbar items found goes here if we want to update it, but for simplicity let's include it in the partial or update it separately. Actually the count is above. Let's just include the grid -->
+                <?php require __DIR__ . '/partials/product-grid.php'; ?>
+            </div>
         </div>
     </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const gridContainer = document.getElementById('ajax-grid-container');
+    const sortSelect = document.getElementById('sort-select');
+    const itemCountSpan = document.getElementById('item-count');
+    let currentCategory = new URLSearchParams(window.location.search).get('category') || '';
+    
+    // Function to fetch and update products
+    async function fetchProducts(category, sort) {
+        // Build URL
+        const url = new URL(window.location.origin + window.location.pathname);
+        if (category) url.searchParams.set('category', category);
+        if (sort) url.searchParams.set('sort', sort);
+        
+        // Add visual loading state
+        gridContainer.style.opacity = '0.5';
+        gridContainer.style.pointerEvents = 'none';
+        
+        // Push State
+        window.history.pushState({}, '', url);
+        
+        try {
+            // Fetch partial
+            url.searchParams.set('ajax', '1');
+            const response = await fetch(url);
+            
+            // To update the item count, we can get it from a custom header or parse the HTML
+            // In our case we can just let it be, or update the controller to return JSON. 
+            // For simplicity, we'll fetch the HTML. We'll update the item count on full page loads.
+            
+            const html = await response.text();
+            
+            // Update DOM
+            gridContainer.innerHTML = html;
+            
+            // Re-trigger GSAP animations
+            if (window.ScrollTrigger) {
+                ScrollTrigger.refresh();
+                const fades = gridContainer.querySelectorAll('.reveal-fade');
+                fades.forEach(el => {
+                    gsap.fromTo(el, 
+                        { opacity: 0, y: 30 },
+                        {
+                            opacity: 1, y: 0,
+                            duration: 1,
+                            ease: "power3.out",
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 90%",
+                            }
+                        }
+                    );
+                });
+            }
+        } catch (err) {
+            console.error("Failed to load products:", err);
+            window.location.reload();
+        } finally {
+            gridContainer.style.opacity = '1';
+            gridContainer.style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Sort Event Listener
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            fetchProducts(currentCategory, e.target.value);
+        });
+    }
+    
+    // Category Event Listeners
+    const categoryLinks = document.querySelectorAll('.spa-link');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const newCategory = link.getAttribute('data-category');
+            currentCategory = newCategory;
+            
+            // Update Active UI State for Categories
+            categoryLinks.forEach(l => {
+                const textSpan = l.querySelector('span.text-sm');
+                const dot = l.querySelector('div\\.w-1\\.5');
+                if (dot) dot.remove(); // Remove active dot
+                textSpan.className = 'text-sm transition-colors text-slate-500 font-light group-hover:text-slate-900';
+            });
+            
+            const textSpan = link.querySelector('span.text-sm');
+            textSpan.className = 'text-sm transition-colors text-slate-900 font-normal';
+            link.insertAdjacentHTML('beforeend', '<div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>');
+            
+            fetchProducts(newCategory, sortSelect ? sortSelect.value : '');
+        });
+    });
+    
+    // Handle Browser Back/Forward
+    window.addEventListener('popstate', () => {
+        window.location.reload();
+    });
+});
+</script>
 
 <style>
 @keyframes heartbeat {
@@ -199,85 +223,6 @@ require __DIR__ . '/../../public/partials/header.php';
     75% { transform: scale(1.1); }
 }
 .heart-beat { animation: heartbeat 1s ease-in-out; }
-
-/* Fallback: if GSAP fails to load after 2s, show everything */
-.no-js .product-card, .gsap-failed .product-card {
-    visibility: visible !important;
-}
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // Safety fallback
-    const fallbackTimer = setTimeout(() => {
-        if (!window.gsap) {
-            document.body.classList.add('gsap-failed');
-        }
-    }, 2000);
-
-    const checkGsap = setInterval(() => {
-        if (window.gsap) {
-            clearInterval(checkGsap);
-            clearTimeout(fallbackTimer);
-            initBrowseAnimations();
-        }
-    }, 50);
-
-    function initBrowseAnimations() {
-        const ctx = gsap.context(() => {
-            
-            // Make cards visible for GSAP
-            gsap.set('.product-card', { visibility: 'visible' });
-
-            const tl = gsap.timeline();
-            
-            // Sidebar slide-in
-            tl.from('aside', {
-                opacity: 0,
-                x: -30,
-                duration: 0.8,
-                ease: 'power3.out'
-            });
-
-            // Grid Cards stagger
-            tl.from('.product-card', {
-                opacity: 0,
-                y: 40,
-                scale: 0.95,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: 'back.out(1.2)'
-            }, '-=0.4');
-
-            // Dynamic Hover Interactions
-            document.querySelectorAll('.product-card').forEach(card => {
-                const img = card.querySelector('.product-img');
-                const overlay = card.querySelector('.product-overlay');
-                const btn = card.querySelector('.add-to-cart-btn');
-                const title = card.querySelector('.product-title');
-                const wishlistBtn = card.querySelector('.wishlist-btn');
-
-                card.addEventListener('mouseenter', () => {
-                    gsap.to(card, { y: -6, boxShadow: '0 20px 40px -12px rgba(4,22,39,0.08)', duration: 0.4, ease: 'power2.out' });
-                    gsap.to(img, { scale: 1.05, duration: 0.6, ease: 'power2.out' });
-                    gsap.to(title, { color: '#006a65', duration: 0.3 }); // secondary color
-                    gsap.to(btn, { backgroundColor: '#006a65', scale: 1.1, rotation: 12, duration: 0.4, ease: 'back.out(2)' });
-                    gsap.to(wishlistBtn, { scale: 1.1, duration: 0.3, ease: 'back.out(2)' });
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    gsap.to(card, { y: 0, boxShadow: '0 2px 12px rgba(4,22,39,0.03)', duration: 0.4, ease: 'power2.out' });
-                    gsap.to(img, { scale: 1, duration: 0.6, ease: 'power2.out' });
-                    gsap.to(title, { color: '#0b1c30', duration: 0.3 }); // on-surface
-                    gsap.to(btn, { backgroundColor: '#0f172a', scale: 1, rotation: 0, duration: 0.4, ease: 'power2.out' }); // slate-900
-                    gsap.to(wishlistBtn, { scale: 1, duration: 0.3, ease: 'power2.out' });
-                });
-            });
-
-        });
-    }
-});
-</script>
 
 <?php require __DIR__ . '/../../public/partials/footer.php'; ?>

@@ -91,10 +91,10 @@ require_once __DIR__ . '/partials/header.php';
     <!-- Wishlist Header -->
     <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-12 gap-6 reveal-element">
         <div>
-            <h1 class="text-4xl font-bold text-primary tracking-tight">Your Wishlist</h1>
+            <h1 class="text-4xl font-normal text-primary tracking-tight">Your Wishlist</h1>
             <p class="text-lg text-slate-500 mt-2"><?= count($wishlistItems) ?> items saved for your dream home.</p>
         </div>
-        <button class="bg-primary text-white font-bold px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+        <button class="bg-primary text-white font-normal px-8 py-4 rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
             <span class="material-symbols-outlined">shopping_cart_checkout</span>
             Move All to Cart
         </button>
@@ -106,9 +106,9 @@ require_once __DIR__ . '/partials/header.php';
             <div class="w-20 h-20 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto mb-6 text-slate-300">
                 <span class="material-symbols-outlined text-4xl">favorite</span>
             </div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">Your wishlist is empty</h2>
+            <h2 class="text-2xl font-normal text-slate-900 mb-2">Your wishlist is empty</h2>
             <p class="text-slate-500 mb-8">Start exploring and save items you love for later.</p>
-            <a href="browse.php" class="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:opacity-90 transition-all inline-block shadow-lg shadow-primary/10">Browse Products</a>
+            <a href="browse.php" class="bg-primary text-white px-10 py-4 rounded-xl font-normal hover:opacity-90 transition-all inline-block shadow-lg shadow-primary/10">Browse Products</a>
         </div>
     <?php else: ?>
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 reveal-element">
@@ -131,14 +131,14 @@ require_once __DIR__ . '/partials/header.php';
                         </form>
                     </div>
                     <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-[10px] font-bold text-teal-600 uppercase tracking-widest mb-1"><?= htmlspecialchars((string)($product['category'] ?? 'Furniture')) ?></span>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 line-clamp-1"><?= htmlspecialchars((string)($product['name'] ?? 'Untitled Item')) ?></h3>
-                        <p class="text-lg font-bold text-primary mb-6">From $<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?><span class="text-xs font-normal text-slate-400">/mo</span></p>
+                        <span class="text-[10px] font-normal text-teal-600 uppercase tracking-widest mb-1"><?= htmlspecialchars((string)($product['category'] ?? 'Furniture')) ?></span>
+                        <h3 class="text-xl font-normal text-slate-900 mb-2 line-clamp-1"><?= htmlspecialchars((string)($product['name'] ?? 'Untitled Item')) ?></h3>
+                        <p class="text-lg font-normal text-primary mb-6">From $<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?><span class="text-xs font-light text-slate-400">/mo</span></p>
                         
                         <form action="cart.php" method="POST" class="mt-auto">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars((string)$product['id']) ?>">
-                            <button type="submit" class="w-full border-2 border-teal-600 text-teal-600 font-bold py-3 rounded-xl hover:bg-teal-600 hover:text-white transition-all flex justify-center items-center gap-2">
+                            <button type="submit" class="w-full border-2 border-teal-600 text-teal-600 font-normal py-3 rounded-xl hover:bg-teal-600 hover:text-white transition-all flex justify-center items-center gap-2">
                                 <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
                                 Move to Cart
                             </button>
@@ -152,30 +152,30 @@ require_once __DIR__ . '/partials/header.php';
     <!-- Saved Collections (Bento) -->
     <section class="mb-16 reveal-element">
         <div class="flex items-center gap-6 mb-10">
-            <h2 class="text-2xl font-bold text-slate-900 tracking-tight shrink-0">Saved Collections</h2>
+            <h2 class="text-2xl font-normal text-slate-900 tracking-tight shrink-0">Saved Collections</h2>
             <div class="h-[1px] flex-grow bg-slate-100"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-[450px]">
             <div class="md:col-span-2 group relative overflow-hidden rounded-3xl cursor-pointer shadow-sm">
                 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAHOn30UOmoB9MDZ8O9iox2j1ryE0wcvS6oJH4X7IVJ_-9lYsW8UOmxuZ_aGtSR23Xsb2W3zS9vlUNTf2vZiuFZFK5mnBifkUZKbftB7hdDni6xXsTg97wv06vGJIStJnGsiFE13y3GY9MIH-8GzI-kBNboWV6MKFvwcRihlDsmxMI6NiruZjRBFjh0-4JQBC2E2uhgTSDGZ5N3WWTPEDb0H-EeFygOlK2b9eS1t-KnGNVNzxmGp_poRYZy7hsXdHY8jQCArjjLh6e" alt="Living Room"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 flex flex-col justify-end">
-                    <h4 class="text-3xl font-bold text-white mb-1">Living Room Setup</h4>
-                    <p class="text-slate-300 font-medium">12 items curated for comfort</p>
+                    <h4 class="text-3xl font-normal text-white mb-1">Living Room Setup</h4>
+                    <p class="text-slate-300 font-normal">12 items curated for comfort</p>
                 </div>
             </div>
             <div class="grid grid-rows-2 gap-8">
                 <div class="group relative overflow-hidden rounded-3xl cursor-pointer shadow-sm">
                     <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4Kgcf0Mma_rlUHnYFBrUq_ELgpYm-VTOV6wus6fCjLB3PweXJ56RK5ZXpCKQnZ9hUPKMKFftGMGSwKuLCLA3_9fO-CEOGYTE7qJCuAtHvYxaYLE7muU2f2XVo8ZYmBUz4yYViEpt0EM9U20pyQJvoQZ4fQWH3YzKhSNIyLbCMoeXwvqMB_0pGSIk7SjtAbEj6cyy9uxs4jWJxUGQEtUSSAODxqcmwbeSBGUk6dJpa7WRVn-lALg_6Qspl9TA57iecds3h8yiOaPXi" alt="Office"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-lg font-bold text-white">Home Office</h4>
-                        <p class="text-xs text-slate-400">5 essentials</p>
+                        <h4 class="text-lg font-normal text-white">Home Office</h4>
+                        <p class="text-xs text-slate-400 font-light">5 essentials</p>
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-3xl cursor-pointer shadow-sm">
                     <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHXG53xMmD8LBSwB52M3xbw3YSE2C8zaK6hYkLTK1muFQohgAzbry8FngWDNRNETlS49C0IUUXV0Fsj_Erj5bzaH9bu5ius4cauJpSOagsEnfam0ba4bSTpyO4R0oDNVhjQi7AYlSK44UoqwAKXMTTYfR6t6mivGSr0dxZTaQ46GB6oUN_NbbV4rgxEgIJiRt8VYxBsd5Kot2m16at7S6FdyXHO7A27FfA47EV_meBUq4T3cPVyJr6EYAI7-vPOnaIYgJyEnwMc5aS" alt="Bedroom"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-lg font-bold text-white">Guest Suite</h4>
-                        <p class="text-xs text-slate-400">8 pieces</p>
+                        <h4 class="text-lg font-normal text-white">Guest Suite</h4>
+                        <p class="text-xs text-slate-400 font-light">8 pieces</p>
                     </div>
                 </div>
             </div>
@@ -185,8 +185,8 @@ require_once __DIR__ . '/partials/header.php';
     <!-- Recommendation Strip -->
     <section class="bg-slate-50 rounded-[2rem] p-12 reveal-element">
         <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Recommended for You</h2>
-            <a class="text-teal-600 font-bold text-sm flex items-center gap-1 hover:underline" href="browse.php">
+            <h2 class="text-2xl font-normal text-slate-900 tracking-tight">Recommended for You</h2>
+            <a class="text-teal-600 font-light text-sm flex items-center gap-1 hover:underline" href="browse.php">
                 View All Explore
                 <span class="material-symbols-outlined text-lg">chevron_right</span>
             </a>
@@ -207,8 +207,8 @@ require_once __DIR__ . '/partials/header.php';
                     <div class="aspect-square rounded-2xl overflow-hidden mb-3 bg-white p-2 border border-slate-100 shadow-sm">
                         <img class="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-500" src="<?= $recom['img'] ?>" alt="<?= $recom['name'] ?>"/>
                     </div>
-                    <p class="text-xs font-bold text-slate-900 truncate"><?= $recom['name'] ?></p>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">$<?= $recom['price'] ?>/mo</p>
+                    <p class="text-xs font-light text-slate-900 truncate"><?= $recom['name'] ?></p>
+                    <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">$<?= $recom['price'] ?>/mo</p>
                 </div>
             <?php endforeach; ?>
         </div>

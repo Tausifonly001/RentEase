@@ -24,22 +24,22 @@ require_once __DIR__ . '/partials/header.php';
             </div>
         </div>
 
-        <h1 class="text-5xl font-bold text-primary mb-6 tracking-tight">Something Big is Coming!</h1>
-        <p class="text-xl text-slate-500 mb-12 leading-relaxed font-medium">We're working hard to bring you this feature. Our team of designers and engineers is currently polishing the final details to ensure a premium experience.</p>
+        <h1 class="text-5xl font-normal text-primary mb-6 tracking-tight">Something Big is Coming!</h1>
+        <p class="text-xl text-slate-500 mb-12 leading-relaxed font-normal">We're working hard to bring you this feature. Our team of designers and engineers is currently polishing the final details to ensure a premium experience.</p>
 
         <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <a href="<?= baseUrl('/dashboard') ?>" class="w-full md:w-auto px-10 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 flex items-center justify-center gap-2">
+            <a href="<?= baseUrl('/dashboard') ?>" class="w-full md:w-auto px-10 py-4 bg-primary text-white font-normal rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">dashboard</span>
                 Back to Dashboard
             </a>
-            <a href="browse.php" class="w-full md:w-auto px-10 py-4 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all active:scale-95 flex items-center justify-center gap-2">
+            <a href="browse.php" class="w-full md:w-auto px-10 py-4 bg-white border-2 border-slate-100 text-slate-600 font-normal rounded-2xl hover:bg-slate-50 transition-all active:scale-95 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">search</span>
                 Browse Furniture
             </a>
         </div>
 
         <div class="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Stay Updated</p>
+            <p class="text-xs font-light text-slate-400 uppercase tracking-[0.2em] mb-6">Stay Updated</p>
             <div class="flex gap-4">
                 <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary transition-colors cursor-pointer">
                     <i class="fa-brands fa-twitter"></i>

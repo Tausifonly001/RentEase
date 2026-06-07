@@ -16,7 +16,7 @@ require __DIR__ . '/partials/header.php';
 <main class="flex-grow flex items-center justify-center py-xl px-4">
     <div class="text-center max-w-lg mx-auto">
         <div class="relative mb-8">
-            <span class="text-[10rem] md:text-[14rem] font-black text-surface-container-high leading-none select-none">404</span>
+            <span class="text-[10rem] md:text-[14rem] font-normal text-surface-container-high leading-none select-none">404</span>
             <div class="absolute inset-0 flex items-center justify-center">
                 <span class="material-symbols-outlined text-6xl md:text-8xl text-secondary opacity-60" style="font-variation-settings: 'FILL' 1;">explore_off</span>
             </div>

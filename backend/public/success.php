@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -30,7 +30,7 @@ if (!$currentUser) {
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script>
         tailwind.config = {
@@ -38,7 +38,7 @@ if (!$currentUser) {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        outfit: ['Outfit', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
                     },
                     colors: {
                         teal: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a', 950: '#042f2e' },
@@ -81,11 +81,11 @@ if (!$currentUser) {
 
         <!-- Success Message -->
         <div class="space-y-4 mb-12">
-            <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 font-outfit slide-up-element opacity-0">
+            <h1 class="text-4xl md:text-5xl font-normal tracking-tighter text-slate-900 font-sans slide-up-element opacity-0">
                 Payment Received!
             </h1>
-            <p class="text-lg text-slate-500 font-medium leading-relaxed slide-up-element opacity-0">
-                Thank you, <span class="text-teal-600 font-bold"><?= e($currentUser['full_name'] ?? 'Guest') ?></span>. 
+            <p class="text-lg text-slate-500 font-normal leading-relaxed slide-up-element opacity-0">
+                Thank you, <span class="text-teal-600 font-normal"><?= e($currentUser['full_name'] ?? 'Guest') ?></span>. 
                 Your order has been confirmed and our fulfillment team is already preparing your premium lease items for dispatch.
             </p>
         </div>
@@ -94,28 +94,28 @@ if (!$currentUser) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12 slide-up-element opacity-0">
             <div class="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-slate-100 shadow-sm text-left">
                 <span class="material-symbols-outlined text-teal-600 mb-2">local_shipping</span>
-                <h3 class="font-bold text-slate-900">Next Step</h3>
-                <p class="text-sm text-slate-500">Scheduled delivery in 48 hours.</p>
+                <h3 class="font-normal text-slate-900">Next Step</h3>
+                <p class="text-sm text-slate-500 font-light">Scheduled delivery in 48 hours.</p>
             </div>
             <div class="bg-white/70 backdrop-blur-md p-6 rounded-3xl border border-slate-100 shadow-sm text-left">
                 <span class="material-symbols-outlined text-teal-600 mb-2">history_edu</span>
-                <h3 class="font-bold text-slate-900">Lease Agreement</h3>
-                <p class="text-sm text-slate-500">Available in your dashboard.</p>
+                <h3 class="font-normal text-slate-900">Lease Agreement</h3>
+                <p class="text-sm text-slate-500 font-light">Available in your dashboard.</p>
             </div>
         </div>
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up-element opacity-0">
-            <a href="<?= baseUrl('/orders') ?>" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-full font-bold shadow-xl shadow-slate-900/20 hover:bg-teal-600 transition-all hover:-translate-y-1 active:scale-95">
+            <a href="<?= baseUrl('/orders') ?>" class="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-full font-normal shadow-xl shadow-slate-900/20 hover:bg-teal-600 transition-all hover:-translate-y-1 active:scale-95">
                 Track My Order
             </a>
-            <a href="<?= baseUrl('/shop') ?>" class="w-full sm:w-auto px-8 py-4 bg-white text-slate-600 rounded-full font-bold border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
+            <a href="<?= baseUrl('/shop') ?>" class="w-full sm:w-auto px-8 py-4 bg-white text-slate-600 rounded-full font-normal border border-slate-200 hover:bg-slate-50 transition-all active:scale-95">
                 Back to Shop
             </a>
         </div>
 
         <!-- Order Number Placeholder -->
-        <p class="mt-12 text-xs font-bold text-slate-300 uppercase tracking-widest slide-up-element opacity-0">
+        <p class="mt-12 text-xs font-light text-slate-300 uppercase tracking-widest slide-up-element opacity-0">
             Transaction Secured by Stripe & Supabase
         </p>
     </div>

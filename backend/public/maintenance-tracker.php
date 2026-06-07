@@ -68,15 +68,15 @@ require_once __DIR__ . '/partials/header.php';
 
     <!-- Summary Header -->
     <section class="mb-12 reveal-element">
-        <h1 class="text-4xl font-bold text-primary mb-8 tracking-tight">Maintenance Tracker</h1>
+        <h1 class="text-4xl font-normal text-primary mb-8 tracking-tight">Maintenance Tracker</h1>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-primary text-white p-8 rounded-2xl shadow-lg flex items-center space-x-6">
                 <div class="bg-white/10 p-3 rounded-xl backdrop-blur-sm">
                     <span class="material-symbols-outlined text-white text-3xl">pending_actions</span>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-teal-400 uppercase tracking-widest mb-1">ACTIVE REQUESTS</p>
-                    <p class="text-2xl font-bold"><?= count($activeRequests) ?> Active</p>
+                    <p class="text-[10px] font-normal text-teal-400 uppercase tracking-widest mb-1">ACTIVE REQUESTS</p>
+                    <p class="text-2xl font-normal"><?= count($activeRequests) ?> Active</p>
                 </div>
             </div>
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-6">
@@ -84,8 +84,8 @@ require_once __DIR__ . '/partials/header.php';
                     <span class="material-symbols-outlined text-primary text-3xl">event_available</span>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">NEXT VISIT</p>
-                    <p class="text-2xl font-bold text-primary">Pending Schedule</p>
+                    <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">NEXT VISIT</p>
+                    <p class="text-2xl font-normal text-primary">Pending Schedule</p>
                 </div>
             </div>
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-6">
@@ -93,8 +93,8 @@ require_once __DIR__ . '/partials/header.php';
                     <span class="material-symbols-outlined text-3xl">history</span>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">RESOLVED TOTAL</p>
-                    <p class="text-2xl font-bold text-primary"><?= count($pastRequests) ?> Tickets</p>
+                    <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">RESOLVED TOTAL</p>
+                    <p class="text-2xl font-normal text-primary"><?= count($pastRequests) ?> Tickets</p>
                 </div>
             </div>
         </div>
@@ -105,8 +105,8 @@ require_once __DIR__ . '/partials/header.php';
         <!-- Tickets Section -->
         <section class="lg:col-span-8 space-y-6">
             <div class="flex items-center justify-between mb-4 reveal-element">
-                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Current Tickets</h2>
-                <a href="<?= baseUrl('/request-maintenance') ?>" class="flex items-center space-x-2 text-teal-600 font-bold hover:underline transition-all">
+                <h2 class="text-2xl font-normal text-slate-900 tracking-tight">Current Tickets</h2>
+                <a href="<?= baseUrl('/request-maintenance') ?>" class="flex items-center space-x-2 text-teal-600 font-normal hover:underline transition-all">
                     <span class="material-symbols-outlined text-xl">add_circle</span>
                     <span>New Request</span>
                 </a>
@@ -117,7 +117,7 @@ require_once __DIR__ . '/partials/header.php';
                     <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
                         <span class="material-symbols-outlined text-4xl text-slate-200">inventory_2</span>
                     </div>
-                    <p class="text-slate-500 font-medium text-lg">No active maintenance requests.</p>
+                    <p class="text-slate-500 font-normal text-lg">No active maintenance requests.</p>
                 </div>
             <?php else: ?>
                 <?php foreach ($activeRequests as $req): 
@@ -133,15 +133,15 @@ require_once __DIR__ . '/partials/header.php';
                                         <img class="w-full h-full object-cover" src="<?= htmlspecialchars((string)($product['image_url'] ?? 'https://via.placeholder.com/100')) ?>" alt="Product"/>
                                     </div>
                                     <div>
-                                        <h3 class="text-2xl font-bold text-slate-900"><?= htmlspecialchars((string)($product['name'] ?? 'Furniture Item')) ?></h3>
+                                        <h3 class="text-2xl font-normal text-slate-900"><?= htmlspecialchars((string)($product['name'] ?? 'Furniture Item')) ?></h3>
                                         <div class="flex items-center gap-2 mt-2">
-                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">REQ #<?= htmlspecialchars((string)$req['id']) ?></span>
+                                            <span class="text-xs font-light text-slate-400 uppercase tracking-widest">REQ #<?= htmlspecialchars((string)$req['id']) ?></span>
                                             <span class="w-1 h-1 rounded-full bg-slate-200"></span>
-                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Opened <?= date('M d, Y', strtotime($req['created_at'])) ?></span>
+                                            <span class="text-xs font-light text-slate-400 uppercase tracking-widest">Opened <?= date('M d, Y', strtotime($req['created_at'])) ?></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="bg-orange-50 text-orange-600 px-6 py-2.5 rounded-full font-bold text-sm flex items-center space-x-2 shrink-0 border border-orange-100">
+                                <div class="bg-orange-50 text-orange-600 px-6 py-2.5 rounded-full font-light text-sm flex items-center space-x-2 shrink-0 border border-orange-100">
                                     <span class="material-symbols-outlined text-[20px]">engineering</span>
                                     <span><?= htmlspecialchars($status === 'OPEN' ? 'Reviewing' : 'Technician En Route') ?></span>
                                 </div>
@@ -150,10 +150,10 @@ require_once __DIR__ . '/partials/header.php';
                             <!-- Progress Bar -->
                             <div class="mb-10 px-2">
                                 <div class="flex justify-between mb-4">
-                                    <span class="text-[10px] font-bold text-teal-600 uppercase tracking-widest">SUBMITTED</span>
-                                    <span class="text-[10px] font-bold <?= $status === 'IN_PROGRESS' ? 'text-teal-600' : 'text-slate-300' ?> uppercase tracking-widest">SCHEDULED</span>
-                                    <span class="text-[10px] font-bold <?= $status === 'IN_PROGRESS' ? 'text-teal-600' : 'text-slate-300' ?> uppercase tracking-widest">EN ROUTE</span>
-                                    <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">RESOLVED</span>
+                                    <span class="text-[10px] font-normal text-teal-600 uppercase tracking-widest">SUBMITTED</span>
+                                    <span class="text-[10px] font-normal <?= $status === 'IN_PROGRESS' ? 'text-teal-600' : 'text-slate-300' ?> uppercase tracking-widest">SCHEDULED</span>
+                                    <span class="text-[10px] font-normal <?= $status === 'IN_PROGRESS' ? 'text-teal-600' : 'text-slate-300' ?> uppercase tracking-widest">EN ROUTE</span>
+                                    <span class="text-[10px] font-normal text-slate-300 uppercase tracking-widest">RESOLVED</span>
                                 </div>
                                 <div class="relative h-2 w-full bg-slate-50 rounded-full border border-slate-100">
                                     <div class="absolute left-0 top-0 h-full <?= $progress ?> bg-teal-500 rounded-full transition-all duration-1000"></div>
@@ -173,23 +173,23 @@ require_once __DIR__ . '/partials/header.php';
                                         <img class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=marcus" alt="Technician"/>
                                     </div>
                                     <div class="flex-grow">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">TECHNICIAN</p>
-                                        <p class="text-base font-bold text-slate-900">Marcus Jensen</p>
-                                        <button class="text-teal-600 text-xs font-bold hover:underline mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-sm">chat</span> Message
+                                        <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-0.5">TECHNICIAN</p>
+                                        <p class="text-base font-normal text-slate-900">Marcus Jensen</p>
+                                        <button class="text-teal-600 text-xs font-light hover:underline mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm font-light">chat</span> Message
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">SCHEDULED WINDOW</p>
-                                    <p class="text-base font-bold text-slate-900">Pending Scheduling</p>
-                                    <p class="text-xs text-slate-500 mt-1 italic">We'll notify you when a slot is assigned.</p>
+                                    <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-0.5">SCHEDULED WINDOW</p>
+                                    <p class="text-base font-normal text-slate-900">Pending Scheduling</p>
+                                    <p class="text-xs text-slate-500 mt-1 italic font-light">We'll notify you when a slot is assigned.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="bg-slate-50/50 px-8 py-5 flex items-center justify-end gap-4 border-t border-slate-50">
-                            <button class="px-6 py-2.5 border-2 border-slate-100 text-slate-600 font-bold text-sm rounded-xl hover:bg-white transition-all">Reschedule</button>
-                            <button class="px-6 py-2.5 bg-primary text-white font-bold text-sm rounded-xl hover:opacity-90 transition-all shadow-md shadow-primary/10">View Details</button>
+                            <button class="px-6 py-2.5 border-2 border-slate-100 text-slate-600 font-light text-sm rounded-xl hover:bg-white transition-all">Reschedule</button>
+                            <button class="px-6 py-2.5 bg-primary text-white font-light text-sm rounded-xl hover:opacity-90 transition-all shadow-md shadow-primary/10">View Details</button>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -198,7 +198,7 @@ require_once __DIR__ . '/partials/header.php';
 
         <!-- Sidebar: Past Requests -->
         <aside class="lg:col-span-4 space-y-8">
-            <h2 class="text-2xl font-bold text-slate-900 tracking-tight reveal-element">Past Requests</h2>
+            <h2 class="text-2xl font-normal text-slate-900 tracking-tight reveal-element">Past Requests</h2>
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 space-y-6 reveal-element max-h-[600px] overflow-y-auto custom-scrollbar">
                 <?php if (empty($pastRequests)): ?>
                     <p class="text-slate-400 text-center italic py-8">No past service history.</p>
@@ -208,28 +208,28 @@ require_once __DIR__ . '/partials/header.php';
                     ?>
                         <div class="group p-4 hover:bg-slate-50 rounded-2xl transition-all border-b border-slate-50 last:border-0 pb-6">
                             <div class="flex justify-between items-start mb-4">
-                                <span class="bg-teal-50 text-teal-600 font-bold text-[10px] px-3 py-1 rounded-full border border-teal-100">RESOLVED</span>
-                                <span class="text-xs font-bold text-slate-300"><?= date('M d', strtotime($req['created_at'])) ?></span>
+                                <span class="bg-teal-50 text-teal-600 font-normal text-[10px] px-3 py-1 rounded-full border border-teal-100">RESOLVED</span>
+                                <span class="text-xs font-light text-slate-300"><?= date('M d', strtotime($req['created_at'])) ?></span>
                             </div>
-                            <h4 class="text-lg font-bold text-slate-900 mb-1"><?= htmlspecialchars((string)($product['name'] ?? 'Furniture Item')) ?></h4>
-                            <p class="text-sm text-slate-500 line-clamp-2 italic">"<?= htmlspecialchars($req['issue_description']) ?>"</p>
+                            <h4 class="text-lg font-normal text-slate-900 mb-1"><?= htmlspecialchars((string)($product['name'] ?? 'Furniture Item')) ?></h4>
+                            <p class="text-sm text-slate-500 line-clamp-2 italic font-light">"<?= htmlspecialchars($req['issue_description']) ?>"</p>
                             <div class="mt-4 flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-300">#<?= htmlspecialchars((string)$req['id']) ?></span>
-                                <button class="text-teal-600 font-bold text-xs hover:underline">View History</button>
+                                <span class="text-xs font-light text-slate-300">#<?= htmlspecialchars((string)$req['id']) ?></span>
+                                <button class="text-teal-600 font-light text-xs hover:underline">View History</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <button class="w-full py-4 text-center text-sm text-slate-400 font-bold hover:text-primary transition-all border-t border-slate-50">
+                <button class="w-full py-4 text-center text-sm text-slate-400 font-light hover:text-primary transition-all border-t border-slate-50">
                     View All History
                 </button>
             </div>
 
             <!-- Support Card -->
             <div class="bg-primary text-white rounded-3xl p-8 shadow-xl reveal-element">
-                <h3 class="text-2xl font-bold mb-3 tracking-tight">Need Help?</h3>
-                <p class="text-teal-100/80 text-sm leading-relaxed mb-8">Our 24/7 concierge is available for emergency maintenance or general inquiries.</p>
-                <a href="<?= baseUrl('/support') ?>" class="w-full bg-white text-primary py-4 rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg text-center block">
+                <h3 class="text-2xl font-normal mb-3 tracking-tight">Need Help?</h3>
+                <p class="text-teal-100/80 text-sm leading-relaxed mb-8 font-light">Our 24/7 concierge is available for emergency maintenance or general inquiries.</p>
+                <a href="<?= baseUrl('/support') ?>" class="w-full bg-white text-primary py-4 rounded-xl font-normal hover:scale-[1.02] active:scale-95 transition-all shadow-lg text-center block">
                     Contact Support
                 </a>
             </div>

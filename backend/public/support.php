@@ -34,7 +34,7 @@ require_once __DIR__ . '/partials/header.php';
             <!-- Left: Contact Info -->
             <div class="lg:col-span-1 space-y-8">
                 <div>
-                    <h1 class="text-4xl font-bold text-primary mb-4 tracking-tight">How can we help?</h1>
+                    <h1 class="text-4xl font-normal text-primary mb-4 tracking-tight">How can we help?</h1>
                     <p class="text-lg text-slate-500 leading-relaxed">Our concierge team is ready to assist you with any questions about your rentals, billing, or technical issues.</p>
                 </div>
 
@@ -44,9 +44,9 @@ require_once __DIR__ . '/partials/header.php';
                             <span class="material-symbols-outlined">chat_bubble</span>
                         </div>
                         <div>
-                            <h4 class="font-bold text-primary mb-1">Live Chat</h4>
-                            <p class="text-sm text-slate-500">Available 24/7 for urgent issues</p>
-                            <a href="<?= baseUrl('/concierge') ?>" class="text-secondary text-sm font-bold mt-2 hover:underline inline-block">Start Chatting →</a>
+                            <h4 class="font-normal text-primary mb-1">Live Chat</h4>
+                            <p class="text-sm text-slate-500 font-light">Available 24/7 for urgent issues</p>
+                            <a href="<?= baseUrl('/concierge') ?>" class="text-secondary text-sm font-light mt-2 hover:underline inline-block">Start Chatting →</a>
                         </div>
                     </div>
 
@@ -55,9 +55,9 @@ require_once __DIR__ . '/partials/header.php';
                             <span class="material-symbols-outlined">mail</span>
                         </div>
                         <div>
-                            <h4 class="font-bold text-primary mb-1">Email Support</h4>
-                            <p class="text-sm text-slate-500">Typical response within 2 hours</p>
-                            <a href="mailto:support@rentease.com" class="text-secondary text-sm font-bold mt-1 hover:underline">support@rentease.com</a>
+                            <h4 class="font-normal text-primary mb-1">Email Support</h4>
+                            <p class="text-sm text-slate-500 font-light">Typical response within 2 hours</p>
+                            <a href="mailto:support@rentease.com" class="text-secondary text-sm font-light mt-1 hover:underline">support@rentease.com</a>
                         </div>
                     </div>
 
@@ -66,9 +66,9 @@ require_once __DIR__ . '/partials/header.php';
                             <span class="material-symbols-outlined">call</span>
                         </div>
                         <div>
-                            <h4 class="font-bold text-primary mb-1">Phone Support</h4>
-                            <p class="text-sm text-slate-500">Mon-Fri, 9am - 6pm EST</p>
-                            <a href="tel:+1800RENTEASE" class="text-secondary text-sm font-bold mt-1 hover:underline">+1 (800) RENT-EASE</a>
+                            <h4 class="font-normal text-primary mb-1">Phone Support</h4>
+                            <p class="text-sm text-slate-500 font-light">Mon-Fri, 9am - 6pm EST</p>
+                            <a href="tel:+1800RENTEASE" class="text-secondary text-sm font-light mt-1 hover:underline">+1 (800) RENT-EASE</a>
                         </div>
                     </div>
                 </div>
@@ -76,9 +76,9 @@ require_once __DIR__ . '/partials/header.php';
                 <!-- FAQ Link -->
                 <div class="p-6 bg-primary text-white rounded-2xl relative overflow-hidden group">
                     <div class="relative z-10">
-                        <h4 class="font-bold mb-2">Check the Help Center</h4>
-                        <p class="text-xs text-on-primary-container mb-4">Most questions can be answered instantly in our knowledge base.</p>
-                        <a href="<?= baseUrl('/help-center') ?>" class="inline-block bg-secondary text-white text-xs font-bold px-4 py-2 rounded-lg hover:brightness-110 transition-all">Go to FAQs</a>
+                        <h4 class="font-normal mb-2">Check the Help Center</h4>
+                        <p class="text-xs text-on-primary-container mb-4 font-light">Most questions can be answered instantly in our knowledge base.</p>
+                        <a href="<?= baseUrl('/help-center') ?>" class="inline-block bg-secondary text-white text-xs font-light px-4 py-2 rounded-lg hover:brightness-110 transition-all">Go to FAQs</a>
                     </div>
                     <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-7xl text-white/5 group-hover:scale-110 transition-transform">help</span>
                 </div>
@@ -90,8 +90,8 @@ require_once __DIR__ . '/partials/header.php';
                     <form id="support-form" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Reason for contact</label>
-                                <select name="category" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-medium appearance-none">
+                                <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Reason for contact</label>
+                                <select name="category" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal appearance-none">
                                     <option value="">Select a category</option>
                                     <option value="billing">Billing & Payments</option>
                                     <option value="delivery">Delivery & Setup</option>
@@ -101,23 +101,23 @@ require_once __DIR__ . '/partials/header.php';
                                 </select>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Subject</label>
-                                <input type="text" name="subject" required placeholder="Briefly describe the issue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-medium">
+                                <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Subject</label>
+                                <input type="text" name="subject" required placeholder="Briefly describe the issue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal">
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Describe your issue</label>
-                            <textarea name="description" required placeholder="Please provide as much detail as possible..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-medium min-h-[180px]"></textarea>
+                            <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Describe your issue</label>
+                            <textarea name="description" required placeholder="Please provide as much detail as possible..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal min-h-[180px]"></textarea>
                         </div>
 
                         <div class="flex items-center gap-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
                             <span class="material-symbols-outlined text-blue-500">info</span>
-                            <p class="text-xs text-blue-700 font-medium">Providing your Order ID helps us resolve issues faster.</p>
+                            <p class="text-xs text-blue-700 font-light">Providing your Order ID helps us resolve issues faster.</p>
                         </div>
 
                         <div class="pt-4">
-                            <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
+                            <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-normal py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
                                 Submit Support Ticket
                             </button>
                         </div>

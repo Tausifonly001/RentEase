@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 declare(strict_types=1);
 
 use RentEase\Services\ProductService;
@@ -139,23 +139,23 @@ require __DIR__ . '/partials/header.php';
 <main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg md:py-xl">
     <!-- Minimal Header & Stepper -->
     <div class="mb-12 text-center max-w-3xl mx-auto">
-        <a class="inline-flex items-center text-teal-600 hover:text-teal-700 transition-colors mb-6 font-bold text-sm bg-teal-50 px-4 py-2 rounded-full" href="<?= baseUrl('/browse') ?>">
-            <span class="material-symbols-outlined text-sm mr-2">arrow_back</span>
+        <a class="inline-flex items-center text-teal-600 hover:text-teal-700 transition-colors mb-6 font-light text-sm bg-teal-50 px-4 py-2 rounded-full" href="<?= baseUrl('/browse') ?>">
+            <span class="material-symbols-outlined text-sm mr-2 font-light">arrow_back</span>
             Continue Shopping
         </a>
-        <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Your Basket</h1>
-        <p class="text-slate-500 font-medium">Review your items and complete your shipping details.</p>
+        <h1 class="text-4xl md:text-5xl font-normal text-slate-900 tracking-tighter mb-4">Your Basket</h1>
+        <p class="text-slate-500 font-normal">Review your items and complete your shipping details.</p>
     </div>
 
     <?php if ($error): ?>
-        <div class="bento-item mb-8 p-4 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3 text-red-700 text-sm font-semibold shadow-sm">
+        <div class="bento-item mb-8 p-4 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3 text-red-700 text-sm font-light shadow-sm">
             <span class="material-symbols-outlined">error</span>
             <p><?= e($error) ?></p>
         </div>
     <?php endif; ?>
     
     <?php if ($success): ?>
-        <div class="bento-item mb-8 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-3 text-emerald-700 text-sm font-semibold shadow-sm">
+        <div class="bento-item mb-8 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-3 text-emerald-700 text-sm font-light shadow-sm">
             <span class="material-symbols-outlined">check_circle</span>
             <p><?= e($success) ?></p>
         </div>
@@ -163,8 +163,8 @@ require __DIR__ . '/partials/header.php';
 
         <?php if (empty($cart)): ?>
             <div class="text-center py-24 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest mt-4">
-                <p class="text-on-surface-variant font-medium text-lg mb-4">Your lease basket is currently empty.</p>
-                <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center justify-center bg-primary text-on-primary font-button px-6 py-3 rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all text-sm">
+                <p class="text-on-surface-variant font-normal text-lg mb-4">Your lease basket is currently empty.</p>
+                <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center justify-center bg-primary text-on-primary font-button px-6 py-3 rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all text-sm font-light">
                     Explore Collections
                 </a>
             </div>
@@ -173,24 +173,24 @@ require __DIR__ . '/partials/header.php';
         <!-- Progress Stepper -->
         <div class="flex items-center w-full max-w-2xl mx-auto mb-12">
             <div class="flex flex-col items-center relative z-10">
-                <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold shadow-lg shadow-teal-500/30 border-4 border-white">
+                <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-normal shadow-lg shadow-teal-500/30 border-4 border-white">
                     <span class="material-symbols-outlined text-[20px]">shopping_basket</span>
                 </div>
-                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-teal-600 uppercase">CART</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-teal-600 uppercase">CART</div>
             </div>
             <div class="flex-auto border-t-2 border-dashed border-teal-500/30"></div>
             <div class="flex flex-col items-center relative z-10">
-                <div class="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-bold shadow-sm border-4 border-white">
+                <div class="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-normal shadow-sm border-4 border-white">
                     <span class="material-symbols-outlined text-[20px]">local_shipping</span>
                 </div>
-                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-slate-400 uppercase">SHIPPING</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-slate-400 uppercase">SHIPPING</div>
             </div>
             <div class="flex-auto border-t-2 border-dashed border-slate-200"></div>
             <div class="flex flex-col items-center relative z-10">
-                <div class="h-10 w-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center font-bold shadow-sm border-4 border-white">
+                <div class="h-10 w-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center font-normal shadow-sm border-4 border-white">
                     <span class="material-symbols-outlined text-[20px]">credit_card</span>
                 </div>
-                <div class="absolute top-12 whitespace-nowrap text-[10px] font-black tracking-widest text-slate-400 uppercase">PAYMENT</div>
+                <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-slate-400 uppercase">PAYMENT</div>
             </div>
         </div>
     </div>
@@ -205,7 +205,7 @@ require __DIR__ . '/partials/header.php';
             
             <!-- Delivery Options -->
             <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3 font-outfit">
+                <h2 class="text-2xl font-normal text-slate-900 mb-6 flex items-center gap-3 font-sans">
                     <div class="p-2 rounded-xl bg-teal-50 text-teal-600">
                         <span class="material-symbols-outlined">local_shipping</span>
                     </div>
@@ -213,21 +213,21 @@ require __DIR__ . '/partials/header.php';
                 </h2>
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preferred Delivery Date</label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Preferred Delivery Date</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors">calendar_month</span>
-                            <input type="date" name="delivery_date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-medium" />
+                            <input type="date" name="delivery_date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-normal" />
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preferred Time Slot</label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Preferred Time Slot</label>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <label class="border-2 border-slate-100 rounded-xl p-4 cursor-pointer hover:border-teal-200 hover:bg-teal-50/50 transition-all duration-200 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-50/50 group relative overflow-hidden">
                                 <input type="radio" name="delivery_time" value="09:00 - 12:00" class="hidden" required />
                                 <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
                                     <span class="material-symbols-outlined text-2xl">light_mode</span>
-                                    <span class="font-bold text-sm whitespace-nowrap">Morning</span>
-                                    <span class="text-[10px] font-bold tracking-widest opacity-60">9AM - 12PM</span>
+                                    <span class="font-light text-sm whitespace-nowrap">Morning</span>
+                                    <span class="text-[10px] font-normal tracking-widest opacity-60">9AM - 12PM</span>
                                 </div>
                                 <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
@@ -235,8 +235,8 @@ require __DIR__ . '/partials/header.php';
                                 <input type="radio" name="delivery_time" value="12:00 - 15:00" class="hidden" required />
                                 <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
                                     <span class="material-symbols-outlined text-2xl">wb_sunny</span>
-                                    <span class="font-bold text-sm whitespace-nowrap">Afternoon</span>
-                                    <span class="text-[10px] font-bold tracking-widest opacity-60">12PM - 3PM</span>
+                                    <span class="font-light text-sm whitespace-nowrap">Afternoon</span>
+                                    <span class="text-[10px] font-normal tracking-widest opacity-60">12PM - 3PM</span>
                                 </div>
                                 <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
@@ -244,8 +244,8 @@ require __DIR__ . '/partials/header.php';
                                 <input type="radio" name="delivery_time" value="15:00 - 18:00" class="hidden" required />
                                 <div class="flex flex-col items-center gap-2 relative z-10 text-slate-500 group-has-[:checked]:text-teal-700">
                                     <span class="material-symbols-outlined text-2xl">routine</span>
-                                    <span class="font-bold text-sm whitespace-nowrap">Evening</span>
-                                    <span class="text-[10px] font-bold tracking-widest opacity-60">3PM - 6PM</span>
+                                    <span class="font-light text-sm whitespace-nowrap">Evening</span>
+                                    <span class="text-[10px] font-normal tracking-widest opacity-60">3PM - 6PM</span>
                                 </div>
                                 <div class="absolute inset-0 bg-teal-500/5 opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
                             </label>
@@ -256,7 +256,7 @@ require __DIR__ . '/partials/header.php';
 
             <!-- Shipping Address -->
             <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3 font-outfit">
+                <h2 class="text-2xl font-normal text-slate-900 mb-6 flex items-center gap-3 font-sans">
                     <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
                         <span class="material-symbols-outlined">home_pin</span>
                     </div>
@@ -264,17 +264,17 @@ require __DIR__ . '/partials/header.php';
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Street Address</label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Street Address</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400 group-focus-within:text-blue-500 transition-colors">home_work</span>
-                            <textarea rows="3" name="address" placeholder="Apt/Suite, Building Name, Street..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium resize-none"></textarea>
+                            <textarea rows="3" name="address" placeholder="Apt/Suite, Building Name, Street..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-normal resize-none"></textarea>
                         </div>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Mobile Number</label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Mobile Number</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">call</span>
-                            <input type="tel" name="mobile_number" placeholder="e.g. +1 555-0123" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium" />
+                            <input type="tel" name="mobile_number" placeholder="e.g. +1 555-0123" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-normal" />
                         </div>
                     </div>
                 </div>
@@ -282,29 +282,29 @@ require __DIR__ . '/partials/header.php';
 
             <!-- KYC Details -->
             <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3 font-outfit">
+                <h2 class="text-2xl font-normal text-slate-900 mb-6 flex items-center gap-3 font-sans">
                     <div class="p-2 rounded-xl bg-indigo-50 text-indigo-600">
                         <span class="material-symbols-outlined">verified_user</span>
                     </div>
                     KYC Verification
                 </h2>
-                <p class="text-sm font-medium text-slate-500 mb-6 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 flex items-start gap-3">
+                <p class="text-sm font-light text-slate-500 mb-6 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 flex items-start gap-3">
                     <span class="material-symbols-outlined text-indigo-500 shrink-0">info</span>
                     <span>Mandatory for background check before delivery approval. Your data is securely encrypted.</span>
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Valid ID Number (Aadhaar/SSN/Passport)</label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Valid ID Number (Aadhaar/SSN/Passport)</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">badge</span>
-                            <input type="text" name="id_number" placeholder="Enter valid ID number" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium" />
+                            <input type="text" name="id_number" placeholder="Enter valid ID number" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-normal" />
                         </div>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Employer Information <span class="text-slate-400 font-normal normal-case tracking-normal ml-1">(Optional)</span></label>
+                        <label class="block text-[10px] font-normal uppercase tracking-widest text-slate-500 mb-2">Employer Information <span class="text-slate-400 font-normal normal-case tracking-normal ml-1">(Optional)</span></label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">work</span>
-                            <input type="text" name="work_verify" placeholder="Employer name / Work verified email" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium" />
+                            <input type="text" name="work_verify" placeholder="Employer name / Work verified email" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-normal" />
                         </div>
                     </div>
                 </div>
@@ -316,7 +316,7 @@ require __DIR__ . '/partials/header.php';
         <div class="w-full lg:w-1/3 bento-item">
             <div class="bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-32">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold font-outfit">Order Summary</h2>
+                    <h2 class="text-2xl font-normal font-sans">Order Summary</h2>
                 </div>
                 
                 <div class="space-y-4 mb-6 max-h-80 overflow-y-auto pr-2">
@@ -326,9 +326,9 @@ require __DIR__ . '/partials/header.php';
                                 <img src="<?= e($dbItem['image_url'] ?? 'https://placehold.co/150') ?>" alt="<?= e($dbItem['name']) ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
                             <div class="flex-1 py-1">
-                                <h3 class="text-white font-bold line-clamp-1 group-hover:text-teal-400 transition-colors"><?= e($dbItem['name']) ?></h3>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Monthly Rental</p>
-                                <p class="text-lg font-black text-teal-400 mt-0.5">$<?= number_format((float)($dbItem['monthly_price'] ?? 0), 2) ?>/mo</p>
+                                <h3 class="text-white font-normal line-clamp-1 group-hover:text-teal-400 transition-colors"><?= e($dbItem['name']) ?></h3>
+                                <p class="text-[10px] text-slate-400 font-normal uppercase tracking-widest mt-1">Monthly Rental</p>
+                                <p class="text-lg font-normal text-teal-400 mt-0.5">$<?= number_format((float)($dbItem['monthly_price'] ?? 0), 2) ?>/mo</p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -336,15 +336,15 @@ require __DIR__ . '/partials/header.php';
 
                 <div class="border-t border-white/10 pt-6 mb-6 space-y-4">
                     <div class="flex justify-between">
-                        <span class="text-slate-400 font-medium">Subtotal (Monthly)</span>
-                        <span class="text-white font-bold">$<?= number_format($subtotal, 2) ?></span>
+                        <span class="text-slate-400 font-normal">Subtotal (Monthly)</span>
+                        <span class="text-white font-normal">$<?= number_format($subtotal, 2) ?></span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400 font-medium">Refundable Deposit</span>
-                        <span class="text-teal-400 font-bold">+ $<?= number_format($deposits, 2) ?></span>
+                        <span class="text-slate-400 font-normal">Refundable Deposit</span>
+                        <span class="text-teal-400 font-normal">+ $<?= number_format($deposits, 2) ?></span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-slate-500 font-medium italic">Estimated Tax & Fees</span>
+                    <div class="flex justify-between text-sm font-light">
+                        <span class="text-slate-500 font-normal italic">Estimated Tax & Fees</span>
                         <span class="text-slate-400">+ $<?= number_format($tax + $delivery, 2) ?></span>
                     </div>
                 </div>
@@ -352,14 +352,14 @@ require __DIR__ . '/partials/header.php';
                 <div class="border-t border-white/10 pt-6 mb-8">
                     <div class="flex justify-between items-baseline">
                         <div>
-                            <span class="block text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-1">Total Due Today</span>
-                            <span class="block text-slate-500 text-xs italic">Includes 1st month + deposit</span>
+                            <span class="block text-slate-400 font-normal uppercase tracking-widest text-[10px] mb-1">Total Due Today</span>
+                            <span class="block text-slate-500 text-xs italic font-light">Includes 1st month + deposit</span>
                         </div>
-                        <span class="text-4xl font-black text-teal-400 font-outfit">$<?= number_format($total, 2) ?></span>
+                        <span class="text-4xl font-normal text-teal-400 font-sans">$<?= number_format($total, 2) ?></span>
                     </div>
                 </div>
 
-                <button type="submit" class="group flex items-center justify-center gap-2 bg-teal-500 text-white font-bold px-6 py-5 rounded-2xl shadow-xl shadow-teal-500/30 hover:bg-teal-400 active:scale-[0.98] transition-all w-full text-lg mb-3">
+                <button type="submit" class="group flex items-center justify-center gap-2 bg-teal-500 text-white font-normal px-6 py-5 rounded-2xl shadow-xl shadow-teal-500/30 hover:bg-teal-400 active:scale-[0.98] transition-all w-full text-lg mb-3">
                     <span class="material-symbols-outlined transition-transform group-hover:scale-110">lock</span>
                     Secure Checkout
                 </button>
@@ -371,7 +371,7 @@ require __DIR__ . '/partials/header.php';
     <div class="flex justify-end mt-6 w-full lg:w-2/3">
         <form action="<?= baseUrl('/cart') ?>" method="POST">
             <input type="hidden" name="action" value="clear">
-            <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition font-bold flex items-center gap-1 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl">
+            <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition font-light flex items-center gap-1 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl">
                 <span class="material-symbols-outlined text-[16px]">delete</span> Empty Cart
             </button>
         </form>

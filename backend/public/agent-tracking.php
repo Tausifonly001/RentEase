@@ -28,24 +28,24 @@ require_once __DIR__ . '/partials/header.php';
 
 <main class="flex-grow pt-24 pb-20 px-6 md:px-12 max-w-3xl mx-auto min-h-screen w-full">
     <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal-element">
-        <h1 class="text-3xl font-bold text-primary mb-2">Agent Location Broadcaster</h1>
+        <h1 class="text-3xl font-normal text-primary mb-2">Agent Location Broadcaster</h1>
         <p class="text-slate-500 mb-8">Broadcast your real-time location to the customer.</p>
         
         <div class="mb-6">
-            <label class="block text-sm font-bold text-slate-700 mb-2">Order ID (UUID)</label>
+            <label class="block text-sm font-light text-slate-700 mb-2">Order ID (UUID)</label>
             <input type="text" id="orderIdInput" class="w-full border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-teal-500" placeholder="Enter Order UUID...">
         </div>
 
         <div class="flex gap-4 mb-8">
-            <button id="startBtn" class="flex-1 bg-teal-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 flex items-center justify-center gap-2">
+            <button id="startBtn" class="flex-1 bg-teal-600 text-white font-normal py-3 px-4 rounded-xl hover:bg-teal-700 transition shadow-lg shadow-teal-500/30 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">play_arrow</span> Start Tracking
             </button>
-            <button id="stopBtn" class="flex-1 bg-rose-50 text-rose-600 font-bold py-3 px-4 rounded-xl hover:bg-rose-100 transition flex items-center justify-center gap-2" disabled>
+            <button id="stopBtn" class="flex-1 bg-rose-50 text-rose-600 font-normal py-3 px-4 rounded-xl hover:bg-rose-100 transition flex items-center justify-center gap-2" disabled>
                 <span class="material-symbols-outlined">stop</span> Stop
             </button>
         </div>
 
-        <div id="statusBox" class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-sm font-mono text-slate-600">
+        <div id="statusBox" class="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-sm font-mono text-slate-600 font-light">
             Waiting to start...
         </div>
     </div>

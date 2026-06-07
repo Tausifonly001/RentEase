@@ -126,21 +126,21 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
             
             <div class="relative z-10 text-center px-12">
                 <a href="<?= baseUrl('/') ?>" class="inline-block mb-12">
-                    <span class="text-5xl font-black text-white tracking-tighter">Rent<span class="text-secondary">Ease</span></span>
+                    <span class="text-5xl font-normal text-white tracking-tighter">Rent<span class="text-secondary">Ease</span></span>
                 </a>
-                <h2 class="text-4xl font-bold text-white mb-6 leading-tight">Join the Premium Rental Marketplace.</h2>
+                <h2 class="text-4xl font-normal text-white mb-6 leading-tight">Join the Premium Rental Marketplace.</h2>
                 <p class="text-slate-400 text-lg max-w-md mx-auto">Create an account to start your journey with curated furniture and luxury living spaces.</p>
                 
                 <div class="mt-16 grid grid-cols-2 gap-4">
                     <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-left backdrop-blur-sm">
                         <span class="material-symbols-outlined text-secondary mb-3">auto_awesome</span>
-                        <h4 class="text-white font-bold text-sm mb-1">Curated Styles</h4>
-                        <p class="text-slate-500 text-xs">Designer-picked furniture collections.</p>
+                        <h4 class="text-white font-light text-sm mb-1">Curated Styles</h4>
+                        <p class="text-slate-500 text-xs font-light">Designer-picked furniture collections.</p>
                     </div>
                     <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-left backdrop-blur-sm">
                         <span class="material-symbols-outlined text-secondary mb-3">verified_user</span>
-                        <h4 class="text-white font-bold text-sm mb-1">Total Security</h4>
-                        <p class="text-slate-500 text-xs">Insured rentals and secure payments.</p>
+                        <h4 class="text-white font-light text-sm mb-1">Total Security</h4>
+                        <p class="text-slate-500 text-xs font-light">Insured rentals and secure payments.</p>
                     </div>
                 </div>
             </div>
@@ -149,17 +149,17 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
         <!-- Right Side: Signup Form -->
         <div class="flex flex-col justify-start sm:justify-center w-full lg:w-1/2 px-5 sm:px-12 lg:px-24 bg-white relative min-w-0">
             <div class="absolute top-8 left-5 lg:hidden">
-                <a href="<?= baseUrl('/') ?>" class="text-2xl font-black text-primary tracking-tighter">RentEase</a>
+                <a href="<?= baseUrl('/') ?>" class="text-2xl font-normal text-primary tracking-tighter">RentEase</a>
             </div>
 
             <div id="signup-container" class="w-full max-w-md mx-auto pt-24 pb-12 sm:py-12 min-w-0">
                 <header class="mb-10">
-                    <h1 class="text-3xl font-bold text-primary mb-2">Create Account</h1>
+                    <h1 class="text-3xl font-normal text-primary mb-2">Create Account</h1>
                     <p class="text-slate-500">Join RentEase and elevate your living space today.</p>
                 </header>
 
                 <?php if ($error): ?>
-                    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 flex gap-3 items-center text-red-700 text-sm animate-shake">
+                    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 flex gap-3 items-center text-red-700 text-sm animate-shake font-light">
                         <span class="material-symbols-outlined text-red-500">error</span>
                         <p><?= htmlspecialchars($error) ?></p>
                     </div>
@@ -169,7 +169,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                     
                     <div>
-                        <label for="full_name" class="block text-sm font-semibold text-primary mb-2">Full Name</label>
+                        <label for="full_name" class="block text-sm font-light text-primary mb-2">Full Name</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">person</span>
                             <input type="text" id="full_name" name="full_name" required 
@@ -180,7 +180,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-primary mb-2">Email Address</label>
+                        <label for="email" class="block text-sm font-light text-primary mb-2">Email Address</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">mail</span>
                             <input type="email" id="email" name="email" required 
@@ -191,7 +191,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-primary mb-2">Password</label>
+                        <label for="password" class="block text-sm font-light text-primary mb-2">Password</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
                             <input type="password" id="password" name="password" required 
@@ -204,12 +204,12 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                         <div class="flex items-center h-5 mt-0.5">
                             <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-secondary border-slate-300 rounded focus:ring-secondary cursor-pointer">
                         </div>
-                        <div class="text-sm">
-                            <label for="terms" class="text-slate-500 leading-relaxed">I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-secondary font-bold hover:underline">Terms of Service</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-secondary font-bold hover:underline">Privacy Policy</a>.</label>
+                        <div class="text-sm font-light">
+                            <label for="terms" class="text-slate-500 leading-relaxed">I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-secondary font-normal hover:underline">Terms of Service</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-secondary font-normal hover:underline">Privacy Policy</a>.</label>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
+                    <button type="submit" class="w-full py-4 bg-primary hover:bg-slate-800 text-white font-normal rounded-xl shadow-lg shadow-primary/10 transition-all transform hover:-translate-y-0.5 active:scale-[0.98]">
                         Create Account
                     </button>
                 </form>
@@ -218,7 +218,7 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                 <div class="mt-8">
                     <div class="relative flex items-center mb-8">
                         <div class="flex-grow border-t border-slate-200"></div>
-                        <span class="flex-shrink mx-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Or sign up with</span>
+                        <span class="flex-shrink mx-4 text-xs font-light text-slate-400 uppercase tracking-widest">Or sign up with</span>
                         <div class="flex-grow border-t border-slate-200"></div>
                     </div>
 
@@ -227,16 +227,16 @@ $oauthProviders = $config['enabled_oauth_providers'] ?? [];
                             <button onclick="window.location.href='<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>'" 
                                 class="flex items-center justify-center gap-3 px-4 py-3 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group w-full">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= $provider['name'] ?>" class="w-5 h-5 group-hover:scale-110 transition-transform">
-                                <span class="text-sm font-bold text-slate-700"><?= $provider['name'] ?></span>
+                                <span class="text-sm font-light text-slate-700"><?= $provider['name'] ?></span>
                             </button>
                         <?php endforeach; ?>
                     </div>
                 </div>
 
                 <footer class="mt-10 text-center">
-                    <p class="text-slate-500 text-sm">
+                    <p class="text-slate-500 text-sm font-light">
                         Already have an account? 
-                        <a href="<?= baseUrl('/login') ?>" class="text-secondary font-bold hover:underline">Sign in instead</a>
+                        <a href="<?= baseUrl('/login') ?>" class="text-secondary font-normal hover:underline">Sign in instead</a>
                     </p>
                 </footer>
             </div>

@@ -46,7 +46,7 @@ require_once __DIR__ . '/partials/header.php';
                 <div class="w-20 h-20 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">celebration</span>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-bold text-primary mb-4 tracking-tight">Your delivery is complete!</h1>
+                <h1 class="text-3xl md:text-4xl font-normal text-primary mb-4 tracking-tight">Your delivery is complete!</h1>
                 <p class="text-lg text-slate-500 max-w-lg mx-auto">We'd love to hear about your experience and your new items.</p>
             </div>
 
@@ -56,7 +56,7 @@ require_once __DIR__ . '/partials/header.php';
                 
                 <!-- Delivery Experience -->
                 <section>
-                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8 text-center">DELIVERY EXPERIENCE</h3>
+                    <h3 class="text-[10px] font-normal text-slate-400 uppercase tracking-[0.2em] mb-8 text-center">DELIVERY EXPERIENCE</h3>
                     <div class="flex flex-col items-center gap-8">
                         <div class="flex justify-center gap-4">
                             <?php for($i=1; $i<=5; $i++): ?>
@@ -64,36 +64,36 @@ require_once __DIR__ . '/partials/header.php';
                                     <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-50 border-2 border-transparent hover:border-secondary hover:bg-white transition-all flex items-center justify-center group-active:scale-95 shadow-sm">
                                         <span class="material-symbols-outlined text-3xl text-slate-300 group-hover:text-secondary transition-colors" style="font-variation-settings: 'FILL' 0;">star</span>
                                     </div>
-                                    <span class="text-[10px] font-bold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity uppercase"><?= ['Terrible','Poor','Average','Great','Amazing'][$i-1] ?></span>
+                                    <span class="text-[10px] font-normal text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity uppercase"><?= ['Terrible','Poor','Average','Great','Amazing'][$i-1] ?></span>
                                 </button>
                             <?php endfor; ?>
                         </div>
-                        <p class="text-sm font-bold text-slate-700">How would you rate the professionalism?</p>
+                        <p class="text-sm font-light text-slate-700">How would you rate the professionalism?</p>
                     </div>
                 </section>
 
                 <!-- Feedback Text -->
                 <section>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 text-center">ANY SPECIFIC COMMENTS?</label>
-                    <textarea id="comments" class="w-full p-6 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-medium min-h-[150px] placeholder:text-slate-300" placeholder="Everything was great, thank you!"></textarea>
+                    <label class="block text-[10px] font-normal text-slate-400 uppercase tracking-[0.2em] mb-4 text-center">ANY SPECIFIC COMMENTS?</label>
+                    <textarea id="comments" class="w-full p-6 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal min-h-[150px] placeholder:text-slate-300" placeholder="Everything was great, thank you!"></textarea>
                 </section>
 
                 <!-- Tags -->
                 <section>
-                    <p class="text-sm font-bold text-slate-700 text-center mb-6">What went well?</p>
+                    <p class="text-sm font-light text-slate-700 text-center mb-6">What went well?</p>
                     <div class="flex flex-wrap justify-center gap-3">
                         <?php foreach(['On-time', 'Polite', 'Careful', 'Professional', 'Fast Setup', 'Clean'] as $tag): ?>
-                            <button type="button" onclick="toggleTag(this)" class="tag-btn px-6 py-2 rounded-full border-2 border-slate-100 text-sm font-bold text-slate-500 hover:border-secondary hover:text-secondary transition-all active:scale-95"><?= $tag ?></button>
+                            <button type="button" onclick="toggleTag(this)" class="tag-btn px-6 py-2 rounded-full border-2 border-slate-100 text-sm font-light text-slate-500 hover:border-secondary hover:text-secondary transition-all active:scale-95"><?= $tag ?></button>
                         <?php endforeach; ?>
                     </div>
                 </section>
 
                 <!-- Submit -->
                 <div class="pt-6">
-                    <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-bold py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg">
+                    <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-normal py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg">
                         Submit Feedback
                     </button>
-                    <a href="<?= baseUrl('/dashboard') ?>" class="block w-full text-center text-slate-400 font-bold py-4 mt-2 hover:text-slate-600 transition-all text-sm">
+                    <a href="<?= baseUrl('/dashboard') ?>" class="block w-full text-center text-slate-400 font-light py-4 mt-2 hover:text-slate-600 transition-all text-sm">
                         Maybe Later
                     </a>
                 </div>

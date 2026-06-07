@@ -181,9 +181,9 @@ require __DIR__ . '/partials/header.php';
         <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-error-container/20 text-error mb-6">
             <span class="material-symbols-outlined text-4xl">inventory_2</span>
         </div>
-        <h2 class="text-2xl font-bold text-primary mb-2">Something went wrong</h2>
+        <h2 class="text-2xl font-normal text-primary mb-2">Something went wrong</h2>
         <p class="text-on-surface-variant mb-8 max-w-md mx-auto"><?= htmlspecialchars($error ?? 'The requested product could not be found in our catalog.') ?></p>
-        <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-primary/10">
+        <a href="<?= baseUrl('/browse') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-normal hover:bg-slate-800 transition-all shadow-lg shadow-primary/10">
             <span class="material-symbols-outlined">arrow_back</span>
             Browse Collections
         </a>
@@ -192,14 +192,14 @@ require __DIR__ . '/partials/header.php';
 
     <!-- Breadcrumbs -->
     <nav aria-label="Breadcrumb" class="mb-8 overflow-hidden" id="breadcrumbs">
-        <ol class="flex items-center gap-2 text-sm text-on-surface-variant">
+        <ol class="flex items-center gap-2 text-sm text-on-surface-variant font-light">
             <li><a href="<?= baseUrl('/') ?>" class="hover:text-secondary transition-colors">Home</a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
             <li><a href="<?= baseUrl('/browse') ?>" class="hover:text-secondary transition-colors">Rentals</a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
             <li><a href="<?= baseUrl('/browse?category=' . urlencode($product['category'])) ?>" class="hover:text-secondary transition-colors"><?= htmlspecialchars($product['category']) ?></a></li>
             <li><span class="material-symbols-outlined text-base">chevron_right</span></li>
-            <li class="font-semibold text-primary truncate"><?= htmlspecialchars($product['name']) ?></li>
+            <li class="font-normal text-primary truncate"><?= htmlspecialchars($product['name']) ?></li>
         </ol>
     </nav>
 
@@ -228,9 +228,9 @@ require __DIR__ . '/partials/header.php';
 
                     <!-- Status Badges -->
                     <div class="absolute bottom-6 left-6 flex flex-wrap gap-2">
-                        <span class="px-4 py-1.5 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Premium Series</span>
+                        <span class="px-4 py-1.5 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-normal uppercase tracking-widest rounded-full shadow-lg">Premium Series</span>
                         <?php if (($product['total_stock'] ?? 0) < 5): ?>
-                            <span class="px-4 py-1.5 bg-red-500/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Low Stock</span>
+                            <span class="px-4 py-1.5 bg-red-500/90 backdrop-blur-md text-white text-[10px] font-normal uppercase tracking-widest rounded-full shadow-lg">Low Stock</span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -252,8 +252,8 @@ require __DIR__ . '/partials/header.php';
                         <span class="material-symbols-outlined">local_shipping</span>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Delivery</p>
-                        <p class="text-sm font-bold text-slate-900">Free & Fast</p>
+                        <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">Delivery</p>
+                        <p class="text-sm font-light text-slate-900">Free & Fast</p>
                     </div>
                 </div>
                 <div class="p-5 rounded-[2rem] bg-white shadow-sm border border-slate-100/50 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
@@ -261,8 +261,8 @@ require __DIR__ . '/partials/header.php';
                         <span class="material-symbols-outlined">build</span>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Assembly</p>
-                        <p class="text-sm font-bold text-slate-900">Professional</p>
+                        <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">Assembly</p>
+                        <p class="text-sm font-light text-slate-900">Professional</p>
                     </div>
                 </div>
                 <div class="p-5 rounded-[2rem] bg-white shadow-sm border border-slate-100/50 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-300">
@@ -270,8 +270,8 @@ require __DIR__ . '/partials/header.php';
                         <span class="material-symbols-outlined">cleaning_services</span>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Service</p>
-                        <p class="text-sm font-bold text-slate-900">Deep Cleaning</p>
+                        <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">Service</p>
+                        <p class="text-sm font-light text-slate-900">Deep Cleaning</p>
                     </div>
                 </div>
             </div>
@@ -281,32 +281,32 @@ require __DIR__ . '/partials/header.php';
         <div class="lg:col-span-5 lg:sticky lg:top-28 space-y-8" id="details-container">
             <header>
                 <div class="flex items-center gap-3 mb-6">
-                    <span class="text-teal-700 font-black text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 bg-teal-50 rounded-full shadow-sm">New Arrival</span>
+                    <span class="text-teal-700 font-normal text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 bg-teal-50 rounded-full shadow-sm">New Arrival</span>
                     <div class="flex items-center gap-1 text-amber-400">
-                        <span class="material-symbols-outlined !text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined !text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined !text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined !text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                        <span class="material-symbols-outlined !text-sm">star_half</span>
-                        <span class="text-slate-500 text-xs ml-2 font-bold">4.8 (124 reviews)</span>
+                        <span class="material-symbols-outlined !text-sm font-light" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined !text-sm font-light" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined !text-sm font-light" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined !text-sm font-light" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined !text-sm font-light">star_half</span>
+                        <span class="text-slate-500 text-xs ml-2 font-light">4.8 (124 reviews)</span>
                     </div>
                 </div>
-                <h1 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-4 tracking-tight">
+                <h1 class="text-4xl md:text-5xl font-normal text-slate-900 leading-tight mb-4 tracking-tight">
                     <?= htmlspecialchars($product['name']) ?>
                 </h1>
-                <p class="text-lg text-slate-500 leading-relaxed font-medium">
+                <p class="text-lg text-slate-500 leading-relaxed font-normal">
                     <?= htmlspecialchars($product['description'] ?? 'Elevate your interior with this curated ' . lcfirst($product['category']) . '. Designed for both aesthetics and durability.') ?>
                 </p>
             </header>
 
             <div class="p-8 rounded-[2rem] bg-white shadow-xl shadow-slate-200/40 border border-slate-100">
                 <div class="flex items-baseline gap-2 mb-2">
-                    <span class="text-5xl font-black text-slate-900 tracking-tighter" id="price-display">$<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?></span>
-                    <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">/ month</span>
+                    <span class="text-5xl font-normal text-slate-900 tracking-tighter" id="price-display">$<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?></span>
+                    <span class="text-slate-500 font-normal uppercase tracking-widest text-[10px]">/ month</span>
                 </div>
-                <p class="text-sm text-slate-400 font-medium flex items-center gap-1">
-                    <span class="material-symbols-outlined !text-sm text-teal-500" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-                    Fully refundable deposit: <span class="text-slate-700 font-bold">+$<?= number_format((float)($product['monthly_price'] ?? 0) * 1.5, 0) ?></span>
+                <p class="text-sm text-slate-400 font-light flex items-center gap-1">
+                    <span class="material-symbols-outlined !text-sm text-teal-500 font-light" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                    Fully refundable deposit: <span class="text-slate-700 font-normal">+$<?= number_format((float)($product['monthly_price'] ?? 0) * 1.5, 0) ?></span>
                 </p>
 
                 <hr class="my-8 border-slate-100">
@@ -318,46 +318,46 @@ require __DIR__ . '/partials/header.php';
                     
                     <div>
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Select Tenure</h3>
-                            <span class="text-[10px] text-teal-700 font-black tracking-widest uppercase bg-teal-50 px-2 py-1 rounded-md">Up to 15% Off</span>
+                            <h3 class="text-xs font-light text-slate-900 uppercase tracking-widest">Select Tenure</h3>
+                            <span class="text-[10px] text-teal-700 font-normal tracking-widest uppercase bg-teal-50 px-2 py-1 rounded-md">Up to 15% Off</span>
                         </div>
                         <div class="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Subscription tenure">
                             <label class="cursor-pointer group">
                                 <input class="peer sr-only" name="tenure" type="radio" value="3" checked onchange="updatePrice(1)" aria-label="3 months tenure"/>
                                 <div class="py-5 px-2 rounded-[1.5rem] border-2 border-slate-100 text-center transition-all group-hover:border-slate-200 peer-checked:border-teal-500 peer-checked:bg-teal-50/50 peer-checked:text-teal-700 peer-focus-visible:ring-2 ring-teal-500">
-                                    <p class="text-2xl font-black tracking-tighter">3</p>
-                                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-60 mt-1">Months</p>
+                                    <p class="text-2xl font-normal tracking-tighter">3</p>
+                                    <p class="text-[10px] font-normal uppercase tracking-widest opacity-60 mt-1">Months</p>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input class="peer sr-only" name="tenure" type="radio" value="6" onchange="updatePrice(0.95)" aria-label="6 months tenure with 5% discount"/>
                                 <div class="py-5 px-2 rounded-[1.5rem] border-2 border-slate-100 text-center transition-all group-hover:border-slate-200 peer-checked:border-teal-500 peer-checked:bg-teal-50/50 peer-checked:text-teal-700 peer-focus-visible:ring-2 ring-teal-500 relative overflow-hidden">
-                                    <p class="text-2xl font-black tracking-tighter">6</p>
-                                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-60 mt-1">Months</p>
-                                    <div class="absolute top-0 right-0 bg-teal-500 text-white text-[8px] font-black px-2 py-1 rounded-bl-xl shadow-sm">5% OFF</div>
+                                    <p class="text-2xl font-normal tracking-tighter">6</p>
+                                    <p class="text-[10px] font-normal uppercase tracking-widest opacity-60 mt-1">Months</p>
+                                    <div class="absolute top-0 right-0 bg-teal-500 text-white text-[8px] font-normal px-2 py-1 rounded-bl-xl shadow-sm">5% OFF</div>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input class="peer sr-only" name="tenure" type="radio" value="12" onchange="updatePrice(0.85)" aria-label="12 months tenure with 15% discount"/>
                                 <div class="py-5 px-2 rounded-[1.5rem] border-2 border-slate-100 text-center transition-all group-hover:border-slate-200 peer-checked:border-teal-500 peer-checked:bg-teal-50/50 peer-checked:text-teal-700 peer-focus-visible:ring-2 ring-teal-500 relative overflow-hidden">
-                                    <p class="text-2xl font-black tracking-tighter">12</p>
-                                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-60 mt-1">Months</p>
-                                    <div class="absolute top-0 right-0 bg-teal-500 text-white text-[8px] font-black px-2 py-1 rounded-bl-xl shadow-sm">15% OFF</div>
+                                    <p class="text-2xl font-normal tracking-tighter">12</p>
+                                    <p class="text-[10px] font-normal uppercase tracking-widest opacity-60 mt-1">Months</p>
+                                    <div class="absolute top-0 right-0 bg-teal-500 text-white text-[8px] font-normal px-2 py-1 rounded-bl-xl shadow-sm">15% OFF</div>
                                 </div>
                             </label>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <button type="submit" class="w-full py-5 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-[1.5rem] shadow-xl shadow-slate-900/20 transition-all transform hover:-translate-y-1 active:scale-[0.98] flex items-center justify-center gap-3 group focus-visible:ring-2 ring-teal-500 outline-none">
+                        <button type="submit" class="w-full py-5 bg-slate-900 hover:bg-slate-800 text-white font-normal rounded-[1.5rem] shadow-xl shadow-slate-900/20 transition-all transform hover:-translate-y-1 active:scale-[0.98] flex items-center justify-center gap-3 group focus-visible:ring-2 ring-teal-500 outline-none">
                             <span class="material-symbols-outlined group-hover:rotate-12 transition-transform" aria-hidden="true">shopping_bag</span>
                             Reserve for Rental
                         </button>
                         
                         <div class="relative group">
-                            <input aria-label="Check delivery availability by zip code" class="w-full bg-slate-50/50 border border-slate-200 rounded-[1.5rem] py-4 pl-12 pr-20 text-sm font-medium focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:text-slate-400" placeholder="Check delivery availability..." type="text"/>
+                            <input aria-label="Check delivery availability by zip code" class="w-full bg-slate-50/50 border border-slate-200 rounded-[1.5rem] py-4 pl-12 pr-20 text-sm font-light focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:text-slate-400" placeholder="Check delivery availability..." type="text"/>
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">local_shipping</span>
-                            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-teal-600 text-[10px] font-black uppercase tracking-widest hover:text-teal-800 transition-colors focus-visible:underline outline-none">Check</button>
+                            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-teal-600 text-[10px] font-normal uppercase tracking-widest hover:text-teal-800 transition-colors focus-visible:underline outline-none">Check</button>
                         </div>
                     </div>
                 </form>
@@ -371,16 +371,16 @@ require __DIR__ . '/partials/header.php';
                             <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center">
                                 <span class="material-symbols-outlined !text-xl">tune</span>
                             </div>
-                            <span class="font-bold text-slate-900 text-lg">Specifications</span>
+                            <span class="font-normal text-slate-900 text-lg">Specifications</span>
                         </div>
                         <span class="material-symbols-outlined text-slate-400 transition-transform group-active:scale-90">expand_more</span>
                     </button>
                     <div class="p-6 pt-0 hidden">
-                        <dl class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm">
+                        <dl class="grid grid-cols-2 gap-y-6 gap-x-4 text-sm font-light">
                             <?php foreach ($specs as $key => $value): ?>
                             <div class="<?= $key === 'Dimensions' ? 'col-span-2' : '' ?>">
-                                <dt class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1"><?= htmlspecialchars($key) ?></dt>
-                                <dd class="text-slate-900 font-bold"><?= htmlspecialchars($value) ?></dd>
+                                <dt class="text-[10px] text-slate-400 font-normal uppercase tracking-widest mb-1"><?= htmlspecialchars($key) ?></dt>
+                                <dd class="text-slate-900 font-normal"><?= htmlspecialchars($value) ?></dd>
                             </div>
                             <?php endforeach; ?>
                         </dl>
@@ -393,7 +393,7 @@ require __DIR__ . '/partials/header.php';
                             <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
                                 <span class="material-symbols-outlined !text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
                             </div>
-                            <span class="font-bold text-slate-900 text-lg">RentEase Promise</span>
+                            <span class="font-normal text-slate-900 text-lg">RentEase Promise</span>
                         </div>
                         <span class="material-symbols-outlined text-slate-400 transition-transform group-active:scale-90">expand_more</span>
                     </button>
@@ -402,22 +402,22 @@ require __DIR__ . '/partials/header.php';
                             <li class="flex items-start gap-4">
                                 <span class="material-symbols-outlined text-teal-500 !text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                                 <div>
-                                    <p class="font-bold text-slate-900 text-sm">Free Relocation</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">Moving within the city? We'll transport it for free.</p>
+                                    <p class="font-light text-slate-900 text-sm">Free Relocation</p>
+                                    <p class="text-xs text-slate-500 mt-0.5 font-light">Moving within the city? We'll transport it for free.</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
                                 <span class="material-symbols-outlined text-teal-500 !text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                                 <div>
-                                    <p class="font-bold text-slate-900 text-sm">Deep Cleaning</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">Complimentary deep cleaning service every 6 months.</p>
+                                    <p class="font-light text-slate-900 text-sm">Deep Cleaning</p>
+                                    <p class="text-xs text-slate-500 mt-0.5 font-light">Complimentary deep cleaning service every 6 months.</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-4">
                                 <span class="material-symbols-outlined text-teal-500 !text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                                 <div>
-                                    <p class="font-bold text-slate-900 text-sm">Professional Support</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">Dedicated maintenance team available on demand.</p>
+                                    <p class="font-light text-slate-900 text-sm">Professional Support</p>
+                                    <p class="text-xs text-slate-500 mt-0.5 font-light">Dedicated maintenance team available on demand.</p>
                                 </div>
                             </li>
                         </ul>
@@ -431,10 +431,10 @@ require __DIR__ . '/partials/header.php';
     <section class="mt-24 pt-24 border-t border-outline-variant" id="related-products">
         <div class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-3xl font-black text-primary tracking-tighter mb-2">Pairs well with</h2>
+                <h2 class="text-3xl font-normal text-primary tracking-tighter mb-2">Pairs well with</h2>
                 <p class="text-on-surface-variant">Complete your room with these hand-picked items.</p>
             </div>
-            <a href="<?= baseUrl('/browse') ?>" class="text-sm font-black text-secondary uppercase tracking-widest hover:underline underline-offset-8">Explore Catalog</a>
+            <a href="<?= baseUrl('/browse') ?>" class="text-sm font-light text-secondary uppercase tracking-widest hover:underline underline-offset-8">Explore Catalog</a>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -457,12 +457,12 @@ require __DIR__ . '/partials/header.php';
                         </a>
                         <div class="p-5 flex flex-col flex-grow bg-white z-10 relative">
                             <a href="<?= baseUrl('/product-detail?id=' . $related['id']) ?>" class="mb-2">
-                                <h3 class="font-bold text-lg text-slate-900 leading-tight group-hover:text-teal-600 transition-colors line-clamp-1"><?= htmlspecialchars($related['name']) ?></h3>
+                                <h3 class="font-normal text-lg text-slate-900 leading-tight group-hover:text-teal-600 transition-colors line-clamp-1"><?= htmlspecialchars($related['name']) ?></h3>
                             </a>
                             <div class="mt-auto flex items-end justify-between pt-2">
                                 <div class="flex items-baseline gap-1">
-                                    <span class="text-xl font-black text-slate-900 tracking-tighter">$<?= number_format((float)$related['monthly_price'], 0) ?></span>
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">/mo</span>
+                                    <span class="text-xl font-normal text-slate-900 tracking-tighter">$<?= number_format((float)$related['monthly_price'], 0) ?></span>
+                                    <span class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">/mo</span>
                                 </div>
                             </div>
                         </div>

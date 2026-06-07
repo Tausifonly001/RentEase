@@ -1,14 +1,12 @@
 /* =============================================================================
-   RentEase Auth Effects
-   - Cinematic background: Ken Burns + film grain + vignette + particles
-   - Mouse parallax on background + cursor glow
-   - 3D tilt on glass form card
-   - Word-by-word headline reveal
-   - Number counter for stats
-   - Password strength meter
-   - Form field focus animations
-   - Submit button loading state
-   - Respects prefers-reduced-motion
+   RentEase Auth Effects — refined
+   - CSS-only word reveal (no JS split dependency)
+   - Counter final value in HTML, JS animates from 0 only when in view
+   - CSS-transition mouse parallax (no RAF loop)
+   - Cursor glow with rAF (only while moving)
+   - 3D tilt: max 2deg (subtle)
+   - 18 particles max
+   - Submit: no artificial delay, error fallback
    ============================================================================= */
 
 (function () {
@@ -18,157 +16,101 @@
     const isMobile = window.matchMedia('(max-width: 1023px)').matches;
     const isTouchOnly = window.matchMedia('(hover: none)').matches;
 
-    // ------------------------------------------------------------------
-    // 1. Cinematic background — slow Ken Burns zoom + parallax on mouse
-    // ------------------------------------------------------------------
-    function initCinematicBackground() {
-        const img = document.querySelector('.cinematic-bg');
+    // 1. Mouse parallax on background (CSS transition, no RAF)
+    function initParallax() {
+        if (prefersReducedMotion || isTouchOnly) return;
+        const wrap = document.querySelector('.cinematic-wrap');
+        const img = wrap && wrap.querySelector('.cinematic-bg');
         if (!img) return;
 
-        if (!prefersReducedMotion) {
-            // Ken Burns: slow zoom + drift over 40s
-            img.style.animation = 'ken-burns 40s ease-in-out infinite alternate';
-        }
+        // CSS transition handles smoothing
+        img.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
 
-        if (!isTouchOnly && !isMobile) {
-            const wrap = img.parentElement;
-            let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-            wrap.addEventListener('mousemove', (e) => {
+        let raf = null;
+        wrap.addEventListener('mousemove', (e) => {
+            if (raf) return;
+            raf = requestAnimationFrame(() => {
                 const rect = wrap.getBoundingClientRect();
-                targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
-                targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
+                const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
+                const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
+                img.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+                raf = null;
             });
-            wrap.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
-
-            const animate = () => {
-                currentX += (targetX - currentX) * 0.06;
-                currentY += (targetY - currentY) * 0.06;
-                img.style.transform = `scale(1.08) translate(${currentX}px, ${currentY}px)`;
-                requestAnimationFrame(animate);
-            };
-            animate();
-        }
+        });
+        wrap.addEventListener('mouseleave', () => {
+            img.style.transform = 'scale(1.08) translate(0, 0)';
+        });
     }
 
-    // ------------------------------------------------------------------
-    // 2. Floating particles (dust motes)
-    // ------------------------------------------------------------------
-    function initParticles() {
-        if (prefersReducedMotion) return;
-        const container = document.querySelector('.particles');
-        if (!container) return;
-        const count = isMobile ? 12 : 28;
-        const fragment = document.createDocumentFragment();
-
-        for (let i = 0; i < count; i++) {
-            const p = document.createElement('span');
-            p.className = 'particle';
-            const size = 2 + Math.random() * 4;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = (Math.random() * 100) + '%';
-            p.style.animationDuration = (15 + Math.random() * 25) + 's';
-            p.style.animationDelay = (-Math.random() * 30) + 's';
-            p.style.opacity = (0.3 + Math.random() * 0.5).toFixed(2);
-            fragment.appendChild(p);
-        }
-        container.appendChild(fragment);
-    }
-
-    // ------------------------------------------------------------------
-    // 3. Cursor glow — soft radial gradient following the mouse
-    // ------------------------------------------------------------------
+    // 2. Cursor glow (rAF, 400px, more subtle)
     function initCursorGlow() {
-        if (isTouchOnly || isMobile) return;
+        if (prefersReducedMotion || isTouchOnly || isMobile) return;
         const glow = document.createElement('div');
         glow.className = 'cursor-glow';
         document.body.appendChild(glow);
 
         let x = -500, y = -500, tx = -500, ty = -500;
+        let active = true;
         document.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; });
+        document.addEventListener('mouseleave', () => { tx = -500; ty = -500; });
+
         const animate = () => {
-            x += (tx - x) * 0.12;
-            y += (ty - y) * 0.12;
+            if (!active) return;
+            x += (tx - x) * 0.1;
+            y += (ty - y) * 0.1;
             glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+            if (Math.abs(tx - x) < 0.5 && Math.abs(ty - y) < 0.5) {
+                // Idle — stop the loop to save CPU
+                return;
+            }
             requestAnimationFrame(animate);
         };
         animate();
     }
 
-    // ------------------------------------------------------------------
-    // 4. 3D tilt on the glass form card
-    // ------------------------------------------------------------------
+    // 3. 3D tilt on glass card (max 2deg, subtle)
     function initTilt() {
         if (prefersReducedMotion || isTouchOnly) return;
         const card = document.querySelector('.tilt-card');
         if (!card) return;
 
         const wrap = card.parentElement;
-        let rect = card.getBoundingClientRect();
-        const updateRect = () => { rect = card.getBoundingClientRect(); };
-        window.addEventListener('resize', updateRect);
-        window.addEventListener('scroll', updateRect, { passive: true });
-
-        wrap.addEventListener('mousemove', (e) => {
+        const update = (e) => {
+            const rect = card.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width - 0.5;
             const y = (e.clientY - rect.top) / rect.height - 0.5;
-            card.style.transform = `perspective(1200px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg) translateZ(0)`;
-            // Move the card's internal highlight
+            card.style.transform = `perspective(1200px) rotateY(${x * 2}deg) rotateX(${-y * 2}deg)`;
             const highlight = card.querySelector('.card-highlight');
             if (highlight) {
-                highlight.style.background = `radial-gradient(circle at ${(x + 0.5) * 100}% ${(y + 0.5) * 100}%, rgba(255,255,255,0.15) 0%, transparent 50%)`;
+                highlight.style.background = `radial-gradient(circle at ${(x + 0.5) * 100}% ${(y + 0.5) * 100}%, rgba(255,255,255,0.12) 0%, transparent 50%)`;
             }
-        });
+        };
+        wrap.addEventListener('mousemove', update);
         wrap.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1200px) rotateY(0deg) rotateX(0deg) translateZ(0)';
+            card.style.transform = 'perspective(1200px) rotateY(0deg) rotateX(0deg)';
         });
     }
 
-    // ------------------------------------------------------------------
-    // 5. Word-by-word headline reveal
-    // ------------------------------------------------------------------
-    function initWordReveal() {
-        if (prefersReducedMotion) {
-            document.querySelectorAll('.word-reveal').forEach(el => {
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
-            return;
-        }
-        document.querySelectorAll('.word-reveal').forEach(el => {
-            const text = el.textContent.trim();
-            el.textContent = '';
-            const words = text.split(/\s+/);
-            words.forEach((word, i) => {
-                const span = document.createElement('span');
-                span.className = 'word';
-                span.textContent = word + (i < words.length - 1 ? ' ' : '');
-                span.style.animationDelay = (i * 0.08) + 's';
-                el.appendChild(span);
-            });
-        });
-    }
-
-    // ------------------------------------------------------------------
-    // 6. Number counter animation
-    // ------------------------------------------------------------------
+    // 4. Counter — final value in HTML, JS animates from 0 when in view
     function initCounters() {
         if (prefersReducedMotion) return;
         const counters = document.querySelectorAll('[data-counter]');
         if (counters.length === 0) return;
 
+        // Reset to 0 only when JS is about to animate (prevents flash of final value)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 const el = entry.target;
                 const target = parseFloat(el.dataset.counter);
                 const suffix = el.dataset.suffix || '';
-                const duration = 1800;
+                el.textContent = '0';
+                el.classList.add('is-animating');
+                const duration = 1600;
                 const start = performance.now();
                 const animate = (now) => {
                     const elapsed = now - start;
                     const progress = Math.min(elapsed / duration, 1);
-                    // ease-out cubic
                     const eased = 1 - Math.pow(1 - progress, 3);
                     const value = target * eased;
                     el.textContent = (target % 1 === 0 ? Math.floor(value) : value.toFixed(1)) + suffix;
@@ -182,57 +124,38 @@
         counters.forEach(c => observer.observe(c));
     }
 
-    // ------------------------------------------------------------------
-    // 7. Form field focus: animated border draw + label float
-    // ------------------------------------------------------------------
+    // 5. Form field focus state
     function initFormFields() {
         document.querySelectorAll('.auth-field').forEach(field => {
             const input = field.querySelector('.auth-input');
             if (!input) return;
             input.addEventListener('focus', () => field.classList.add('is-focused'));
-            input.addEventListener('blur', () => {
-                field.classList.remove('is-focused');
-                if (input.value.trim()) field.classList.add('has-value');
-                else field.classList.remove('has-value');
-            });
-            // initial state
-            if (input.value.trim()) field.classList.add('has-value');
+            input.addEventListener('blur', () => field.classList.remove('is-focused'));
         });
     }
 
-    // ------------------------------------------------------------------
-    // 8. Submit button loading state + page transition
-    // ------------------------------------------------------------------
-    function initSubmitAnimation() {
+    // 6. Submit — show loading state, no artificial delay
+    function initSubmit() {
         document.querySelectorAll('form[data-cinematic-submit]').forEach(form => {
             form.addEventListener('submit', (e) => {
+                if (!form.checkValidity()) return; // let native validation handle invalid forms
                 const btn = form.querySelector('[type="submit"]');
                 if (!btn) return;
-                // Only animate if form is valid
-                if (!form.checkValidity()) return;
-                e.preventDefault();
                 btn.classList.add('is-loading');
                 btn.disabled = true;
-                // Trigger cinematic zoom on the background
                 document.body.classList.add('is-submitting');
-                // Submit after a short delay for the animation to play
-                setTimeout(() => form.submit(), 700);
+                // Form submits naturally — no setTimeout
             });
         });
     }
 
-    // ------------------------------------------------------------------
-    // 9. Boot
-    // ------------------------------------------------------------------
     function boot() {
-        initCinematicBackground();
-        initParticles();
+        initParallax();
         initCursorGlow();
         initTilt();
-        initWordReveal();
         initCounters();
         initFormFields();
-        initSubmitAnimation();
+        initSubmit();
     }
 
     if (document.readyState === 'loading') {

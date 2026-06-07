@@ -73,7 +73,6 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         }
     </script>
     <style>
-        /* ========== BASE ========== */
         html, body { height: 100%; overscroll-behavior: none; }
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #041527; color: #fff; }
 
@@ -85,100 +84,90 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
             object-fit: cover;
             transform: scale(1.08);
             will-change: transform;
-            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes ken-burns {
             0%   { transform: scale(1.08) translate(0%, 0%); }
-            100% { transform: scale(1.18) translate(-1.5%, -1%); }
+            100% { transform: scale(1.16) translate(-1%, -0.5%); }
         }
         .grade-overlay {
             position: absolute; inset: 0; pointer-events: none;
             background:
-                radial-gradient(ellipse at 30% 30%, rgba(20, 184, 166, 0.10) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
-                linear-gradient(180deg, rgba(4, 21, 39, 0.55) 0%, rgba(4, 21, 39, 0.35) 50%, rgba(4, 21, 39, 0.85) 100%);
+                radial-gradient(ellipse at 30% 30%, rgba(20, 184, 166, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(245, 158, 11, 0.06) 0%, transparent 60%),
+                linear-gradient(90deg, rgba(4, 21, 39, 0.55) 0%, rgba(4, 21, 39, 0.30) 50%, rgba(4, 21, 39, 0.80) 100%);
         }
         .vignette {
             position: absolute; inset: 0; pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+            background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%);
         }
         .grain {
-            position: absolute; inset: 0; pointer-events: none; opacity: 0.12; mix-blend-mode: overlay;
+            position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
         }
-        .letterbox {
-            position: absolute; left: 0; right: 0; height: 6vh; max-height: 60px; min-height: 32px;
-            background: #000; z-index: 5;
-        }
+        .letterbox { position: absolute; left: 0; right: 0; height: 5vh; max-height: 48px; min-height: 24px; background: #000; z-index: 5; }
         .letterbox-top { top: 0; }
         .letterbox-bottom { bottom: 0; }
         @media (max-width: 1023px) { .letterbox { display: none; } }
 
-        /* ========== PARTICLES ========== */
         .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
         .particle {
             position: absolute; bottom: -10px;
-            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 70%);
             border-radius: 9999px;
             animation: drift linear infinite;
+            will-change: transform;
         }
         @keyframes drift {
             0%   { transform: translate(0, 0) scale(1); }
-            50%  { transform: translate(20px, -50vh) scale(0.7); }
-            100% { transform: translate(-10px, -110vh) scale(0.3); }
+            50%  { transform: translate(15px, -50vh) scale(0.7); }
+            100% { transform: translate(-8px, -110vh) scale(0.3); }
         }
 
-        /* ========== CURSOR GLOW ========== */
         .cursor-glow {
             position: fixed; left: 0; top: 0;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 60%);
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, transparent 60%);
             border-radius: 9999px; pointer-events: none;
             z-index: 1; will-change: transform;
             transform: translate(-500px, -500px);
         }
 
-        /* ========== WORD REVEAL ========== */
-        .word-reveal .word {
-            display: inline-block;
-            opacity: 0; transform: translateY(20px);
-            animation: wordIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+        /* ========== WORD REVEAL (CSS-only, no JS split) ========== */
+        .word { display: inline-block; opacity: 0; transform: translateY(24px); animation: wordIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes wordIn { to { opacity: 1; transform: translateY(0); } }
 
         /* ========== GLASS CARD ========== */
         .tilt-card {
-            background: rgba(255, 255, 255, 0.72);
+            background: rgba(255, 255, 255, 0.74);
             backdrop-filter: blur(28px) saturate(180%);
             -webkit-backdrop-filter: blur(28px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow:
                 0 1px 0 rgba(255, 255, 255, 0.9) inset,
-                0 30px 80px -20px rgba(0, 0, 0, 0.45),
-                0 10px 30px -10px rgba(0, 0, 0, 0.25);
+                0 30px 80px -20px rgba(0, 0, 0, 0.4),
+                0 10px 30px -10px rgba(0, 0, 0, 0.2);
             transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
             position: relative;
             overflow: hidden;
         }
         .card-highlight {
             position: absolute; inset: 0; pointer-events: none;
-            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 50%);
-            opacity: 0; transition: opacity 0.3s;
+            opacity: 0; transition: opacity 0.4s;
         }
         .tilt-card:hover .card-highlight { opacity: 1; }
 
         /* ========== FORM FIELDS ========== */
         .auth-field { position: relative; }
         .auth-input {
-            width: 100%; padding: 1.1rem 1rem 1.1rem 3rem;
-            background: rgba(255, 255, 255, 0.5);
+            width: 100%; padding: 1.05rem 1rem 1.05rem 3rem;
+            background: rgba(255, 255, 255, 0.55);
             border: 1.5px solid rgba(15, 23, 42, 0.08);
             border-radius: 14px;
             color: #0f172a;
             font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
         }
         .auth-input::placeholder { color: #94a3b8; transition: opacity 0.2s; }
@@ -187,12 +176,12 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         .auth-field.is-focused .auth-input {
             border-color: #14b8a6;
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12), 0 4px 12px rgba(20, 184, 166, 0.08);
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
         }
         .auth-field .field-icon {
             position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
             color: #94a3b8; font-size: 20px; pointer-events: none;
-            transition: color 0.3s, transform 0.3s;
+            transition: color 0.25s, transform 0.25s;
         }
         .auth-field.is-focused .field-icon { color: #14b8a6; transform: translateY(-50%) scale(1.1); }
 
@@ -211,8 +200,8 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         .btn-cinematic:hover { background: #0f172a; transform: translateY(-2px); box-shadow: 0 12px 30px -8px rgba(4,21,39,0.5); }
         .btn-cinematic:hover::before { transform: translateX(100%); }
         .btn-cinematic:active { transform: translateY(0); }
-        .btn-cinematic.is-loading { pointer-events: none; }
-        .btn-cinematic .btn-text, .btn-cinematic .btn-loader { transition: all 0.3s; }
+        .btn-cinematic.is-loading { pointer-events: none; opacity: 0.95; }
+        .btn-cinematic .btn-text, .btn-cinematic .btn-loader { transition: all 0.25s; }
         .btn-cinematic .btn-loader {
             position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
             opacity: 0; transform: translateY(8px);
@@ -220,46 +209,49 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         .btn-cinematic.is-loading .btn-text { opacity: 0; transform: translateY(-8px); }
         .btn-cinematic.is-loading .btn-loader { opacity: 1; transform: translateY(0); }
         .spinner {
-            width: 18px; height: 18px;
+            width: 16px; height: 16px;
             border: 2px solid rgba(255,255,255,0.3);
             border-top-color: #fff;
             border-radius: 9999px;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ========== SUBMIT TRANSITION ========== */
-        .is-submitting .cinematic-bg { transform: scale(1.4) !important; filter: blur(8px) brightness(0.7); }
-        .is-submitting { transition: filter 0.6s; }
+        .is-submitting .cinematic-bg { transform: scale(1.25) !important; filter: blur(6px) brightness(0.7); transition: transform 0.7s, filter 0.7s; }
+        .is-submitting .tilt-card { opacity: 0.7; transform: scale(0.98); transition: all 0.4s; }
 
         /* ========== STAGGER ANIMATIONS ========== */
-        .stagger-in { opacity: 0; transform: translateY(20px); animation: staggerIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .stagger-in { opacity: 0; transform: translateY(16px); animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes staggerIn { to { opacity: 1; transform: translateY(0); } }
-        .s-1 { animation-delay: 0.1s; }
-        .s-2 { animation-delay: 0.2s; }
-        .s-3 { animation-delay: 0.3s; }
-        .s-4 { animation-delay: 0.4s; }
-        .s-5 { animation-delay: 0.5s; }
-        .s-6 { animation-delay: 0.6s; }
-        .s-7 { animation-delay: 0.7s; }
+        .s-1 { animation-delay: 0.05s; }
+        .s-2 { animation-delay: 0.15s; }
+        .s-3 { animation-delay: 0.25s; }
+        .s-4 { animation-delay: 0.35s; }
+        .s-5 { animation-delay: 0.45s; }
+        .s-6 { animation-delay: 0.55s; }
+        .s-7 { animation-delay: 0.65s; }
+
+        /* Counter (hidden until JS animates) */
+        [data-counter] { opacity: 0; transition: opacity 0.3s; }
+        [data-counter].is-animating { opacity: 1; }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 1023px) {
             .editorial-panel { display: none !important; }
             .cinematic-wrap::after {
                 content: ''; position: absolute; inset: 0;
-                background: linear-gradient(180deg, rgba(4,21,39,0.85) 0%, rgba(4,21,39,0.7) 100%);
+                background: linear-gradient(180deg, rgba(4,21,39,0.82) 0%, rgba(4,21,39,0.65) 100%);
             }
         }
         @media (min-width: 1024px) and (max-width: 1279px) {
-            .editorial-headline { font-size: 4.5rem !important; }
+            .editorial-headline { font-size: 4.25rem !important; line-height: 0.95 !important; }
         }
         @media (max-width: 640px) {
             .auth-form-card { padding: 1.75rem !important; border-radius: 1.5rem !important; }
             .editorial-mobile-headline { font-size: 2.5rem !important; }
         }
 
-        /* ========== A11Y ========== */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -267,11 +259,9 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                 transition-duration: 0.01ms !important;
             }
             .cinematic-bg { animation: none !important; transform: scale(1.05) !important; }
-            .stagger-in { opacity: 1; transform: none; }
-            .word-reveal .word { opacity: 1; transform: none; animation: none; }
-            .particle { display: none; }
-            .cursor-glow { display: none; }
-            .grain { opacity: 0.05; }
+            .stagger-in, .word { opacity: 1; transform: none; }
+            .particle, .cursor-glow { display: none; }
+            .grain { opacity: 0.03; }
         }
     </style>
 </head>
@@ -293,17 +283,17 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
     </div>
 
     <!-- ============ EDITORIAL BRAND PANEL (LEFT, DESKTOP) ============ -->
-    <aside class="editorial-panel relative z-10 hidden lg:flex flex-col justify-between w-1/2 px-12 xl:px-20 py-16 text-white">
+    <aside class="editorial-panel relative z-10 hidden lg:flex flex-col justify-between w-1/2 px-12 xl:px-20 py-14 text-white">
 
         <!-- Top: brand mark + tagline pill -->
         <div class="stagger-in s-1 flex items-center gap-3">
             <a href="<?= baseUrl('/') ?>" class="flex items-center gap-2.5 group">
-                <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-105 transition-all">
+                <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-white/20 group-hover:scale-105 transition-all duration-300">
                     <span class="text-white font-bold text-lg">R</span>
                 </div>
                 <span class="text-white font-semibold text-lg tracking-tight">RentEase<span class="text-teal-400">.</span></span>
             </a>
-            <span class="ml-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/8 backdrop-blur-md border border-white/15 text-[11px] font-medium tracking-widest uppercase text-white/80">
+            <span class="ml-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-medium tracking-widest uppercase text-white/80">
                 <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
                 Member sign in
             </span>
@@ -312,28 +302,28 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
         <!-- Center: massive headline + subhead -->
         <div class="max-w-2xl">
             <h1 class="editorial-headline text-7xl xl:text-8xl font-bold leading-[0.92] tracking-tighter">
-                <span class="word-reveal block">Your space,</span>
-                <span class="word-reveal block"><span class="font-serif italic font-normal text-teal-300">effortlessly</span></span>
-                <span class="word-reveal block">curated.</span>
+                <span style="display:block;"><span class="word" style="animation-delay:0.2s;">Your</span> <span class="word" style="animation-delay:0.28s;">space,</span></span>
+                <span style="display:block;"><span class="word font-serif italic font-normal text-teal-300" style="animation-delay:0.36s;">effortlessly</span></span>
+                <span style="display:block;"><span class="word" style="animation-delay:0.44s;">curated.</span></span>
             </h1>
-            <p class="stagger-in s-4 mt-8 text-white/70 text-lg leading-relaxed max-w-md">
+            <p class="stagger-in s-4 mt-7 text-white/70 text-lg leading-relaxed max-w-md">
                 Continue managing your rentals, tracking deliveries, and unlocking member rewards — all in one place.
             </p>
         </div>
 
         <!-- Bottom: stats strip with animated counters -->
-        <div class="stagger-in s-5 grid grid-cols-3 gap-6 max-w-xl pt-8 border-t border-white/10">
+        <div class="stagger-in s-5 grid grid-cols-3 gap-5 max-w-xl pt-7 border-t border-white/10">
             <div>
-                <div class="text-4xl font-bold tracking-tight"><span data-counter="12" data-suffix="k+">0</span></div>
-                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">Happy members</div>
+                <div class="text-3xl xl:text-4xl font-bold tracking-tight"><span data-counter="12" data-suffix="k+">12k+</span></div>
+                <div class="text-white/50 text-[10px] xl:text-[11px] uppercase tracking-widest mt-2">Happy members</div>
             </div>
             <div>
-                <div class="text-4xl font-bold tracking-tight"><span data-counter="98" data-suffix="%">0</span></div>
-                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">On-time delivery</div>
+                <div class="text-3xl xl:text-4xl font-bold tracking-tight"><span data-counter="98" data-suffix="%">98%</span></div>
+                <div class="text-white/50 text-[10px] xl:text-[11px] uppercase tracking-widest mt-2">On-time delivery</div>
             </div>
             <div>
-                <div class="text-4xl font-bold tracking-tight"><span data-counter="4.9" data-suffix="">0</span><span class="text-teal-400">★</span></div>
-                <div class="text-white/50 text-[11px] uppercase tracking-widest mt-2">Avg. rating</div>
+                <div class="text-3xl xl:text-4xl font-bold tracking-tight"><span data-counter="4.9">4.9</span><span class="text-teal-400">★</span></div>
+                <div class="text-white/50 text-[10px] xl:text-[11px] uppercase tracking-widest mt-2">Avg. rating</div>
             </div>
         </div>
     </aside>
@@ -341,29 +331,24 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
     <!-- ============ FORM PANEL (RIGHT) ============ -->
     <main class="relative z-10 flex-1 flex flex-col">
 
-        <!-- Top bar (mobile brand + desktop pill link) -->
         <header class="stagger-in s-1 flex items-center justify-between px-6 lg:px-12 py-6">
-            <!-- Mobile: brand only -->
             <a href="<?= baseUrl('/') ?>" class="lg:hidden flex items-center gap-2.5">
                 <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
                     <span class="text-white font-bold">R</span>
                 </div>
                 <span class="text-white font-semibold tracking-tight">RentEase<span class="text-teal-400">.</span></span>
             </a>
-            <!-- Desktop: spacer -->
             <div class="hidden lg:block"></div>
-            <a href="<?= baseUrl('/signup') ?>" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-sm font-medium transition-all hover:scale-[1.02]">
+            <a href="<?= baseUrl('/signup') ?>" class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:scale-[1.02]">
                 <span class="hidden sm:inline">New here?</span>
                 <span class="text-teal-300">Create an account</span>
-                <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform duration-300">arrow_forward</span>
             </a>
         </header>
 
-        <!-- Centered form area -->
         <div class="flex-1 flex items-center justify-center p-5 sm:p-8 lg:p-12">
             <div class="w-full max-w-md">
 
-                <!-- Mobile headline (hidden on desktop) -->
                 <div class="lg:hidden mb-8 text-center text-white stagger-in s-1">
                     <h1 class="editorial-mobile-headline text-4xl sm:text-5xl font-bold leading-[1.05] tracking-tight">
                         Welcome <span class="font-serif italic text-teal-300">back</span>
@@ -371,7 +356,6 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                     <p class="mt-3 text-white/60 text-sm">Sign in to continue your journey</p>
                 </div>
 
-                <!-- GLASS FORM CARD -->
                 <div class="tilt-card auth-form-card rounded-3xl p-7 sm:p-9 lg:p-10 stagger-in s-2">
                     <div class="card-highlight"></div>
 
@@ -424,13 +408,13 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                             </span>
                             <span class="btn-loader">
                                 <span class="spinner"></span>
-                                <span class="ml-2">Signing you in…</span>
+                                <span class="ml-2 text-sm">Signing you in…</span>
                             </span>
                         </button>
                     </form>
 
                     <?php if (!empty($oauthProviders)): ?>
-                    <div class="relative mt-7 stagger-in s-7 flex items-center gap-4">
+                    <div class="relative mt-6 stagger-in s-7 flex items-center gap-4">
                         <div class="flex-1 h-px bg-slate-200"></div>
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">or continue with</span>
                         <div class="flex-1 h-px bg-slate-200"></div>
@@ -439,8 +423,8 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                     <div class="relative mt-4 stagger-in s-7 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-2.5">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
                             <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>"
-                               class="flex items-center justify-center gap-2.5 py-3 px-3 bg-white border border-slate-200 hover:border-ink hover:bg-slate-50 rounded-2xl transition-all group">
-                                <img src="<?= $provider['icon'] ?>" alt="" class="w-4 h-4 group-hover:scale-110 transition-transform">
+                               class="flex items-center justify-center gap-2.5 py-3 px-3 bg-white border border-slate-200 hover:border-ink hover:bg-slate-50 rounded-2xl transition-all duration-200 group">
+                                <img src="<?= $provider['icon'] ?>" alt="" class="w-4 h-4 group-hover:scale-110 transition-transform duration-200">
                                 <span class="text-sm font-semibold text-slate-700"><?= $provider['name'] ?></span>
                             </a>
                         <?php endforeach; ?>

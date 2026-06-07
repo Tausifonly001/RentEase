@@ -38,6 +38,7 @@ desktop.ini
 .gemini/
 .github/prompts/
 skills-lock.json
+.opencode/
 __pycache__/
 
 # ===== ONESIGNAL BUILD ARTIFACTS =====

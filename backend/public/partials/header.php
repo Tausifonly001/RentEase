@@ -112,7 +112,7 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
     <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <!-- Lenis smooth scroll removed: it conflicts with parallax scrub and can stall native scroll on desktop. -->
     <script src="<?= baseUrl('/assets/js/theme.js') ?>" defer></script>
 
     <!-- OneSignal Integration -->

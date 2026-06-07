@@ -200,24 +200,19 @@
     }
 
     // -------------------------------------------------------------------------
-    // 6. Lenis smooth scroll + GSAP reveals + parallax
+    // 6. GSAP reveals + parallax (native scroll; Lenis removed for stability)
     // -------------------------------------------------------------------------
     function initAiryUX() {
-        if (window.gsap && window.ScrollTrigger && window.Lenis) {
-            gsap.registerPlugin(ScrollTrigger);
-
-            const lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smooth: true,
-            });
-            lenis.on('scroll', ScrollTrigger.update);
-            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-            gsap.ticker.lagSmoothing(0, 0);
-            window.RentEase.lenis = lenis;
-        }
-
         if (window.gsap && window.ScrollTrigger) {
+            // Refresh ScrollTrigger after layout settles (images, fonts)
+            window.addEventListener('load', () => ScrollTrigger.refresh());
+            // Refresh on resize too
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+            });
+
             // Text reveals (slide up from below)
             gsap.utils.toArray('.reveal-text').forEach(text => {
                 gsap.to(text, {

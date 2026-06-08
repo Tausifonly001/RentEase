@@ -56,7 +56,7 @@ jobs:
             echo "::error:: .env is committed — remove it immediately"
             exit 1
           fi
-          if ! echo ".env" | git check-ignore --stdin > /dev/null 2>&1; then
+          if ! echo ".env" | git check-ignore --stdin --no-index > /dev/null 2>&1; then
             echo "::error:: .env is not in .gitignore — add it now"
             exit 1
           fi

@@ -1,329 +1,276 @@
-/* =============================================================================
-   RentEase Theme JS
-   - GSAP/Lenis smooth scroll + reveals + parallax
-   - Scroll progress bar
-   - Scroll-to-top button
-   - Toast notification system  (window.RentEase.toast)
-   - Cookie consent banner
-   - Search input wiring
-   ============================================================================= */
+/**
+ * RentEase — Shared GSAP Animation Utilities
+ * Luxury cinematic motion library
+ */
 
-(function () {
+window.RentEase = window.RentEase || {};
+
+(function() {
     'use strict';
 
-    const RentEase = window.RentEase = window.RentEase || {};
+    const RE = window.RentEase;
 
-    // -------------------------------------------------------------------------
-    // 1. Toast Notification System
-    //    Usage: RentEase.toast.show({ type, title, message, duration })
-    // -------------------------------------------------------------------------
-    const toastContainer = (() => {
-        let c = document.querySelector('.toast-container');
-        if (!c) {
-            c = document.createElement('div');
-            c.className = 'toast-container';
-            c.setAttribute('aria-live', 'polite');
-            c.setAttribute('aria-atomic', 'true');
-            document.body.appendChild(c);
-        }
-        return c;
-    })();
+    // === Toast System ===
+    RE.toast = {
+        show: function(title, message, type) {
+            type = type || 'success';
+            const container = document.getElementById('toast-container') || (function() {
+                const el = document.createElement('div');
+                el.id = 'toast-container';
+                el.className = 'toast-container';
+                document.body.appendChild(el);
+                return el;
+            })();
 
-    const TOAST_ICONS = { success: 'check', error: 'error', info: 'info', warning: 'warning' };
-    const TOAST_DEFAULT_TITLES = {
-        success: 'Success',
-        error: 'Something went wrong',
-        info: 'Heads up',
-        warning: 'Warning'
-    };
-
-    RentEase.toast = {
-        show({ type = 'info', title, message = '', duration = 4200 } = {}) {
             const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.setAttribute('role', 'status');
+            toast.className = 'toast toast-' + type;
             toast.innerHTML = `
                 <div class="toast-icon">
-                    <span class="material-symbols-outlined">${TOAST_ICONS[type] || 'info'}</span>
+                    <span class="material-symbols-outlined">${type === 'success' ? 'check' : type === 'error' ? 'close' : type === 'warning' ? 'warning' : 'info'}</span>
                 </div>
                 <div class="toast-content">
-                    ${title ? `<div class="toast-title">${escapeHtml(title)}</div>` : ''}
-                    ${message ? `<div class="toast-message">${escapeHtml(message)}</div>` : ''}
+                    <div class="toast-title">${title}</div>
+                    ${message ? '<div class="toast-message">' + message + '</div>' : ''}
                 </div>
-                <button class="toast-close" aria-label="Dismiss">
+                <button class="toast-close" onclick="this.closest('.toast').classList.remove('is-visible'); setTimeout(() => this.closest('.toast').remove(), 300);">
                     <span class="material-symbols-outlined" style="font-size:18px;">close</span>
                 </button>
             `;
-            toastContainer.appendChild(toast);
+
+            container.appendChild(toast);
             requestAnimationFrame(() => toast.classList.add('is-visible'));
 
-            const dismiss = () => {
+            setTimeout(() => {
                 toast.classList.remove('is-visible');
                 setTimeout(() => toast.remove(), 400);
-            };
-            toast.querySelector('.toast-close').addEventListener('click', dismiss);
-            if (duration > 0) setTimeout(dismiss, duration);
-            return { dismiss };
+            }, 4000);
         },
-        success(m, t) { return this.show({ type: 'success', message: m, title: t }); },
-        error(m, t)   { return this.show({ type: 'error', message: m, title: t, duration: 6000 }); },
-        info(m, t)    { return this.show({ type: 'info', message: m, title: t }); },
-        warning(m, t) { return this.show({ type: 'warning', message: m, title: t, duration: 5500 }); }
+
+        success: function(title, message) { this.show(title, message, 'success'); },
+        error: function(title, message) { this.show(title, message, 'error'); },
+        info: function(title, message) { this.show(title, message, 'info'); },
+        warning: function(title, message) { this.show(title, message, 'warning'); }
     };
 
-    // -------------------------------------------------------------------------
-    // 2. Scroll Progress + Scroll-to-Top
-    // -------------------------------------------------------------------------
-    function initScrollUtilities() {
-        // Inject scroll progress
-        let progress = document.querySelector('.scroll-progress');
-        if (!progress) {
-            progress = document.createElement('div');
-            progress.className = 'scroll-progress';
-            progress.innerHTML = '<div class="scroll-progress-bar"></div>';
-            document.body.appendChild(progress);
-        }
-        const progressBar = progress.querySelector('.scroll-progress-bar');
+    // === GSAP Boot ===
+    const GSAP_CHECK_INTERVAL = 100;
+    const GSAP_MAX_RETRIES = 30;
 
-        // Inject scroll-to-top button
-        let topBtn = document.querySelector('.scroll-top-btn');
-        if (!topBtn) {
-            topBtn = document.createElement('button');
-            topBtn.className = 'scroll-top-btn';
-            topBtn.setAttribute('aria-label', 'Scroll to top');
-            topBtn.innerHTML = '<span class="material-symbols-outlined">arrow_upward</span>';
-            document.body.appendChild(topBtn);
-            topBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+    function waitForGsap(callback) {
+        let retries = 0;
+        const check = setInterval(function() {
+            retries++;
+            if (window.gsap) {
+                clearInterval(check);
+                callback(window.gsap);
+            } else if (retries >= GSAP_MAX_RETRIES) {
+                clearInterval(check);
+                // fallback: make all hidden elements visible
+                document.querySelectorAll('.text-mask-inner').forEach(function(el) {
+                    el.style.transform = 'translateY(0)';
+                });
+                document.querySelectorAll('[class*="reveal-"], .gsap-fade, .gsap-fade-up').forEach(function(el) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                });
+                document.querySelectorAll('.clip-reveal').forEach(function(el) {
+                    el.style.clipPath = 'inset(0 0% 0 0)';
+                });
+            }
+        }, GSAP_CHECK_INTERVAL);
+    }
+
+    RE.waitForGsap = waitForGsap;
+
+    // === Text Mask Reveal ===
+    RE.revealTextMasks = function(gsap, container, options) {
+        options = options || {};
+        const selector = options.selector || '.text-mask-inner';
+        const targets = (container || document).querySelectorAll(selector);
+        if (targets.length === 0) return gsap.timeline();
+
+        return gsap.to(targets, {
+            y: '0%',
+            duration: options.duration || 1.2,
+            ease: options.ease || 'power4.out',
+            stagger: options.stagger || 0.15
+        });
+    };
+
+    // === Curtain Reveal ===
+    RE.curtainReveal = function(gsap, el, options) {
+        options = options || {};
+        if (!el) return gsap.timeline();
+        return gsap.to(el, {
+            clipPath: options.direction === 'left' ? 'inset(0 0 0 100%)' : 'inset(0 0 0 100%)',
+            duration: options.duration || 1.5,
+            ease: options.ease || 'power4.inOut'
+        });
+    };
+
+    // === Scale In ===
+    RE.scaleIn = function(gsap, el, options) {
+        options = options || {};
+        if (!el) return gsap.timeline();
+        return gsap.to(el, {
+            scale: 1,
+            duration: options.duration || 2.5,
+            ease: options.ease || 'power2.out'
+        });
+    };
+
+    // === Fade Up ===
+    RE.fadeUp = function(gsap, targets, options) {
+        options = options || {};
+        return gsap.to(targets, {
+            y: 0,
+            opacity: 1,
+            duration: options.duration || 1,
+            stagger: options.stagger || 0.1,
+            ease: options.ease || 'power3.out',
+            clearProps: 'transform'
+        });
+    };
+
+    // === Scroll Reveal ===
+    RE.scrollReveal = function(gsap, targets, options) {
+        options = options || {};
+        if (!window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (targets instanceof Element || targets instanceof NodeList || Array.isArray(targets)) {
+            gsap.utils.toArray(targets).forEach(function(el) {
+                gsap.from(el, {
+                    scrollTrigger: {
+                        trigger: el,
+                        start: options.start || 'top 85%'
+                    },
+                    y: options.y || 40,
+                    opacity: 0,
+                    duration: options.duration || 1.2,
+                    ease: options.ease || 'power3.out',
+                    stagger: options.stagger || 0
+                });
             });
         }
+    };
 
-        const update = () => {
-            const doc = document.documentElement;
-            const scrolled = doc.scrollTop || document.body.scrollTop;
-            const total = doc.scrollHeight - doc.clientHeight;
-            const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
-            progressBar.style.width = pct + '%';
-            if (scrolled > 600) topBtn.classList.add('is-visible');
-            else topBtn.classList.remove('is-visible');
-        };
-        window.addEventListener('scroll', update, { passive: true });
-        update();
-    }
+    // === Parallax Init ===
+    RE.parallaxInit = function(gsap) {
+        if (!window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
 
-    // -------------------------------------------------------------------------
-    // 3. Cookie Consent Banner
-    // -------------------------------------------------------------------------
-    function initCookieBanner() {
-        if (localStorage.getItem('re_cookie_consent')) return;
-
-        const banner = document.createElement('div');
-        banner.className = 'cookie-banner';
-        banner.setAttribute('role', 'dialog');
-        banner.setAttribute('aria-label', 'Cookie consent');
-        banner.innerHTML = `
-            <div class="cookie-icon">
-                <span class="material-symbols-outlined">cookie</span>
-            </div>
-            <div class="cookie-content">
-                <div class="cookie-title">We use cookies</div>
-                <div class="cookie-text">Essential for the cart, login session, and analytics. By continuing, you accept our <a href="/privacy" style="color:var(--re-accent-dark);text-decoration:underline;">privacy policy</a>.</div>
-            </div>
-            <div class="cookie-actions">
-                <button class="btn-pill btn-pill-sm btn-pill-ghost" data-cookie="decline">Decline</button>
-                <button class="btn-pill btn-pill-sm" data-cookie="accept">Accept</button>
-            </div>
-        `;
-        document.body.appendChild(banner);
-
-        const dismiss = (value) => {
-            localStorage.setItem('re_cookie_consent', value);
-            banner.classList.remove('is-visible');
-            setTimeout(() => banner.remove(), 500);
-        };
-        banner.querySelector('[data-cookie="accept"]').addEventListener('click', () => dismiss('accepted'));
-        banner.querySelector('[data-cookie="decline"]').addEventListener('click', () => dismiss('declined'));
-
-        setTimeout(() => banner.classList.add('is-visible'), 1500);
-    }
-
-    // -------------------------------------------------------------------------
-    // 4. Search Input Wiring (header)
-    // -------------------------------------------------------------------------
-    function initSearch() {
-        const input = document.querySelector('input[aria-label="Search products"]');
-        if (!input) return;
-        const form = input.closest('form') || input.parentElement;
-        let timer = null;
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const q = input.value.trim();
-                if (q.length === 0) return;
-                window.location.href = (window.baseUrl ? window.baseUrl('/shop') : '/shop') + '?search=' + encodeURIComponent(q);
-            }
-        });
-        input.addEventListener('input', () => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                // hook for live search dropdown if/when API supports it
-            }, 250);
-        });
-    }
-
-    // -------------------------------------------------------------------------
-    // 5. Form Enhancements — auto wire error states
-    // -------------------------------------------------------------------------
-    function enhanceForms() {
-        // Required-field highlight on submit
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', (e) => {
-                let firstInvalid = null;
-                form.querySelectorAll('[required]').forEach(field => {
-                    if (!field.value.trim()) {
-                        field.classList.add('is-error');
-                        if (!firstInvalid) firstInvalid = field;
-                    } else {
-                        field.classList.remove('is-error');
-                    }
-                });
-                if (firstInvalid) {
-                    e.preventDefault();
-                    firstInvalid.focus();
+        document.querySelectorAll('.parallax-section').forEach(function(section) {
+            const img = section.querySelector('img');
+            if (!img) return;
+            gsap.fromTo(img, {
+                y: '-10%',
+                scale: 1.1
+            }, {
+                y: '10%',
+                scale: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: section,
+                    scrub: true,
+                    start: 'top bottom',
+                    end: 'bottom top'
                 }
             });
-            form.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(field => {
-                field.addEventListener('input', () => field.classList.remove('is-error'));
+        });
+    };
+
+    // === Mobile Nav ===
+    RE.initMobileNav = function() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('mobile-nav');
+        const overlay = document.getElementById('mobile-overlay');
+
+        if (btn && nav) {
+            btn.addEventListener('click', function() {
+                const isOpen = nav.classList.contains('flex');
+                nav.classList.toggle('hidden');
+                nav.classList.toggle('flex');
+                if (overlay) overlay.classList.toggle('hidden');
+                document.body.style.overflow = isOpen ? '' : 'hidden';
+
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) icon.textContent = isOpen ? 'menu' : 'close';
+            });
+        }
+    };
+
+    // === Scroll Progress ===
+    RE.initScrollProgress = function() {
+        const bar = document.getElementById('scroll-progress-bar');
+        if (!bar) return;
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            bar.style.width = scrollPercent + '%';
+        });
+    };
+
+    // === Navbar Hide/Show on Scroll ===
+    RE.initNavScroll = function() {
+        const nav = document.getElementById('main-nav');
+        if (!nav) return;
+
+        let lastScroll = 0;
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 120) {
+                if (currentScroll > lastScroll) {
+                    nav.style.transform = 'translateY(-100%)';
+                } else {
+                    nav.style.transform = 'translateY(0)';
+                }
+            } else {
+                nav.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        }, { passive: true });
+    };
+
+    // === Image Error Fallback ===
+    RE.initImageFallbacks = function() {
+        document.querySelectorAll('img').forEach(function(img) {
+            img.addEventListener('error', function() {
+                this.src = 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=600';
+                this.style.opacity = '0.8';
             });
         });
-    }
+    };
 
-    // -------------------------------------------------------------------------
-    // 6. GSAP reveals + parallax (native scroll; Lenis removed for stability)
-    // -------------------------------------------------------------------------
-    function initAiryUX() {
-        if (window.gsap && window.ScrollTrigger) {
-            // Refresh ScrollTrigger after layout settles (images, fonts)
-            window.addEventListener('load', () => ScrollTrigger.refresh());
-            // Refresh on resize too
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
-            });
-
-            // Text reveals (slide up from below)
-            gsap.utils.toArray('.reveal-text').forEach(text => {
-                gsap.to(text, {
-                    y: '0%',
-                    duration: 1.2,
-                    ease: 'power4.out',
-                    scrollTrigger: {
-                        trigger: text.parentElement,
-                        start: 'top 90%'
+    // === Lazy Load with IntersectionObserver ===
+    RE.initLazyLoad = function() {
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
                     }
                 });
-            });
+            }, { rootMargin: '200px' });
 
-            // Simple fade reveals
-            gsap.utils.toArray('.reveal-fade').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, y: 30 },
-                    {
-                        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-                        scrollTrigger: { trigger: el, start: 'top 90%' }
-                    }
-                );
-            });
-
-            // Slide-in-from-left
-            gsap.utils.toArray('.reveal-slide-left').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, x: -40 },
-                    {
-                        opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-                        scrollTrigger: { trigger: el, start: 'top 88%' }
-                    }
-                );
-            });
-
-            // Slide-in-from-right
-            gsap.utils.toArray('.reveal-slide-right').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, x: 40 },
-                    {
-                        opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-                        scrollTrigger: { trigger: el, start: 'top 88%' }
-                    }
-                );
-            });
-
-            // Scale-up
-            gsap.utils.toArray('.reveal-scale').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, scale: 0.92 },
-                    {
-                        opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out',
-                        scrollTrigger: { trigger: el, start: 'top 88%' }
-                    }
-                );
-            });
-
-            // Image parallax
-            gsap.utils.toArray('.parallax-img').forEach(img => {
-                gsap.to(img, {
-                    y: '10%',
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: img.parentElement,
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: true
-                    }
-                });
+            document.querySelectorAll('img[data-src]').forEach(function(img) {
+                observer.observe(img);
             });
         }
-    }
+    };
 
-    // -------------------------------------------------------------------------
-    // Utilities
-    // -------------------------------------------------------------------------
-    function escapeHtml(s) {
-        return String(s)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
+    // === Init on DOM Ready ===
+    document.addEventListener('DOMContentLoaded', function() {
+        RE.initMobileNav();
+        RE.initImageFallbacks();
+        RE.initLazyLoad();
+    });
 
-    // -------------------------------------------------------------------------
-    // Boot
-    // -------------------------------------------------------------------------
-    function boot() {
-        initScrollUtilities();
-        initSearch();
-        enhanceForms();
-        initCookieBanner();
-
-        // GSAP/Lenis are optional — try to init, retry until loaded
-        const tryInit = () => {
-            if (window.gsap && window.ScrollTrigger) {
-                initAiryUX();
-                return true;
-            }
-            return false;
-        };
-        if (!tryInit()) {
-            const i = setInterval(() => { if (tryInit()) clearInterval(i); }, 80);
-            setTimeout(() => clearInterval(i), 5000);
-        }
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot);
-    } else {
-        boot();
-    }
 })();

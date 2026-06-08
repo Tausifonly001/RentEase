@@ -65,66 +65,63 @@ $pageDescription = 'Join RentEase to rent premium furniture, track deliveries, a
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#fafaf9">
     <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        ink: '#0a0a0a',
-                        surface: '#fafafa',
-                        champagne: '#c5b39b',
+                        ink: '#18181B', muted: '#78716C', 'muted-light': '#A8A29E',
+                        canvas: '#FAFAF9', champagne: '#C5A98B', 'champagne-dark': '#A8886E',
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'], serif: ['"Playfair Display"', 'serif'],
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <style>
         .clip-reveal { clip-path: inset(0 100% 0 0); }
         .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
         .text-mask-inner { display: inline-block; transform: translateY(100%); }
     </style>
 </head>
-<body class="min-h-screen bg-white text-zinc-500 font-sans selection:bg-champagne/30 selection:text-ink overflow-x-hidden">
-    <div class="flex min-h-screen w-full flex-row-reverse">
-        <!-- Right Side: Form -->
-        <div class="w-full lg:w-1/2 flex flex-col px-6 sm:px-12 lg:px-24 py-10 relative z-10 bg-white">
-            <!-- Header -->
+<body class="min-h-screen bg-canvas text-muted font-sans selection:bg-champagne/20 selection:text-champagne-dark overflow-x-hidden">
+    <div class="flex min-h-screen w-full">
+        <!-- Form Side -->
+        <div class="w-full lg:w-1/2 flex flex-col px-6 sm:px-12 lg:px-20 py-10 relative z-10 bg-surface">
             <header class="flex items-center justify-between lg:justify-end mb-auto opacity-0 gsap-fade">
-                <a href="<?= baseUrl('/') ?>" class="lg:hidden text-xl font-serif font-medium tracking-tight text-ink flex items-center gap-3 outline-none focus-visible:ring-1 ring-champagne group">
-                    <span class="w-8 h-8 flex items-center justify-center bg-ink text-white font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
+                <a href="<?= baseUrl('/') ?>" class="lg:hidden inline-flex items-center gap-3 text-xl font-serif font-medium tracking-tight text-ink outline-none focus-visible:ring-1 ring-champagne group">
+                    <span class="w-8 h-8 flex items-center justify-center bg-ink text-white text-xs font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
                 </a>
-                <p class="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.15em]">
+                <p class="text-[11px] font-medium text-muted-light uppercase tracking-[0.15em]">
                     Already a member? <a href="<?= baseUrl('/login') ?>" class="text-ink hover:text-champagne transition-colors duration-300 ml-1 outline-none focus-visible:ring-1 ring-champagne">Sign in</a>
                 </p>
             </header>
 
-            <!-- Form Container -->
-            <div class="w-full max-w-sm mx-auto py-12 lg:py-0 form-container my-auto">
+            <div class="w-full max-w-sm mx-auto py-12 lg:py-0 my-auto">
                 <div class="mb-12">
-                    <div class="hidden lg:inline-flex items-center gap-3 mb-8 opacity-0 gsap-fade group cursor-pointer outline-none focus-visible:ring-1 ring-champagne" tabindex="0">
-                        <span class="w-8 h-8 flex items-center justify-center bg-ink text-white font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
+                    <div class="hidden lg:inline-flex items-center gap-3 mb-8 opacity-0 gsap-fade group outline-none focus-visible:ring-1 ring-champagne">
+                        <span class="w-8 h-8 flex items-center justify-center bg-ink text-white text-xs font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
                         <span class="font-serif font-medium tracking-tight text-ink text-xl">RentEase.</span>
                     </div>
                     <h1 class="text-4xl md:text-5xl font-serif text-ink mb-4 tracking-tight leading-tight">
                         <span class="text-mask"><span class="text-mask-inner">Start your</span></span><br>
                         <span class="text-mask"><span class="text-mask-inner italic text-champagne">story.</span></span>
                     </h1>
-                    <p class="text-zinc-500 text-sm font-light opacity-0 gsap-fade">Join RentEase to access premium living.</p>
+                    <p class="text-muted text-sm font-light opacity-0 gsap-fade">Join RentEase to access premium living.</p>
                 </div>
 
                 <?php if ($error): ?>
-                    <div class="mb-8 p-4 bg-red-50 border border-red-200 text-red-600 text-sm font-light opacity-0 gsap-fade">
+                    <div class="mb-8 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm font-light opacity-0 gsap-fade">
                         <?= htmlspecialchars($error) ?>
                     </div>
                 <?php endif; ?>
@@ -133,55 +130,51 @@ $pageDescription = 'Join RentEase to rent premium furniture, track deliveries, a
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <div class="space-y-2 opacity-0 gsap-fade">
-                        <label for="full_name" class="block text-[10px] font-medium text-ink uppercase tracking-[0.2em]">Full name</label>
+                        <label for="full_name" class="form-label">Full name</label>
                         <input type="text" id="full_name" name="full_name" required autocomplete="name"
-                               class="w-full bg-transparent border-b border-zinc-200 px-0 py-3 text-ink placeholder-zinc-300 focus:outline-none focus:border-champagne focus:ring-0 transition-colors duration-500 font-light rounded-none"
+                               class="form-input"
                                placeholder="Jane Cooper"
                                value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
                     </div>
 
                     <div class="space-y-2 opacity-0 gsap-fade">
-                        <label for="email" class="block text-[10px] font-medium text-ink uppercase tracking-[0.2em]">Email</label>
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" id="email" name="email" required autocomplete="email"
-                               class="w-full bg-transparent border-b border-zinc-200 px-0 py-3 text-ink placeholder-zinc-300 focus:outline-none focus:border-champagne focus:ring-0 transition-colors duration-500 font-light rounded-none"
+                               class="form-input"
                                placeholder="you@example.com"
                                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                     </div>
 
                     <div class="space-y-2 opacity-0 gsap-fade">
-                        <label for="password" class="block text-[10px] font-medium text-ink uppercase tracking-[0.2em]">Password</label>
+                        <label for="password" class="form-label">Password</label>
                         <input type="password" id="password" name="password" required autocomplete="new-password"
-                               class="w-full bg-transparent border-b border-zinc-200 px-0 py-3 text-ink placeholder-zinc-300 focus:outline-none focus:border-champagne focus:ring-0 transition-colors duration-500 font-light rounded-none" 
+                               class="form-input"
                                placeholder="At least 8 characters">
                     </div>
 
                     <div class="flex items-start pt-2 opacity-0 gsap-fade">
-                        <div class="flex items-center h-5">
-                            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 rounded-none border-zinc-300 text-champagne focus:ring-champagne focus:ring-offset-white cursor-pointer transition-colors duration-300">
-                        </div>
-                        <label for="terms" class="ml-3 text-sm font-light text-zinc-500 leading-snug cursor-pointer select-none">
-                            I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-ink hover:text-champagne transition-colors duration-300 underline decoration-zinc-300 underline-offset-4">Terms</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-ink hover:text-champagne transition-colors duration-300 underline decoration-zinc-300 underline-offset-4">Privacy Policy</a>.
+                        <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 accent-champagne cursor-pointer transition-colors duration-300 mt-0.5">
+                        <label for="terms" class="ml-3 text-sm text-muted font-light leading-snug cursor-pointer select-none">
+                            I agree to the <a href="<?= baseUrl('/terms') ?>" class="text-ink hover:text-champagne transition-colors duration-300 underline decoration-muted-light underline-offset-4">Terms</a> and <a href="<?= baseUrl('/privacy') ?>" class="text-ink hover:text-champagne transition-colors duration-300 underline decoration-muted-light underline-offset-4">Privacy Policy</a>.
                         </label>
                     </div>
 
-                    <button type="submit" class="w-full mt-10 bg-ink text-white text-[11px] font-medium tracking-[0.2em] uppercase py-4 outline-none focus-visible:ring-1 focus:ring-offset-2 focus:ring-offset-white focus:ring-champagne hover:bg-champagne hover:text-ink transition-all duration-500 opacity-0 gsap-fade relative overflow-hidden group">
-                        <span class="relative z-10">Create Account</span>
-                    </button>
+                    <button type="submit" class="btn-primary w-full mt-10 opacity-0 gsap-fade">Create Account</button>
                 </form>
 
                 <?php if (!empty($oauthProviders)): ?>
                 <div class="mt-10 opacity-0 gsap-fade">
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-zinc-100"></div>
+                            <div class="w-full border-t" style="border-color: rgba(231,229,228,0.6);"></div>
                         </div>
                         <div class="relative flex justify-center text-[9px] uppercase tracking-[0.25em] font-medium">
-                            <span class="px-4 bg-white text-zinc-300">Or continue with</span>
+                            <span class="px-4 bg-surface text-muted-light">Or continue with</span>
                         </div>
                     </div>
                     <div class="mt-8 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border border-zinc-200 py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group">
+                            <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group" style="border-color: rgba(231,229,228,0.6);">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= htmlspecialchars($provider['name']) ?>" class="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0">
                                 <span class="text-[10px] font-medium text-ink uppercase tracking-widest"><?= htmlspecialchars($provider['name']) ?></span>
                             </a>
@@ -191,21 +184,20 @@ $pageDescription = 'Join RentEase to rent premium furniture, track deliveries, a
                 <?php endif; ?>
             </div>
 
-            <!-- Footer -->
-            <footer class="mt-auto text-[10px] uppercase tracking-[0.15em] text-zinc-400 font-medium flex justify-center lg:justify-end opacity-0 gsap-fade">
+            <footer class="mt-auto text-[10px] uppercase tracking-[0.15em] text-muted-light font-medium flex justify-center lg:justify-end opacity-0 gsap-fade">
                 <span>&copy; <?= date('Y') ?> RentEase.</span>
             </footer>
         </div>
 
-        <!-- Left Side: Image -->
-        <div class="hidden lg:block lg:w-1/2 relative bg-surface overflow-hidden border-r border-zinc-200">
+        <!-- Image Side -->
+        <div class="hidden lg:block lg:w-1/2 relative bg-surface overflow-hidden" style="border-right: 1px solid rgba(231,229,228,0.6);">
             <div class="absolute inset-0 bg-champagne/10 z-10 clip-reveal" id="image-overlay"></div>
-            <img src="<?= baseUrl('/assets/images/auth/signup_bg.png') ?>" alt="Designer Furniture" class="absolute inset-0 w-full h-full object-cover grayscale-[30%] origin-center scale-110" id="hero-image">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10"></div>
-            
+            <img src="<?= baseUrl('/assets/images/auth/signup_bg.png') ?>" alt="Designer Furniture" class="absolute inset-0 w-full h-full object-cover origin-center scale-110" id="hero-image" style="filter: grayscale(30%);">
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent z-10"></div>
+
             <div class="absolute bottom-16 left-16 right-16 text-white max-w-lg z-20">
-                <div class="inline-flex items-center gap-3 px-4 py-2 border border-champagne/50 bg-black/20 backdrop-blur-md text-champagne text-[9px] font-medium uppercase tracking-[0.25em] mb-8 opacity-0 gsap-fade">
-                    <span class="w-1.5 h-1.5 bg-champagne animate-pulse"></span>
+                <div class="inline-flex items-center gap-3 px-4 py-2 border glass-champagne text-champagne text-[9px] font-medium uppercase tracking-[0.25em] mb-8 opacity-0 gsap-fade">
+                    <span class="w-1.5 h-1.5 bg-champagne" style="animation: pulse-dot 2s ease-in-out infinite;"></span>
                     Premium Living
                 </div>
                 <h2 class="text-3xl font-serif leading-tight mb-8 font-light italic">
@@ -213,7 +205,7 @@ $pageDescription = 'Join RentEase to rent premium furniture, track deliveries, a
                     <span class="text-mask"><span class="text-mask-inner quote-text">with designer pieces,</span></span><br>
                     <span class="text-mask"><span class="text-mask-inner quote-text text-champagne">curated for you.</span></span>
                 </h2>
-                <div class="flex gap-12 mt-10 border-t border-white/20 pt-8 opacity-0" id="stats">
+                <div class="flex gap-12 mt-10 pt-8 opacity-0" id="stats" style="border-top: 1px solid rgba(255,255,255,0.15);">
                     <div>
                         <div class="text-3xl font-serif text-white mb-2 italic">12k+</div>
                         <div class="text-[9px] text-champagne uppercase tracking-[0.25em] font-medium">Happy Members</div>
@@ -226,74 +218,29 @@ $pageDescription = 'Join RentEase to rent premium furniture, track deliveries, a
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.context(() => {
-                    const tl = gsap.timeline();
-                    
-                    // 1. Text Mask Reveals
-                    tl.to('.text-mask-inner:not(.quote-text)', {
-                        y: '0%',
-                        duration: 1.2,
-                        ease: 'power4.out',
-                        stagger: 0.15
-                    });
-
-                    // 2. Image Reveal (Curtain effect)
-                    tl.to('#image-overlay', {
-                        clipPath: 'inset(0 0 0 100%)',
-                        duration: 1.5,
-                        ease: 'power4.inOut'
-                    }, "-=1.0");
-
-                    // 3. Image Scale down
-                    tl.to('#hero-image', {
-                        scale: 1,
-                        duration: 2.5,
-                        ease: 'power2.out'
-                    }, "-=1.5");
-
-                    // 4. Form Elements Fade Up
-                    tl.to('.gsap-fade', {
-                        y: 0,
-                        opacity: 1,
-                        duration: 1,
-                        stagger: 0.1,
-                        ease: 'power3.out',
-                        clearProps: 'transform'
-                    }, "-=2.0");
-
-                    // 5. Quote Text Reveal
-                    tl.to('.quote-text', {
-                        y: '0%',
-                        duration: 1.2,
-                        ease: 'power4.out',
-                        stagger: 0.15
-                    }, "-=1.5");
-
-                    tl.to('#stats', {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        ease: 'power3.out'
-                    }, "-=1.0");
-                });
-            } else {
-                document.querySelectorAll('.gsap-fade, #stats').forEach(el => {
-                    el.style.opacity = '1';
-                });
-                document.querySelectorAll('.text-mask-inner').forEach(el => {
-                    el.style.transform = 'translateY(0)';
-                });
-                const imgOverlay = document.getElementById('image-overlay');
-                if(imgOverlay) imgOverlay.style.display = 'none';
-                const heroImg = document.getElementById('hero-image');
-                if(heroImg) heroImg.style.transform = 'scale(1)';
-            }
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof gsap !== 'undefined') {
+            gsap.context(() => {
+                const tl = gsap.timeline();
+                tl.to('.text-mask-inner:not(.quote-text)', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 });
+                tl.to('#image-overlay', { clipPath: 'inset(0 0 0 100%)', duration: 1.5, ease: 'power4.inOut' }, "-=1.0");
+                tl.to('#hero-image', { scale: 1, duration: 2.5, ease: 'power2.out' }, "-=1.5");
+                tl.to('.gsap-fade', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', clearProps: 'transform' }, "-=2.0");
+                tl.to('.quote-text', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 }, "-=1.5");
+                tl.to('#stats', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, "-=1.0");
+            });
+        } else {
+            document.querySelectorAll('.gsap-fade, #stats').forEach(el => el.style.opacity = '1');
+            document.querySelectorAll('.text-mask-inner').forEach(el => el.style.transform = 'translateY(0)');
+            const overlay = document.getElementById('image-overlay');
+            if (overlay) overlay.style.display = 'none';
+            const img = document.getElementById('hero-image');
+            if (img) img.style.transform = 'scale(1)';
+        }
+    });
     </script>
 </body>
 </html>

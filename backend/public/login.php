@@ -13,13 +13,13 @@ $error = Session::getFlash('error', $_GET['error'] ?? null);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
-        $error = 'Your session has expired. Please refresh and try again.';
+        $error = 'Session expired. Please refresh and try again.';
     } else {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = $_POST['password'] ?? '';
 
         if (!$email || empty($password)) {
-            $error = 'Both email and password are required fields.';
+            $error = 'Both email and password are required.';
         } else {
             try {
                 $loginResult = $authService->login(['email' => $email, 'password' => $password]);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header('Location: ' . baseUrl('/'));
                     exit;
                 } else {
-                    $error = 'Authentication failed. Please verify your email and password.';
+                    $error = 'Authentication failed. Please verify your credentials.';
                 }
             } catch (Throwable $e) {
                 $error = 'Login failed. Please verify your credentials and try again.';
@@ -50,63 +50,60 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#fafaf9">
     <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        ink: '#0a0a0a',
-                        surface: '#fafafa',
-                        champagne: '#c5b39b',
+                        ink: '#18181B', muted: '#78716C', 'muted-light': '#A8A29E',
+                        canvas: '#FAFAF9', champagne: '#C5A98B', 'champagne-dark': '#A8886E',
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'], serif: ['"Playfair Display"', 'serif'],
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <style>
         .clip-reveal { clip-path: inset(0 100% 0 0); }
         .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
         .text-mask-inner { display: inline-block; transform: translateY(100%); }
     </style>
 </head>
-<body class="min-h-screen bg-white text-zinc-500 font-sans selection:bg-champagne/30 selection:text-ink overflow-x-hidden">
-    <div class="flex min-h-screen w-full">
-        <!-- Left Side: Form -->
-        <div class="w-full lg:w-1/2 flex flex-col px-6 sm:px-12 lg:px-24 py-10 relative z-10 bg-white">
-            <!-- Header -->
+<body class="min-h-screen bg-canvas text-muted font-sans selection:bg-champagne/20 selection:text-champagne-dark overflow-x-hidden">
+    <div class="flex min-h-screen w-full flex-row-reverse">
+        <!-- Form Side -->
+        <div class="w-full lg:w-1/2 flex flex-col px-6 sm:px-12 lg:px-20 py-10 relative z-10 bg-surface">
             <header class="flex items-center justify-between mb-auto opacity-0 gsap-fade">
-                <a href="<?= baseUrl('/') ?>" class="text-xl font-serif font-medium tracking-tight text-ink flex items-center gap-3 outline-none focus-visible:ring-1 ring-champagne group">
-                    <span class="w-8 h-8 flex items-center justify-center bg-ink text-white font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
+                <a href="<?= baseUrl('/') ?>" class="inline-flex items-center gap-3 text-xl font-serif font-medium tracking-tight text-ink outline-none focus-visible:ring-1 ring-champagne group">
+                    <span class="w-8 h-8 flex items-center justify-center bg-ink text-white text-xs font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
                     RentEase.
                 </a>
-                <a href="<?= baseUrl('/signup') ?>" class="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.15em] hover:text-champagne transition-colors duration-300 outline-none focus-visible:ring-1 ring-champagne">
-                    New here? <span class="text-ink group-hover:text-champagne transition-colors duration-300 ml-1">Join</span>
+                <a href="<?= baseUrl('/signup') ?>" class="text-[11px] font-medium text-muted-light uppercase tracking-[0.15em] hover:text-champagne transition-colors duration-300 outline-none focus-visible:text-champagne">
+                    New here? <span class="text-ink ml-1">Join</span>
                 </a>
             </header>
 
-            <!-- Form Container -->
-            <div class="w-full max-w-sm mx-auto py-12 lg:py-0 form-container my-auto">
+            <div class="w-full max-w-sm mx-auto py-12 lg:py-0 my-auto">
                 <div class="mb-12">
                     <h1 class="text-4xl md:text-5xl font-serif text-ink mb-4 tracking-tight leading-tight">
                         <span class="text-mask"><span class="text-mask-inner">Welcome</span></span><br>
                         <span class="text-mask"><span class="text-mask-inner italic text-champagne">back.</span></span>
                     </h1>
-                    <p class="text-zinc-500 text-sm font-light opacity-0 gsap-fade">Please enter your details to sign in.</p>
+                    <p class="text-muted text-sm font-light opacity-0 gsap-fade">Please enter your details to sign in.</p>
                 </div>
 
                 <?php if ($error): ?>
-                    <div class="mb-8 p-4 bg-red-50 border border-red-200 text-red-600 text-sm font-light opacity-0 gsap-fade">
+                    <div class="mb-8 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm font-light opacity-0 gsap-fade">
                         <?= htmlspecialchars($error) ?>
                     </div>
                 <?php endif; ?>
@@ -115,46 +112,44 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <div class="space-y-2 opacity-0 gsap-fade">
-                        <label for="email" class="block text-[10px] font-medium text-ink uppercase tracking-[0.2em]">Email</label>
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" id="email" name="email" required autocomplete="email"
-                               class="w-full bg-transparent border-b border-zinc-200 px-0 py-3 text-ink placeholder-zinc-300 focus:outline-none focus:border-champagne focus:ring-0 transition-colors duration-500 font-light rounded-none"
+                               class="form-input"
                                placeholder="you@company.com"
                                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                     </div>
 
                     <div class="space-y-2 opacity-0 gsap-fade">
                         <div class="flex items-center justify-between">
-                            <label for="password" class="block text-[10px] font-medium text-ink uppercase tracking-[0.2em]">Password</label>
-                            <a href="<?= baseUrl('/forgot-password') ?>" class="text-[10px] font-medium text-zinc-400 uppercase tracking-[0.1em] hover:text-champagne transition-colors duration-300 outline-none focus-visible:text-champagne">Forgot?</a>
+                            <label for="password" class="form-label">Password</label>
+                            <a href="<?= baseUrl('/forgot-password') ?>" class="text-[10px] font-medium text-muted-light uppercase tracking-[0.1em] hover:text-champagne transition-colors duration-300 outline-none focus-visible:text-champagne">Forgot?</a>
                         </div>
                         <input type="password" id="password" name="password" required autocomplete="current-password"
-                               class="w-full bg-transparent border-b border-zinc-200 px-0 py-3 text-ink placeholder-zinc-300 focus:outline-none focus:border-champagne focus:ring-0 transition-colors duration-500 font-light rounded-none" 
-                               placeholder="••••••••">
+                               class="form-input"
+                               placeholder="********">
                     </div>
 
                     <div class="flex items-center pt-2 opacity-0 gsap-fade">
-                        <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded-none border-zinc-300 text-champagne focus:ring-champagne focus:ring-offset-white cursor-pointer transition-colors duration-300">
-                        <label for="remember" class="ml-3 text-sm text-zinc-500 font-light cursor-pointer select-none hover:text-ink transition-colors duration-300">Keep me signed in</label>
+                        <input type="checkbox" id="remember" name="remember" class="w-4 h-4 accent-champagne cursor-pointer transition-colors duration-300">
+                        <label for="remember" class="ml-3 text-sm text-muted font-light cursor-pointer select-none hover:text-ink transition-colors duration-300">Keep me signed in</label>
                     </div>
 
-                    <button type="submit" class="w-full mt-10 bg-ink text-white text-[11px] font-medium tracking-[0.2em] uppercase py-4 outline-none focus-visible:ring-1 focus:ring-offset-2 focus:ring-offset-white focus:ring-champagne hover:bg-champagne hover:text-ink transition-all duration-500 opacity-0 gsap-fade relative overflow-hidden group">
-                        <span class="relative z-10">Sign In</span>
-                    </button>
+                    <button type="submit" class="btn-primary w-full mt-10 opacity-0 gsap-fade">Sign In</button>
                 </form>
 
                 <?php if (!empty($oauthProviders)): ?>
                 <div class="mt-10 opacity-0 gsap-fade">
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-zinc-100"></div>
+                            <div class="w-full border-t" style="border-color: rgba(231,229,228,0.6);"></div>
                         </div>
                         <div class="relative flex justify-center text-[9px] uppercase tracking-[0.25em] font-medium">
-                            <span class="px-4 bg-white text-zinc-300">Or continue with</span>
+                            <span class="px-4 bg-surface text-muted-light">Or continue with</span>
                         </div>
                     </div>
                     <div class="mt-8 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-4">
                         <?php foreach ($oauthProviders as $id => $provider): ?>
-                            <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border border-zinc-200 py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group">
+                            <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group" style="border-color: rgba(231,229,228,0.6);">
                                 <img src="<?= $provider['icon'] ?>" alt="<?= htmlspecialchars($provider['name']) ?>" class="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0">
                                 <span class="text-[10px] font-medium text-ink uppercase tracking-widest"><?= htmlspecialchars($provider['name']) ?></span>
                             </a>
@@ -164,8 +159,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                 <?php endif; ?>
             </div>
 
-            <!-- Footer -->
-            <footer class="mt-auto text-[10px] uppercase tracking-[0.15em] text-zinc-400 font-medium flex flex-col sm:flex-row justify-between items-center gap-4 opacity-0 gsap-fade">
+            <footer class="mt-auto text-[10px] uppercase tracking-[0.15em] text-muted-light font-medium flex flex-col sm:flex-row justify-between items-center gap-4 opacity-0 gsap-fade">
                 <span>&copy; <?= date('Y') ?> RentEase.</span>
                 <div class="flex gap-8">
                     <a href="<?= baseUrl('/terms') ?>" class="hover:text-champagne transition-colors duration-300 outline-none focus-visible:text-champagne">Terms</a>
@@ -174,12 +168,12 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
             </footer>
         </div>
 
-        <!-- Right Side: Image -->
-        <div class="hidden lg:block lg:w-1/2 relative bg-surface overflow-hidden border-l border-zinc-200">
+        <!-- Image Side -->
+        <div class="hidden lg:block lg:w-1/2 relative bg-surface overflow-hidden" style="border-right: 1px solid rgba(231,229,228,0.6);">
             <div class="absolute inset-0 bg-champagne/10 z-10 clip-reveal" id="image-overlay"></div>
-            <img src="<?= baseUrl('/assets/images/auth/login_bg.png') ?>" alt="Modern Interior" class="absolute inset-0 w-full h-full object-cover grayscale-[30%] origin-center scale-110" id="hero-image">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10"></div>
-            
+            <img src="<?= baseUrl('/assets/images/auth/login_bg.png') ?>" alt="Modern Interior" class="absolute inset-0 w-full h-full object-cover origin-center scale-110" id="hero-image" style="filter: grayscale(30%);">
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent z-10"></div>
+
             <div class="absolute bottom-16 left-16 right-16 text-white max-w-lg z-20">
                 <blockquote class="text-3xl font-serif leading-snug mb-8 font-light italic">
                     <span class="text-mask"><span class="text-mask-inner quote-text">"RentEase transformed our</span></span><br>
@@ -187,7 +181,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
                     <span class="text-mask"><span class="text-mask-inner quote-text text-champagne">curated home."</span></span>
                 </blockquote>
                 <div class="flex items-center gap-5 opacity-0" id="quote-author">
-                    <div class="w-12 h-12 rounded-none border border-champagne/50 flex items-center justify-center font-serif italic text-champagne text-lg bg-black/20 backdrop-blur-md">S</div>
+                    <div class="w-12 h-12 flex items-center justify-center font-serif italic text-champagne text-lg border" style="border-color: rgba(197,169,139,0.5); background: rgba(24,24,27,0.3); backdrop-filter: blur(8px);">S</div>
                     <div>
                         <div class="font-medium text-[13px] tracking-widest uppercase text-white mb-1">Sarah Miller</div>
                         <div class="text-[10px] text-champagne uppercase tracking-[0.2em]">Interior Designer</div>
@@ -196,74 +190,29 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof gsap !== 'undefined') {
-                gsap.context(() => {
-                    const tl = gsap.timeline();
-                    
-                    // 1. Text Mask Reveals
-                    tl.to('.text-mask-inner:not(.quote-text)', {
-                        y: '0%',
-                        duration: 1.2,
-                        ease: 'power4.out',
-                        stagger: 0.15
-                    });
-
-                    // 2. Image Reveal (Curtain effect)
-                    tl.to('#image-overlay', {
-                        clipPath: 'inset(0 0 0 100%)',
-                        duration: 1.5,
-                        ease: 'power4.inOut'
-                    }, "-=1.0");
-
-                    // 3. Image Scale down
-                    tl.to('#hero-image', {
-                        scale: 1,
-                        duration: 2.5,
-                        ease: 'power2.out'
-                    }, "-=1.5");
-
-                    // 4. Form Elements Fade Up
-                    tl.to('.gsap-fade', {
-                        y: 0,
-                        opacity: 1,
-                        duration: 1,
-                        stagger: 0.1,
-                        ease: 'power3.out',
-                        clearProps: 'transform'
-                    }, "-=2.0");
-
-                    // 5. Quote Text Reveal
-                    tl.to('.quote-text', {
-                        y: '0%',
-                        duration: 1.2,
-                        ease: 'power4.out',
-                        stagger: 0.15
-                    }, "-=1.5");
-
-                    tl.to('#quote-author', {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        ease: 'power3.out'
-                    }, "-=1.0");
-                });
-            } else {
-                document.querySelectorAll('.gsap-fade, #quote-author').forEach(el => {
-                    el.style.opacity = '1';
-                });
-                document.querySelectorAll('.text-mask-inner').forEach(el => {
-                    el.style.transform = 'translateY(0)';
-                });
-                const imgOverlay = document.getElementById('image-overlay');
-                if(imgOverlay) imgOverlay.style.display = 'none';
-                const heroImg = document.getElementById('hero-image');
-                if(heroImg) heroImg.style.transform = 'scale(1)';
-            }
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof gsap !== 'undefined') {
+            gsap.context(() => {
+                const tl = gsap.timeline();
+                tl.to('.text-mask-inner:not(.quote-text)', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 });
+                tl.to('#image-overlay', { clipPath: 'inset(0 0 0 100%)', duration: 1.5, ease: 'power4.inOut' }, "-=1.0");
+                tl.to('#hero-image', { scale: 1, duration: 2.5, ease: 'power2.out' }, "-=1.5");
+                tl.to('.gsap-fade', { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', clearProps: 'transform' }, "-=2.0");
+                tl.to('.quote-text', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 }, "-=1.5");
+                tl.to('#quote-author', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, "-=1.0");
+            });
+        } else {
+            document.querySelectorAll('.gsap-fade, #quote-author').forEach(el => el.style.opacity = '1');
+            document.querySelectorAll('.text-mask-inner').forEach(el => el.style.transform = 'translateY(0)');
+            const overlay = document.getElementById('image-overlay');
+            if (overlay) overlay.style.display = 'none';
+            const img = document.getElementById('hero-image');
+            if (img) img.style.transform = 'scale(1)';
+        }
+    });
     </script>
 </body>
 </html>

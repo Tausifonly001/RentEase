@@ -13,30 +13,20 @@ $authService = new AuthService($config);
 $productService = new ProductService($config);
 $stripeService = new StripeService($config);
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
 $currentUser = null;
 try {
     $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
-    if ($token) {
-        $currentUser = $authService->validateToken($token);
-    }
+    if ($token) $currentUser = $authService->validateToken($token);
 } catch (Throwable $ignored) {}
 
-if (!$currentUser) {
-    header('Location: ' . baseUrl('/login?redirect=cart'));
-    exit;
-}
+if (!$currentUser) { header('Location: ' . baseUrl('/login?redirect=cart')); exit; }
 
 $cart = $_SESSION['cart'] ?? [];
 $kyc = $_SESSION['checkout_kyc'] ?? [];
 
-if (empty($cart)) {
-    header('Location: ' . baseUrl('/shop'));
-    exit;
-}
+if (empty($cart)) { header('Location: ' . baseUrl('/shop')); exit; }
 
 $subtotal = 0.0;
 $deposits = 0.0;
@@ -64,10 +54,8 @@ $total = $subtotal + $deposits + $delivery + $tax;
 $cartItemsForMetadata = [];
 foreach ($validCart as $id => $item) {
     $cartItemsForMetadata[] = [
-        'id' => (string)$id,
-        'name' => $item['name'],
-        'monthly_price' => $item['monthly_price'],
-        'months' => $item['months'],
+        'id' => (string)$id, 'name' => $item['name'],
+        'monthly_price' => $item['monthly_price'], 'months' => $item['months'],
         'image_url' => $item['image_url']
     ];
 }
@@ -84,14 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                 'cancel_url' => $baseUrl . '/cart',
                 'customer_email' => $currentUser['email'],
                 'client_reference_id' => $currentUser['id'],
-                'line_items' => [
-                    [
-                        'name' => 'RentEase Total Initial Payment',
-                        'unit_amount' => (int) round($total * 100),
-                        'currency' => 'usd',
-                        'quantity' => 1
-                    ]
-                ],
+                'line_items' => [[
+                    'name' => 'RentEase Total Initial Payment',
+                    'unit_amount' => (int) round($total * 100),
+                    'currency' => 'usd',
+                    'quantity' => 1
+                ]],
                 'metadata' => [
                     'user_id' => $currentUser['id'],
                     'kyc_id' => $kyc['id_number'] ?? 'Not provided',
@@ -126,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
 
                 $orderHeaders = array_merge($serviceHeaders, ['Prefer' => 'return=representation']);
                 $orderRes = $http->request('POST', $config['supabase_url'] . '/rest/v1/orders', $orderHeaders, $orderData);
-                
                 $newOrder = $orderRes['body'][0] ?? null;
                 $orderId = $newOrder['id'] ?? null;
 
@@ -143,29 +128,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                                 'status' => 'pending',
                                 'order_id' => $orderId
                             ]);
-
                             $rentalId = $rentalRes[0]['id'] ?? null;
                             if ($rentalId) {
                                 $rentalService->createDelivery([
-                                    'order_id' => $orderId,
-                                    'rental_id' => $rentalId,
-                                    'user_id' => $currentUser['id'],
-                                    'type' => 'DELIVERY',
+                                    'order_id' => $orderId, 'rental_id' => $rentalId,
+                                    'user_id' => $currentUser['id'], 'type' => 'DELIVERY',
                                     'scheduled_date' => $kyc['delivery_date'] ?? date('Y-m-d', strtotime('+2 days')),
                                     'time_slot' => $kyc['delivery_time'] ?? '09:00 AM - 12:00 PM',
-                                    'address' => $kyc['address'] ?? 'Not provided',
-                                    'status' => 'SCHEDULED',
+                                    'address' => $kyc['address'] ?? 'Not provided', 'status' => 'SCHEDULED',
                                     'agent_notes' => 'Awaiting payment confirmation.'
                                 ]);
                             }
                         } catch (\Throwable $e) {
-                            // SEC-006: Collect errors instead of swallowing silently
                             $rentalErrors[] = htmlspecialchars($details['name'] ?? "Product #{$prodId}") . ': ' . $e->getMessage();
                             error_log("Checkout rental creation failed for product {$prodId}: " . $e->getMessage());
                         }
                     }
-
-                    // If any rentals failed, show error and prevent redirect to Stripe
                     if (!empty($rentalErrors)) {
                         $error = 'Some items could not be reserved: ' . implode('; ', $rentalErrors) . '. Please try again or contact support.';
                     }
@@ -173,11 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
                     $error = 'We could not create your lease order. Please try again or contact support.';
                 }
 
-                // Only proceed to payment if all rentals were created successfully
                 if (empty($error)) {
                     $_SESSION['cart'] = [];
                     unset($_SESSION['checkout_kyc']);
-
                     header('Location: ' . $session['url']);
                     exit;
                 }
@@ -192,197 +168,175 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
 
 $cartCount = count($cart);
 
-/**
- * Escape HTML output for security.
- *
- * @param string $value
- * @return string
- */
-
-?>
-<?php 
 $pageTitle = 'Secure Checkout - RentEase';
 $pageDescription = 'Complete your rental request with secure checkout.';
-require __DIR__ . '/partials/header.php'; 
+require __DIR__ . '/partials/header.php';
 ?>
 
-<main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-lg md:py-xl">
-    <!-- Header & Progress -->
-    <div class="mb-12 text-center max-w-3xl mx-auto reveal-element">
-        <h1 class="text-4xl md:text-5xl font-normal text-slate-900 tracking-tighter mb-4">Secure Order Validation</h1>
-        <p class="text-slate-500 font-normal">Review your lease selections and verification details before proceeding to secure payment.</p>
+<main class="flex-grow w-full max-w-[1600px] mx-auto px-6 lg:px-12 py-28 lg:py-32">
+    <div class="max-w-3xl mx-auto text-center mb-16 reveal-fade">
+        <h1 class="text-4xl md:text-5xl font-serif font-medium text-ink tracking-tight mb-4">Secure Order</h1>
+        <p class="text-muted font-light">Review your selections and proceed to secure payment.</p>
     </div>
 
-    <!-- Progress Stepper -->
-    <div class="flex items-center w-full max-w-2xl mx-auto mb-12 reveal-element">
-        <div class="flex flex-col items-center relative z-10">
-            <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-normal shadow-lg shadow-teal-500/30 border-4 border-white">
-                <span class="material-symbols-outlined text-[16px]">check</span>
-            </div>
-            <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-teal-600 uppercase">CART</div>
+    <!-- Stepper -->
+    <div class="flex items-center justify-center gap-4 mb-16 max-w-lg mx-auto reveal-fade">
+        <div class="flex items-center gap-3">
+            <span class="w-9 h-9 flex items-center justify-center bg-ink text-white text-xs font-medium"><span class="material-symbols-outlined text-sm">check</span></span>
+            <span class="text-[10px] uppercase tracking-[0.15em] text-ink font-medium">Cart</span>
         </div>
-        <div class="flex-auto border-t-2 border-teal-500"></div>
-        <div class="flex flex-col items-center relative z-10">
-            <div class="h-10 w-10 rounded-full bg-teal-500 text-white flex items-center justify-center font-normal shadow-lg shadow-teal-500/30 border-4 border-white">
-                <span class="material-symbols-outlined text-[16px]">check</span>
-            </div>
-            <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-teal-600 uppercase">SHIPPING</div>
+        <div class="w-12 h-[1px] bg-ink/30"></div>
+        <div class="flex items-center gap-3">
+            <span class="w-9 h-9 flex items-center justify-center bg-ink text-white text-xs font-medium"><span class="material-symbols-outlined text-sm">check</span></span>
+            <span class="text-[10px] uppercase tracking-[0.15em] text-ink font-medium">Shipping</span>
         </div>
-        <div class="flex-auto border-t-2 border-dashed border-teal-500/30"></div>
-        <div class="flex flex-col items-center relative z-10">
-            <div class="h-10 w-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-normal shadow-sm border-4 border-white">
-                <span class="material-symbols-outlined text-[20px]">credit_card</span>
-            </div>
-            <div class="absolute top-12 whitespace-nowrap text-[10px] font-normal tracking-widest text-slate-400 uppercase">PAYMENT</div>
+        <div class="w-12 h-[1px] bg-ink/30"></div>
+        <div class="flex items-center gap-3">
+            <span class="w-9 h-9 flex items-center justify-center bg-champagne text-ink text-xs font-medium"><span class="material-symbols-outlined text-sm">credit_card</span></span>
+            <span class="text-[10px] uppercase tracking-[0.15em] text-champagne-dark font-medium">Payment</span>
         </div>
     </div>
 
     <?php if ($error): ?>
-        <div class="bento-item mb-8 p-4 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3 text-red-700 text-sm font-light shadow-sm">
+        <div class="max-w-3xl mx-auto mb-10 p-4 border border-rose/20 text-rose bg-rose/5 flex items-center gap-3 text-sm font-light">
             <span class="material-symbols-outlined">error</span>
-            <p><?= e($error) ?></p>
+            <p><?= htmlspecialchars($error) ?></p>
         </div>
     <?php endif; ?>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-        
-        <!-- Left: Reservation Details -->
-        <div class="lg:col-span-2 space-y-md">
-            
-            <!-- Items Section -->
-            <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <h2 class="text-2xl font-normal text-slate-900 mb-6 flex items-center gap-3 font-sans">
-                    <div class="p-2 rounded-xl bg-teal-50 text-teal-600">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                    </div>
-                    Validated Selections
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Left -->
+        <div class="lg:col-span-2 space-y-10">
+            <!-- Items -->
+            <div class="p-8 bg-surface border" style="border-color: rgba(231,229,228,0.6);">
+                <h2 class="text-xl font-serif font-medium text-ink mb-8 tracking-tight flex items-center gap-3">
+                    <span class="w-8 h-8 flex items-center justify-center bg-champagne/5 text-champagne-dark">
+                        <span class="material-symbols-outlined text-lg">inventory_2</span>
+                    </span>
+                    Selections
                 </h2>
-                <div class="divide-y divide-slate-100">
+                <div class="divide-y" style="border-color: rgba(231,229,228,0.6);">
                     <?php foreach ($validCart as $id => $item): ?>
-                        <div class="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group">
-                            <div class="flex items-center gap-5">
-                                <div class="h-24 w-24 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shrink-0">
-                                    <img src="<?= e((string)($item['image_url'] ?? 'https://placehold.co/150')) ?>" alt="<?= e((string)$item['name']) ?>" class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                </div>
-                                <div>
-                                    <h4 class="text-lg font-normal text-slate-900 group-hover:text-teal-600 transition-colors"><?= e((string)$item['name']) ?></h4>
-                                    <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mt-1"><?= (int)$item['months'] ?> Month Rental Duration</p>
-                                </div>
+                    <div class="py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group">
+                        <div class="flex items-center gap-5">
+                            <div class="h-24 w-24 overflow-hidden bg-surface shrink-0">
+                                <img src="<?= htmlspecialchars((string)($item['image_url'] ?? 'https://placehold.co/150')) ?>" alt="<?= htmlspecialchars((string)$item['name']) ?>" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                             </div>
-                            <span class="text-2xl font-normal text-slate-900 sm:text-right">$<?= number_format((float)$item['monthly_price'], 2) ?><span class="text-sm text-slate-400 font-light tracking-normal block">/month</span></span>
+                            <div>
+                                <h4 class="text-lg font-serif text-ink group-hover:text-champagne transition-colors"><?= htmlspecialchars((string)$item['name']) ?></h4>
+                                <p class="text-[10px] text-muted-light uppercase tracking-widest mt-1 font-medium"><?= (int)$item['months'] ?> Month Rental</p>
+                            </div>
                         </div>
+                        <span class="text-2xl font-serif text-ink sm:text-right">$<?= number_format((float)$item['monthly_price'], 2) ?><span class="text-sm text-muted-light font-sans font-light tracking-normal block">/month</span></span>
+                    </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <!-- KYC Section -->
-            <div class="bento-item bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 border border-white/40 shadow-xl shadow-slate-200/50">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-normal text-slate-900 flex items-center gap-3 font-sans">
-                        <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
-                            <span class="material-symbols-outlined">verified_user</span>
-                        </div>
-                        Verification Summary
+            <!-- KYC -->
+            <div class="p-8 bg-surface border" style="border-color: rgba(231,229,228,0.6);">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-serif font-medium text-ink tracking-tight flex items-center gap-3">
+                        <span class="w-8 h-8 flex items-center justify-center bg-champagne/5 text-champagne-dark">
+                            <span class="material-symbols-outlined text-lg">verified_user</span>
+                        </span>
+                        Verification
                     </h2>
-                    <a href="<?= baseUrl('/cart') ?>" class="text-[10px] font-normal uppercase tracking-widest text-teal-600 hover:text-teal-700 bg-teal-50 px-3 py-1.5 rounded-lg transition-colors">Edit Details</a>
+                    <a href="<?= baseUrl('/cart') ?>" class="text-[11px] font-medium tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors">Edit</a>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6 bg-canvas" style="border: 1px solid rgba(231,229,228,0.4);">
                     <div>
-                        <span class="flex items-center gap-2 text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">
-                            <span class="material-symbols-outlined text-[14px]">badge</span>
-                            Identity Reference
+                        <span class="flex items-center gap-2 text-[10px] text-muted-light uppercase tracking-widest mb-1 font-medium">
+                            <span class="material-symbols-outlined text-sm">badge</span> ID
                         </span>
-                        <p class="text-lg font-normal text-slate-900"><?= e((string)($kyc['id_number'] ?? 'Not provided')) ?></p>
+                        <p class="text-lg text-ink"><?= htmlspecialchars((string)($kyc['id_number'] ?? 'Not provided')) ?></p>
                     </div>
                     <div>
-                        <span class="flex items-center gap-2 text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">
-                            <span class="material-symbols-outlined text-[14px]">local_shipping</span>
-                            Delivery Arrival
+                        <span class="flex items-center gap-2 text-[10px] text-muted-light uppercase tracking-widest mb-1 font-medium">
+                            <span class="material-symbols-outlined text-sm">local_shipping</span> Delivery
                         </span>
-                        <p class="text-lg font-normal text-slate-900"><?= e((string)($kyc['delivery_date'] ?? 'Asap')) ?></p>
-                        <p class="text-sm font-light text-slate-500"><?= e((string)($kyc['delivery_time'] ?? '09:00 AM - 12:00 PM')) ?></p>
+                        <p class="text-lg text-ink"><?= htmlspecialchars((string)($kyc['delivery_date'] ?? 'Asap')) ?></p>
+                        <p class="text-sm text-muted font-light"><?= htmlspecialchars((string)($kyc['delivery_time'] ?? '09:00 AM - 12:00 PM')) ?></p>
                     </div>
-                    <div class="sm:col-span-2 pt-6 border-t border-slate-200">
-                        <span class="flex items-center gap-2 text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">
-                            <span class="material-symbols-outlined text-[14px]">home_work</span>
-                            Shipping Address
+                    <div class="sm:col-span-2 pt-6" style="border-top: 1px solid rgba(231,229,228,0.6);">
+                        <span class="flex items-center gap-2 text-[10px] text-muted-light uppercase tracking-widest mb-1 font-medium">
+                            <span class="material-symbols-outlined text-sm">home_work</span> Address
                         </span>
-                        <p class="text-base font-normal text-slate-900"><?= e((string)($kyc['address'] ?? 'Not provided')) ?></p>
+                        <p class="text-base text-ink"><?= htmlspecialchars((string)($kyc['address'] ?? 'Not provided')) ?></p>
                     </div>
                     <?php if (!empty($kyc['work_verify'])): ?>
-                        <div class="sm:col-span-2 pt-6 border-t border-slate-200">
-                            <span class="flex items-center gap-2 text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">
-                                <span class="material-symbols-outlined text-[14px]">work</span>
-                                Employment Proof
-                            </span>
-                            <p class="text-base font-normal text-slate-900"><?= e((string)$kyc['work_verify']) ?></p>
-                        </div>
+                    <div class="sm:col-span-2 pt-6" style="border-top: 1px solid rgba(231,229,228,0.6);">
+                        <span class="flex items-center gap-2 text-[10px] text-muted-light uppercase tracking-widest mb-1 font-medium">
+                            <span class="material-symbols-outlined text-sm">work</span> Employment
+                        </span>
+                        <p class="text-base text-ink"><?= htmlspecialchars((string)$kyc['work_verify']) ?></p>
+                    </div>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Bill Summary -->
-        <div class="reveal-element">
-            <div class="bento-item bg-slate-900 text-white rounded-[2rem] p-8 shadow-2xl shadow-slate-900/20 sticky top-32">
-                <h2 class="text-2xl font-normal mb-8 font-sans">Bill Outlay</h2>
+        <!-- Right: Summary -->
+        <div>
+            <div class="bg-ink text-white p-8 lg:sticky lg:top-28">
+                <h2 class="text-xl font-serif font-medium mb-8 tracking-tight">Summary</h2>
 
                 <div class="space-y-4 mb-6">
-                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
-                        <span class="text-sm font-light text-slate-300">Base Monthly Rate</span>
-                        <span class="text-base font-normal text-white">$<?= number_format($subtotal, 2) ?></span>
+                    <div class="flex justify-between items-center p-3 bg-white/5">
+                        <span class="text-sm text-white/50 font-light">Base Rate</span>
+                        <span class="text-white">$<?= number_format($subtotal, 2) ?></span>
                     </div>
-                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
-                        <span class="text-sm font-light text-slate-300">Refundable Deposit</span>
-                        <span class="text-base font-normal text-teal-400">+$<?= number_format($deposits, 2) ?></span>
+                    <div class="flex justify-between items-center p-3 bg-white/5">
+                        <span class="text-sm text-white/50 font-light">Deposit</span>
+                        <span class="text-champagne">+$<?= number_format($deposits, 2) ?></span>
                     </div>
-                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
-                        <span class="text-sm font-light text-slate-300">Tech & Logistics Fee</span>
-                        <span class="text-base font-normal text-white">+$<?= number_format($delivery, 2) ?></span>
+                    <div class="flex justify-between items-center p-3 bg-white/5">
+                        <span class="text-sm text-white/50 font-light">Logistics</span>
+                        <span class="text-white">+$<?= number_format($delivery, 2) ?></span>
                     </div>
-                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl">
-                        <span class="text-sm font-light text-slate-300">Service Taxes (8%)</span>
-                        <span class="text-base font-normal text-white">+$<?= number_format($tax, 2) ?></span>
+                    <div class="flex justify-between items-center p-3 bg-white/5">
+                        <span class="text-sm text-white/50 font-light">Tax (8%)</span>
+                        <span class="text-white">+$<?= number_format($tax, 2) ?></span>
                     </div>
-                    <div class="pt-6 border-t border-white/10 mt-6">
+                    <div class="pt-6 mt-6" style="border-top: 1px solid rgba(255,255,255,0.1);">
                         <div class="flex justify-between items-baseline mb-2">
-                            <span class="text-[10px] font-normal uppercase tracking-widest text-slate-400">Total Due Today</span>
-                            <span class="text-4xl font-normal text-teal-400 font-sans">$<?= number_format($total, 2) ?></span>
+                            <span class="text-[10px] uppercase tracking-widest text-white/40">Total Today</span>
+                            <span class="text-3xl font-serif text-champagne">$<?= number_format($total, 2) ?></span>
                         </div>
-                        <p class="text-xs text-slate-500 italic text-right mb-6 font-light">Includes 1st month + deposit</p>
+                        <p class="text-xs text-white/30 italic text-right font-light">1st month + deposit</p>
                     </div>
                 </div>
 
                 <form action="<?= baseUrl('/checkout') ?>" method="POST">
-                    <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
-                    <button type="submit" name="pay" value="1" class="group flex items-center justify-center gap-2 bg-teal-500 text-white font-normal px-6 py-5 rounded-2xl shadow-xl shadow-teal-500/30 hover:bg-teal-400 active:scale-[0.98] transition-all w-full text-lg">
-                        <span class="material-symbols-outlined transition-transform group-hover:scale-110">payments</span>
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(Csrf::token()) ?>">
+                    <button type="submit" name="pay" value="1" class="w-full py-5 bg-champagne text-ink text-[11px] font-medium tracking-[0.2em] uppercase hover:bg-white transition-all duration-500 flex items-center justify-center gap-3 outline-none">
+                        <span class="material-symbols-outlined">payments</span>
                         Pay with Stripe
                     </button>
                 </form>
-                
-                <div class="mt-6 flex items-center justify-center gap-2 text-slate-400 bg-white/5 py-3 rounded-xl border border-white/5">
-                    <span class="material-symbols-outlined text-[16px] text-teal-500">lock</span>
-                    <span class="text-xs font-light">Secure 256-bit encrypted transaction</span>
+
+                <div class="mt-6 flex items-center justify-center gap-2 text-white/30 py-3 border border-white/10">
+                    <span class="material-symbols-outlined text-sm">lock</span>
+                    <span class="text-xs font-light">256-bit encrypted</span>
                 </div>
             </div>
         </div>
-
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    gsap.from(".bento-item", {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power4.out"
-    });
+    const check = setInterval(() => {
+        if (window.gsap) {
+            clearInterval(check);
+            gsap.context(() => {
+                gsap.utils.toArray('.reveal-fade, .bg-surface.border, .bg-ink').forEach((el, i) => {
+                    gsap.from(el, { opacity: 0, y: 20, duration: 0.8, delay: i * 0.1, ease: 'power3.out' });
+                });
+            });
+        }
+    }, 100);
 });
 </script>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>
-

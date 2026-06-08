@@ -61,11 +61,11 @@ require_once __DIR__ . '/partials/header.php';
 
 <main class="flex-grow pt-24 pb-20 px-6 md:px-12 max-w-7xl mx-auto min-h-screen w-full">
     <?php if (!$activeDelivery): ?>
-        <div class="text-center py-20 bg-white rounded-3xl shadow-sm border border-slate-100 reveal-element">
-            <span class="material-symbols-outlined text-6xl text-slate-200 mb-6">local_shipping</span>
-            <h1 class="text-3xl font-normal text-primary mb-4">No Active Deliveries</h1>
-            <p class="text-slate-500 max-w-md mx-auto mb-8 font-normal">You don't have any deliveries or pickups currently in progress.</p>
-            <a href="<?= baseUrl('/dashboard') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-normal rounded-2xl hover:opacity-95 transition-all shadow-xl shadow-primary/20">
+        <div class="text-center py-20 bg-surface rounded-3xl reveal-element" style="border-color: rgba(231,229,228,0.6);">
+            <span class="material-symbols-outlined text-6xl text-muted-light mb-6">local_shipping</span>
+            <h1 class="text-3xl font-normal text-ink mb-4">No Active Deliveries</h1>
+            <p class="text-muted max-w-md mx-auto mb-8 font-normal">You don't have any deliveries or pickups currently in progress.</p>
+            <a href="<?= baseUrl('/dashboard') ?>" class="inline-flex items-center gap-2 px-8 py-4 bg-ink text-white font-normal hover:opacity-95 transition-all">
                 Go to Dashboard
                 <span class="material-symbols-outlined">arrow_forward</span>
             </a>
@@ -78,16 +78,16 @@ require_once __DIR__ . '/partials/header.php';
         <!-- Header Section: Live Countdown -->
         <div class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-end reveal-element">
             <div>
-                <h1 class="text-4xl font-normal text-primary tracking-tight mb-2"><?= $isPickup ? 'Track Your Pickup' : 'Track Your Delivery' ?></h1>
-                <p class="text-slate-500 font-normal">Order #<?= htmlspecialchars((string)$orderNumber) ?> • Status: <span class="text-teal-600 font-normal"><?= str_replace('_', ' ', $status) ?></span></p>
+                <h1 class="text-4xl font-normal text-ink tracking-tight mb-2"><?= $isPickup ? 'Track Your Pickup' : 'Track Your Delivery' ?></h1>
+                <p class="text-muted font-normal">Order #<?= htmlspecialchars((string)$orderNumber) ?> • Status: <span class="text-champagne-dark font-normal"><?= str_replace('_', ' ', $status) ?></span></p>
             </div>
-            <div class="bg-primary text-white p-8 rounded-3xl shadow-xl flex flex-col md:items-end relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000"></div>
-                <span class="text-[10px] font-normal uppercase tracking-[0.2em] text-teal-400 mb-2">Estimated Arrival</span>
+            <div class="bg-ink text-white p-8 rounded-3xl flex flex-col md:items-end relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-champagne/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000"></div>
+                <span class="text-[10px] font-normal uppercase tracking-[0.2em] text-champagne mb-2">Estimated Arrival</span>
                 <div class="flex items-baseline space-x-2">
                     <span class="text-3xl md:text-4xl font-normal"><?= htmlspecialchars((string)($activeDelivery['time_slot'] ?? '10:30 AM - 11:45 AM')) ?></span>
                 </div>
-                <div class="flex items-center mt-3 text-teal-100/60">
+                <div class="flex items-center mt-3 text-champagne/40">
                     <span class="material-symbols-outlined text-sm mr-2 font-light">schedule</span>
                     <p class="text-xs font-light italic"><?= htmlspecialchars((string)($activeDelivery['scheduled_date'] ?? date('Y-m-d'))) ?></p>
                 </div>
@@ -98,42 +98,42 @@ require_once __DIR__ . '/partials/header.php';
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Left Column: Map -->
             <div class="lg:col-span-8 space-y-8">
-                <div class="relative bg-white rounded-3xl overflow-hidden shadow-sm aspect-video border border-slate-100 group reveal-element">
-                    <div id="map-container" class="absolute inset-0 bg-slate-100">
+                <div class="relative bg-surface rounded-3xl overflow-hidden aspect-video group reveal-element" style="border-color: rgba(231,229,228,0.6);">
+                    <div id="map-container" class="absolute inset-0 bg-canvas">
                         <!-- Google Map will render here -->
                     </div>
-                    <div class="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg flex items-center border border-white/50">
-                        <div class="w-2.5 h-2.5 bg-teal-500 rounded-full animate-pulse mr-3"></div>
-                        <span class="text-[10px] font-normal text-primary uppercase tracking-widest" id="lastUpdatedText">Live GPS Tracking</span>
+                    <div class="absolute top-6 left-6 bg-surface/90 backdrop-blur-md px-4 py-2 flex items-center" style="border-color: rgba(255,255,255,0.5);border-radius: 0.75rem;">
+                        <div class="w-2.5 h-2.5 bg-champagne rounded-full animate-pulse mr-3"></div>
+                        <span class="text-[10px] font-normal text-ink uppercase tracking-widest" id="lastUpdatedText">Live GPS Tracking</span>
                     </div>
                 </div>
 
                 <!-- Driver & Instructions -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal-element">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center justify-between group">
+                    <div class="bg-surface p-6 rounded-3xl flex items-center justify-between group" style="border-color: rgba(231,229,228,0.6);">
                         <div class="flex items-center">
-                            <div class="w-16 h-16 rounded-2xl overflow-hidden mr-5 bg-slate-50 border-2 border-white shadow-sm shrink-0">
+                            <div class="w-16 h-16 overflow-hidden mr-5 bg-canvas border-2 border-surface shrink-0" style="border-radius: 0.75rem;">
                                 <img class="w-full h-full object-cover" src="https://i.pravatar.cc/150?u=driver" alt="Driver"/>
                             </div>
                             <div>
-                                <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest mb-1">Your Driver</p>
-                                <p class="text-xl font-normal text-primary">Marcus J.</p>
-                                <div class="flex items-center text-teal-600 text-xs font-light mt-1">
+                                <p class="text-[10px] font-normal text-muted-light uppercase tracking-widest mb-1">Your Driver</p>
+                                <p class="text-xl font-normal text-ink">Marcus J.</p>
+                                <div class="flex items-center text-champagne-dark text-xs font-light mt-1">
                                     <span class="material-symbols-outlined text-[14px] mr-1">star</span>
                                     <span>4.9 (2.4k deliveries)</span>
                                 </div>
                             </div>
                         </div>
-                        <button class="bg-teal-50 text-teal-600 p-4 rounded-2xl hover:bg-teal-600 hover:text-white transition-all shadow-sm border border-teal-100">
+                        <button class="bg-champagne/10 text-champagne-dark p-4 hover:bg-champagne hover:text-white transition-all" style="border-radius: 0.75rem; border-color: rgba(231,229,228,0.6);">
                             <span class="material-symbols-outlined">call</span>
                         </button>
                     </div>
-                    <div class="bg-slate-50 p-6 rounded-3xl border-l-4 border-teal-500 shadow-sm flex flex-col justify-center">
+                    <div class="bg-canvas p-6 rounded-3xl flex flex-col justify-center" style="border-left: 4px solid #D4A574;">
                         <div class="flex items-center mb-2">
-                            <span class="material-symbols-outlined text-teal-600 mr-2 text-xl">description</span>
-                            <span class="text-[10px] font-normal text-primary uppercase tracking-widest">Notes</span>
+                            <span class="material-symbols-outlined text-champagne-dark mr-2 text-xl">description</span>
+                            <span class="text-[10px] font-normal text-ink uppercase tracking-widest">Notes</span>
                         </div>
-                        <p class="text-sm text-slate-600 italic leading-relaxed font-light">"<?= htmlspecialchars((string)($activeDelivery['agent_notes'] ?? 'No special instructions provided.')) ?>"</p>
+                        <p class="text-sm text-muted italic leading-relaxed font-light">"<?= htmlspecialchars((string)($activeDelivery['agent_notes'] ?? 'No special instructions provided.')) ?>"</p>
                     </div>
                 </div>
             </div>
@@ -141,8 +141,8 @@ require_once __DIR__ . '/partials/header.php';
             <!-- Right Column: Status & Items -->
             <div class="lg:col-span-4 space-y-8">
                 <!-- Status Timeline -->
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal-element">
-                    <h3 class="text-xl font-normal text-primary mb-8 tracking-tight">Status</h3>
+                <div class="bg-surface p-8 rounded-3xl reveal-element" style="border-color: rgba(231,229,228,0.6);">
+                    <h3 class="text-xl font-normal text-ink mb-8 tracking-tight">Status</h3>
                     <div class="space-y-8 relative">
                         <?php 
                         $steps = [
@@ -166,23 +166,23 @@ require_once __DIR__ . '/partials/header.php';
                             $isLast = $index === count($steps) - 1;
                         ?>
                             <div class="relative flex items-start">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center z-10 shrink-0 <?= $isDone ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/20' : ($isActive ? 'bg-teal-50 text-teal-500 border-2 border-teal-500 ring-4 ring-teal-50' : 'bg-slate-50 text-slate-300 border border-slate-100') ?>">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center z-10 shrink-0 <?= $isDone ? 'bg-champagne text-white' : ($isActive ? 'bg-champagne/10 text-champagne-dark border-2 border-champagne ring-4 ring-champagne/10' : 'bg-canvas text-muted-light border') ?>" <?= $isDone || $isActive ? '' : 'style="border-color: rgba(231,229,228,0.6);"' ?>>
                                     <?php if ($isDone): ?>
                                         <span class="material-symbols-outlined text-sm font-light">check</span>
                                     <?php elseif ($isActive): ?>
-                                        <div class="w-2 h-2 bg-teal-500 rounded-full animate-ping"></div>
+                                        <div class="w-2 h-2 bg-champagne rounded-full animate-ping"></div>
                                     <?php else: ?>
                                         <span class="material-symbols-outlined text-sm font-light"><?= $step['icon'] ?></span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="ml-6 pt-1">
-                                    <p class="text-sm font-light <?= $isActive || $isDone ? 'text-primary' : 'text-slate-300' ?> uppercase tracking-widest mb-1"><?= $step['label'] ?></p>
+                                    <p class="text-sm font-light <?= $isActive || $isDone ? 'text-ink' : 'text-muted-light' ?> uppercase tracking-widest mb-1"><?= $step['label'] ?></p>
                                     <?php if ($isActive): ?>
-                                        <p class="text-xs text-teal-600 font-light">Updated just now</p>
+                                        <p class="text-xs text-champagne-dark font-light">Updated just now</p>
                                     <?php endif; ?>
                                 </div>
                                 <?php if (!$isLast): ?>
-                                    <div class="absolute left-4 top-8 w-[2px] h-8 <?= $isDone ? 'bg-teal-500' : 'bg-slate-100' ?>"></div>
+                                    <div class="absolute left-4 top-8 w-[2px] h-8 <?= $isDone ? 'bg-champagne' : '' ?>" <?= $isDone ? '' : 'style="background: rgba(231,229,228,0.6);"' ?>></div>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
@@ -190,31 +190,31 @@ require_once __DIR__ . '/partials/header.php';
                 </div>
 
                 <!-- Items -->
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 reveal-element">
-                    <h3 class="text-xl font-normal text-primary mb-8 tracking-tight">Manifest</h3>
+                <div class="bg-surface p-8 rounded-3xl reveal-element" style="border-color: rgba(231,229,228,0.6);">
+                    <h3 class="text-xl font-normal text-ink mb-8 tracking-tight">Manifest</h3>
                     <?php 
                     $rental = $activeDelivery['rentals'] ?? null;
                     $product = $rental['products'] ?? null;
                     if ($product):
                     ?>
-                        <div class="flex items-center p-3 hover:bg-slate-50 transition-all rounded-2xl border border-transparent hover:border-slate-100 group cursor-pointer">
-                            <div class="w-14 h-14 bg-slate-50 rounded-xl mr-4 overflow-hidden shrink-0 shadow-sm">
+                        <div class="flex items-center p-3 hover:bg-canvas transition-all border border-transparent hover:border-[rgba(231,229,228,0.6)] group cursor-pointer" style="border-radius: 0.75rem;">
+                            <div class="w-14 h-14 bg-canvas mr-4 overflow-hidden shrink-0" style="border-radius: 0.75rem;">
                                 <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?= htmlspecialchars((string)$product['image_url']) ?>" alt="Product"/>
                             </div>
                             <div class="flex-grow">
-                                <p class="text-sm font-light text-slate-900 mb-0.5"><?= htmlspecialchars((string)$product['name']) ?></p>
-                                <p class="text-[10px] font-normal text-slate-400 uppercase tracking-widest">SKU: <?= htmlspecialchars((string)($product['sku'] ?? 'N/A')) ?></p>
+                                <p class="text-sm font-light text-ink mb-0.5"><?= htmlspecialchars((string)$product['name']) ?></p>
+                                <p class="text-[10px] font-normal text-muted-light uppercase tracking-widest">SKU: <?= htmlspecialchars((string)($product['sku'] ?? 'N/A')) ?></p>
                             </div>
                         </div>
                     <?php endif; ?>
                     
-                    <div class="mt-10 pt-6 border-t border-slate-50 flex flex-col space-y-3">
-                        <a href="<?= baseUrl('/support') ?>" class="w-full bg-primary text-white font-normal py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
+                    <div class="mt-10 pt-6 flex flex-col space-y-3" style="border-top-color: rgba(231,229,228,0.6);">
+                        <a href="<?= baseUrl('/support') ?>" class="w-full bg-ink text-white font-normal py-4 flex items-center justify-center gap-2 hover:scale-[1.02] transition-all" style="border-radius: 0.75rem;">
                             <span class="material-symbols-outlined text-xl">support_agent</span>
                             Live Support
                         </a>
                         <?php if ($status !== 'COMPLETED'): ?>
-                            <a href="reschedule.php?id=<?= $activeDelivery['id'] ?>" class="w-full bg-white border-2 border-slate-100 text-slate-600 font-normal py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                            <a href="reschedule.php?id=<?= $activeDelivery['id'] ?>" class="w-full bg-surface border-2 text-muted font-normal py-4 flex items-center justify-center gap-2 hover:bg-canvas transition-all" style="border-color: rgba(231,229,228,0.6); border-radius: 0.75rem;">
                                 <span class="material-symbols-outlined text-xl">event_repeat</span>
                                 Reschedule
                             </a>

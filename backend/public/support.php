@@ -27,58 +27,58 @@ $title = 'Contact Support | RentEase';
 require_once __DIR__ . '/partials/header.php';
 ?>
 
-<main class="pt-32 pb-24 bg-slate-50 min-h-screen">
+<main class="pt-32 pb-24 bg-canvas min-h-screen">
     <div class="max-w-7xl mx-auto px-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
             <!-- Left: Contact Info -->
             <div class="lg:col-span-1 space-y-8">
                 <div>
-                    <h1 class="text-4xl font-normal text-primary mb-4 tracking-tight">How can we help?</h1>
-                    <p class="text-lg text-slate-500 leading-relaxed">Our concierge team is ready to assist you with any questions about your rentals, billing, or technical issues.</p>
+                    <h1 class="text-4xl font-normal text-ink mb-4 tracking-tight">How can we help?</h1>
+                    <p class="text-lg text-muted leading-relaxed">Our concierge team is ready to assist you with any questions about your rentals, billing, or technical issues.</p>
                 </div>
 
                 <div class="space-y-6">
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-secondary shrink-0">
+                        <div class="w-12 h-12 bg-surface flex items-center justify-center text-secondary shrink-0" style="border-radius: 0.75rem;">
                             <span class="material-symbols-outlined">chat_bubble</span>
                         </div>
                         <div>
-                            <h4 class="font-normal text-primary mb-1">Live Chat</h4>
-                            <p class="text-sm text-slate-500 font-light">Available 24/7 for urgent issues</p>
+                            <h4 class="font-normal text-ink mb-1">Live Chat</h4>
+                            <p class="text-sm text-muted font-light">Available 24/7 for urgent issues</p>
                             <a href="<?= baseUrl('/concierge') ?>" class="text-secondary text-sm font-light mt-2 hover:underline inline-block">Start Chatting →</a>
                         </div>
                     </div>
 
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-secondary shrink-0">
+                        <div class="w-12 h-12 bg-surface flex items-center justify-center text-secondary shrink-0" style="border-radius: 0.75rem;">
                             <span class="material-symbols-outlined">mail</span>
                         </div>
                         <div>
-                            <h4 class="font-normal text-primary mb-1">Email Support</h4>
-                            <p class="text-sm text-slate-500 font-light">Typical response within 2 hours</p>
+                            <h4 class="font-normal text-ink mb-1">Email Support</h4>
+                            <p class="text-sm text-muted font-light">Typical response within 2 hours</p>
                             <a href="mailto:support@rentease.com" class="text-secondary text-sm font-light mt-1 hover:underline">support@rentease.com</a>
                         </div>
                     </div>
 
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-secondary shrink-0">
+                        <div class="w-12 h-12 bg-surface flex items-center justify-center text-secondary shrink-0" style="border-radius: 0.75rem;">
                             <span class="material-symbols-outlined">call</span>
                         </div>
                         <div>
-                            <h4 class="font-normal text-primary mb-1">Phone Support</h4>
-                            <p class="text-sm text-slate-500 font-light">Mon-Fri, 9am - 6pm EST</p>
+                            <h4 class="font-normal text-ink mb-1">Phone Support</h4>
+                            <p class="text-sm text-muted font-light">Mon-Fri, 9am - 6pm EST</p>
                             <a href="tel:+1800RENTEASE" class="text-secondary text-sm font-light mt-1 hover:underline">+1 (800) RENT-EASE</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Link -->
-                <div class="p-6 bg-primary text-white rounded-2xl relative overflow-hidden group">
+                <div class="p-6 bg-ink text-white relative overflow-hidden group" style="border-radius: 0.75rem;">
                     <div class="relative z-10">
                         <h4 class="font-normal mb-2">Check the Help Center</h4>
-                        <p class="text-xs text-on-primary-container mb-4 font-light">Most questions can be answered instantly in our knowledge base.</p>
-                        <a href="<?= baseUrl('/help-center') ?>" class="inline-block bg-secondary text-white text-xs font-light px-4 py-2 rounded-lg hover:brightness-110 transition-all">Go to FAQs</a>
+                        <p class="text-xs text-white/70 mb-4 font-light">Most questions can be answered instantly in our knowledge base.</p>
+                        <a href="<?= baseUrl('/help-center') ?>" class="inline-block bg-secondary text-white text-xs font-light px-4 py-2 hover:brightness-110 transition-all" style="border-radius: 0.5rem;">Go to FAQs</a>
                     </div>
                     <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-7xl text-white/5 group-hover:scale-110 transition-transform">help</span>
                 </div>
@@ -86,12 +86,12 @@ require_once __DIR__ . '/partials/header.php';
 
             <!-- Right: Ticket Form -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8 md:p-12 reveal-element">
+                <div class="bg-surface rounded-3xl p-8 md:p-12 reveal-element" style="border-color: rgba(231,229,228,0.6);">
                     <form id="support-form" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Reason for contact</label>
-                                <select name="category" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal appearance-none">
+                                <label class="text-[10px] font-normal text-muted-light uppercase tracking-widest px-1">Reason for contact</label>
+                                <select name="category" required class="w-full p-4 bg-canvas border text-ink font-normal appearance-none outline-none transition-all focus:ring-4 focus:ring-secondary/10 focus:border-secondary" style="border-color: rgba(231,229,228,0.6);">
                                     <option value="">Select a category</option>
                                     <option value="billing">Billing & Payments</option>
                                     <option value="delivery">Delivery & Setup</option>
@@ -101,23 +101,23 @@ require_once __DIR__ . '/partials/header.php';
                                 </select>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Subject</label>
-                                <input type="text" name="subject" required placeholder="Briefly describe the issue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal">
+                                <label class="text-[10px] font-normal text-muted-light uppercase tracking-widest px-1">Subject</label>
+                                <input type="text" name="subject" required placeholder="Briefly describe the issue" class="w-full p-4 bg-canvas border text-ink font-normal outline-none transition-all focus:ring-4 focus:ring-secondary/10 focus:border-secondary" style="border-color: rgba(231,229,228,0.6);">
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-normal text-slate-400 uppercase tracking-widest px-1">Describe your issue</label>
-                            <textarea name="description" required placeholder="Please provide as much detail as possible..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all text-slate-700 font-normal min-h-[180px]"></textarea>
+                            <label class="text-[10px] font-normal text-muted-light uppercase tracking-widest px-1">Describe your issue</label>
+                            <textarea name="description" required placeholder="Please provide as much detail as possible..." class="w-full p-4 bg-canvas border text-ink font-normal outline-none transition-all focus:ring-4 focus:ring-secondary/10 focus:border-secondary min-h-[180px]" style="border-color: rgba(231,229,228,0.6);"></textarea>
                         </div>
 
-                        <div class="flex items-center gap-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                        <div class="flex items-center gap-4 p-4 bg-blue-50/50 border border-blue-100" style="border-radius: 0.75rem;">
                             <span class="material-symbols-outlined text-blue-500">info</span>
                             <p class="text-xs text-blue-700 font-light">Providing your Order ID helps us resolve issues faster.</p>
                         </div>
 
                         <div class="pt-4">
-                            <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-normal py-5 rounded-2xl shadow-xl shadow-primary/20 hover:opacity-95 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
+                            <button type="submit" id="submit-btn" class="w-full bg-ink text-white font-normal py-5 hover:opacity-95 transition-all active:scale-95 text-lg flex items-center justify-center gap-2" style="border-radius: 0.75rem;">
                                 Submit Support Ticket
                             </button>
                         </div>
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.success) {
                 btn.innerHTML = '<span class="material-symbols-outlined text-xl">check_circle</span> Submitted Successfully';
-                btn.classList.replace('bg-primary', 'bg-emerald-500');
+                btn.classList.replace('bg-ink', 'bg-champagne');
                 
                 setTimeout(() => {
                     window.location.href = '<?= baseUrl('/dashboard') ?>?msg=ticket_created';

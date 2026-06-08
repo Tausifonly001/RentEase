@@ -24,231 +24,302 @@ $pageDescription = 'Transform your space without commitment. Rent premium furnit
 require __DIR__ . '/partials/header.php';
 ?>
 
-<!-- Loader Animation -->
-<div id="loader" class="fixed inset-0 bg-white z-[60] flex items-center justify-center">
+<!-- Loader -->
+<div id="loader" class="fixed inset-0 bg-canvas z-[60] flex items-center justify-center">
     <div class="text-center">
-        <div class="text-4xl font-serif font-bold tracking-widest mb-4 text-ink">RENTEASE</div>
-        <div class="w-16 h-[1px] bg-champagne mx-auto origin-left transform scale-x-0" id="loader-line"></div>
+        <div class="w-10 h-10 mx-auto mb-6 flex items-center justify-center bg-ink text-white font-serif text-lg font-medium tracking-wide">R</div>
+        <div class="w-20 h-[1px] bg-champagne mx-auto origin-left" style="transform: scaleX(0);" id="loader-line"></div>
     </div>
 </div>
 
-<main class="w-full relative bg-white">
+<main class="w-full relative bg-canvas">
 
-<!-- 1. EDITORIAL HERO SECTION -->
-<section class="relative w-full min-h-screen flex items-center px-6 lg:px-12 pt-20 max-w-[1600px] mx-auto overflow-hidden">
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 w-full items-center">
-        <!-- Text Column -->
+<!-- ============================================ -->
+<!-- 1. CINEMATIC HERO SECTION -->
+<!-- ============================================ -->
+<section class="relative w-full min-h-[100dvh] flex items-center px-6 lg:px-12 pt-24 max-w-[1600px] mx-auto overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 w-full items-center">
         <div class="relative z-10 w-full max-w-2xl order-2 lg:order-1">
+            <div class="mb-4">
+                <div class="inline-flex items-center gap-2 text-muted text-[10px] font-medium uppercase tracking-[0.2em] opacity-0 gsap-fade mb-6">
+                    <span class="w-1.5 h-1.5 bg-champagne" style="animation: pulse-dot 2s ease-in-out infinite;"></span>
+                    Premium Living, Flexible Terms
+                </div>
+            </div>
             <div class="mb-8">
-                <h1 class="text-6xl md:text-7xl lg:text-[6.5rem] font-serif tracking-tight text-ink leading-[1.05]" id="hero-title">
+                <h1 class="text-5xl md:text-7xl lg:text-[6.5rem] font-serif tracking-tight text-ink leading-[1.05]" id="hero-title">
                     <span class="text-mask"><span class="text-mask-inner">Design your</span></span><br>
                     <span class="text-mask"><span class="text-mask-inner italic text-champagne">space.</span></span>
                 </h1>
             </div>
             <div class="overflow-hidden mb-12 max-w-lg">
-                <p class="text-lg md:text-xl text-zinc-500 font-light leading-relaxed opacity-0" id="hero-desc">
+                <p class="text-lg md:text-xl text-muted font-light leading-relaxed opacity-0" id="hero-desc">
                     Curated furniture and smart appliances. Flexible terms. White-glove delivery included.
                 </p>
             </div>
-            <div class="flex flex-col sm:flex-row gap-6 opacity-0" id="hero-ctas">
-                <a href="<?= baseUrl('/shop') ?>" class="px-10 py-4 bg-ink text-white hover:bg-champagne hover:text-ink hover:border-champagne text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-500 flex items-center justify-center outline-none focus-visible:ring-1 ring-champagne border border-ink">
-                    Explore Collection
-                </a>
-                <a href="#how-it-works" class="px-10 py-4 bg-transparent text-ink border border-zinc-200 hover:border-champagne hover:text-champagne text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-500 flex items-center justify-center outline-none focus-visible:ring-1 ring-champagne">
-                    How it Works
-                </a>
+            <div class="flex flex-col sm:flex-row gap-5 opacity-0" id="hero-ctas">
+                <a href="<?= baseUrl('/shop') ?>" class="btn-primary">Explore Collection</a>
+                <a href="#how-it-works" class="btn-secondary">How it Works</a>
             </div>
         </div>
-        
-        <!-- Image Column -->
-        <div class="relative z-10 w-full h-[60vh] lg:h-[85vh] order-1 lg:order-2 overflow-hidden bg-surface" id="hero-img-container">
+
+        <div class="relative z-10 w-full min-h-[50vh] lg:min-h-[85vh] order-1 lg:order-2 overflow-hidden bg-surface" id="hero-img-container">
             <div class="absolute inset-0 bg-champagne/10 z-10 clip-reveal" id="hero-image-overlay"></div>
-            <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="Ultra luxury living room" class="w-full h-full object-cover origin-center scale-110 grayscale-[15%]" id="hero-img">
+            <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="Luxury living room interior" class="w-full h-full object-cover origin-center scale-110" id="hero-img" style="filter: grayscale(15%);">
+            <div class="absolute inset-0 bg-gradient-to-t from-canvas/40 via-transparent to-transparent z-10 lg:hidden"></div>
         </div>
     </div>
 </section>
 
-<!-- 2. EDITORIAL BENEFITS -->
-<section class="py-32 relative border-t border-zinc-200">
-    <div class="px-6 lg:px-12 max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-24 text-left">
-        <div class="benefit-card border-l border-zinc-200 pl-8">
-            <h3 class="text-xl font-serif font-medium text-ink mb-4">I. Delivery</h3>
-            <p class="text-zinc-500 font-light leading-relaxed">White-glove delivery and assembly in your space. We handle the heavy lifting, allowing you to simply enjoy.</p>
+<!-- ============================================ -->
+<!-- 2. ASYMMETRIC EDITORIAL BENEFITS -->
+<!-- ============================================ -->
+<section class="py-28 lg:py-36 relative border-t" style="border-color: rgba(231,229,228,0.6);">
+    <div class="px-6 lg:px-12 max-w-[1600px] mx-auto">
+        <div class="max-w-2xl mb-20">
+            <h2 class="section-title">Designed around you.</h2>
+            <p class="section-subtitle">Every detail considered so you can focus on living, not logistics.</p>
         </div>
-        <div class="benefit-card border-l border-zinc-200 pl-8">
-            <h3 class="text-xl font-serif font-medium text-ink mb-4">II. Flexibility</h3>
-            <p class="text-zinc-500 font-light leading-relaxed">Swap, upgrade, or return items when your term ends. Your space evolves seamlessly with your lifestyle.</p>
-        </div>
-        <div class="benefit-card border-l border-zinc-200 pl-8">
-            <h3 class="text-xl font-serif font-medium text-ink mb-4">III. Maintenance</h3>
-            <p class="text-zinc-500 font-light leading-relaxed">Accidental damage or general wear? Our dedicated team handles repairs and replacements at no extra cost.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+            <div class="benefit-card">
+                <div class="text-5xl font-serif text-champagne/30 mb-6 font-medium italic">01</div>
+                <h3 class="text-xl font-serif font-medium text-ink mb-4">White-Glove Delivery</h3>
+                <p class="text-muted font-light leading-relaxed">We deliver, assemble, and place every item exactly where you want it. All packaging removed. Zero effort on your part.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="text-5xl font-serif text-champagne/30 mb-6 font-medium italic">02</div>
+                <h3 class="text-xl font-serif font-medium text-ink mb-4">Total Flexibility</h3>
+                <p class="text-muted font-light leading-relaxed">Swap, upgrade, or return items when your term ends. Your space evolves seamlessly with your changing tastes.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="text-5xl font-serif text-champagne/30 mb-6 font-medium italic">03</div>
+                <h3 class="text-xl font-serif font-medium text-ink mb-4">Peace of Mind</h3>
+                <p class="text-muted font-light leading-relaxed">Accidental damage or general wear? Our team handles repairs and replacements at no extra cost. Ever.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- 3. STICKY STORYTELLING -->
-<section id="how-it-works" class="py-32 px-6 lg:px-12 max-w-[1600px] mx-auto relative border-t border-zinc-200 bg-surface">
-    <div class="text-left mb-24 max-w-2xl">
-        <h2 class="text-5xl md:text-6xl font-serif font-medium tracking-tight text-ink mb-6">
-            Beautifully simple.
-        </h2>
-        <p class="text-zinc-500 text-lg font-light leading-relaxed">A seamless process designed to remove the friction of traditional ownership.</p>
+<!-- ============================================ -->
+<!-- 3. STICKY STORYTELLING (CINEMATIC) -->
+<!-- ============================================ -->
+<section id="how-it-works" class="py-28 lg:py-36 px-6 lg:px-12 max-w-[1600px] mx-auto relative border-t" style="border-color: rgba(231,229,228,0.6); background: #FAFAF9;">
+    <div class="max-w-3xl mb-20">
+        <div class="section-eyebrow"><span class="dot"></span>The Process</div>
+        <h2 class="section-title">Three steps.<br><span class="italic text-champagne">Beautifully simple.</span></h2>
+        <p class="section-subtitle">A seamless journey designed to remove the friction of traditional ownership.</p>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-20 relative">
-        <!-- Left: Text Scroller -->
-        <div class="w-full lg:w-1/2 py-[10vh] lg:pr-16">
-            <div class="step-block min-h-[70vh] flex flex-col justify-center">
-                <div class="text-zinc-300 font-serif text-6xl mb-8">01.</div>
+    <div class="flex flex-col lg:flex-row gap-16 relative">
+        <div class="w-full lg:w-1/2 lg:pr-16">
+            <div class="step-block min-h-[70vh] flex flex-col justify-center py-16 lg:py-0">
+                <div class="inline-flex items-center gap-4 mb-10">
+                    <span class="font-serif text-7xl text-champagne/25 italic font-medium">01</span>
+                    <span class="h-[1px] w-12 bg-champagne/30"></span>
+                </div>
                 <h3 class="text-3xl font-serif font-medium text-ink mb-6">Choose your pieces.</h3>
-                <p class="text-lg text-zinc-500 leading-relaxed font-light">Browse our curated collection of premium furniture and appliances. Select the items that fit your aesthetic and choose a rental plan that aligns with your timeline.</p>
+                <p class="text-lg text-muted leading-relaxed font-light max-w-md">Browse our curated collection of premium furniture and appliances. Select the items that fit your aesthetic and choose a plan that aligns with your timeline.</p>
             </div>
-            
-            <div class="step-block min-h-[70vh] flex flex-col justify-center">
-                <div class="text-zinc-300 font-serif text-6xl mb-8">02.</div>
+
+            <div class="step-block min-h-[70vh] flex flex-col justify-center py-16 lg:py-0">
+                <div class="inline-flex items-center gap-4 mb-10">
+                    <span class="font-serif text-7xl text-champagne/25 italic font-medium">02</span>
+                    <span class="h-[1px] w-12 bg-champagne/30"></span>
+                </div>
                 <h3 class="text-3xl font-serif font-medium text-ink mb-6">White-glove delivery.</h3>
-                <p class="text-lg text-zinc-500 leading-relaxed font-light">Our delivery team brings everything to your door, assembles the furniture in your preferred room, and removes all packaging.</p>
+                <p class="text-lg text-muted leading-relaxed font-light max-w-md">Our team brings everything to your door, assembles each piece in your preferred room, and removes all packaging — leaving you to simply enjoy.</p>
             </div>
-            
-            <div class="step-block min-h-[70vh] flex flex-col justify-center">
-                <div class="text-zinc-300 font-serif text-6xl mb-8">03.</div>
+
+            <div class="step-block min-h-[70vh] flex flex-col justify-center py-16 lg:py-0">
+                <div class="inline-flex items-center gap-4 mb-10">
+                    <span class="font-serif text-7xl text-champagne/25 italic font-medium">03</span>
+                    <span class="h-[1px] w-12 bg-champagne/30"></span>
+                </div>
                 <h3 class="text-3xl font-serif font-medium text-ink mb-6">Live freely.</h3>
-                <p class="text-lg text-zinc-500 leading-relaxed font-light">When your plan ends, you're in control. Renew your rental, swap for new pieces, buy them out, or schedule a free pickup.</p>
+                <p class="text-lg text-muted leading-relaxed font-light max-w-md">When your plan ends, you're in control. Renew, swap for new pieces, buy them out, or schedule a free pickup. Your space evolves with you.</p>
             </div>
         </div>
 
-        <!-- Right: Sticky Image -->
         <div class="hidden lg:block w-1/2 h-screen sticky top-0 flex items-center justify-center py-20">
-            <div class="w-full h-full relative bg-white">
-                <img id="sticky-img-1" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt="Select">
-                <img id="sticky-img-2" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" alt="Deliver">
-                <img id="sticky-img-3" src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" alt="Enjoy">
+            <div class="w-full h-[80vh] relative bg-surface overflow-hidden">
+                <img id="sticky-img-1" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" alt="Select furniture" loading="lazy">
+                <img id="sticky-img-2" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" alt="Delivery service" loading="lazy">
+                <img id="sticky-img-3" src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" alt="Living freely" loading="lazy">
+                <div class="absolute inset-0 bg-canvas/5"></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 4. AIRY PRODUCT GRID -->
-<section class="py-32 relative border-t border-zinc-200">
+<!-- ============================================ -->
+<!-- 4. PREMIUM COLLECTION GRID -->
+<!-- ============================================ -->
+<section class="py-28 lg:py-36 relative border-t" style="border-color: rgba(231,229,228,0.6);">
     <div class="px-6 lg:px-12 max-w-[1600px] mx-auto relative z-10">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-20">
-            <div>
-                <h2 class="text-4xl md:text-5xl font-serif font-medium tracking-tight text-ink mb-4">
-                    The Collection.
-                </h2>
-                <p class="text-lg text-zinc-500 font-light">Pieces our community loves.</p>
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+            <div class="max-w-2xl">
+                <div class="section-eyebrow"><span class="dot"></span>The Collection</div>
+                <h2 class="section-title">Pieces our<br><span class="italic text-champagne">community loves.</span></h2>
             </div>
-            <a href="<?= baseUrl('/shop') ?>" class="text-[11px] font-medium tracking-[0.2em] uppercase text-ink hover:opacity-60 transition-opacity border-b border-ink pb-1 mt-6 md:mt-0 outline-none focus-visible:ring-1 ring-ink">
+            <a href="<?= baseUrl('/shop') ?>" class="btn-ghost mt-6 md:mt-0">
                 View All
+                <span class="material-symbols-outlined text-sm ml-1">arrow_right_alt</span>
             </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-            <?php
-            $allProducts = array_merge($furniture, $appliances);
-            if (!empty($allProducts)): 
-                foreach (array_slice($allProducts, 0, 8) as $index => $product): 
-            ?>
-            <a href="<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>" class="group block relative w-full outline-none focus-visible:ring-1 ring-ink p-2 -m-2">
-                <!-- Image Container -->
+        <?php
+        $allProducts = array_merge($furniture, $appliances);
+        if (!empty($allProducts)):
+        ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20">
+            <?php foreach (array_slice($allProducts, 0, 8) as $index => $product): ?>
+            <a href="<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>" class="product-card group block relative w-full outline-none focus-visible:ring-1 ring-champagne p-2 -m-2">
                 <div class="aspect-[4/5] bg-surface relative overflow-hidden mb-6">
                     <img alt="<?= htmlspecialchars((string)($product['name'] ?? 'Product')) ?>"
                          src="<?= htmlspecialchars((string)($product['image_url'] ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600')) ?>"
-                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/5 transition-colors duration-500"></div>
+                         class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
+                         loading="lazy"
+                         style="filter: grayscale(10%);" />
+                    <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/5 transition-colors duration-700"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-canvas/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                        <span class="text-[11px] font-medium tracking-[0.2em] uppercase text-ink">View Details</span>
+                    </div>
                 </div>
-
-                <!-- Text Content -->
-                <div class="flex flex-col">
+                <div class="flex flex-col px-1">
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-serif font-medium text-ink">
+                        <h3 class="text-lg font-serif font-medium text-ink group-hover:text-champagne transition-colors duration-500">
                             <?= htmlspecialchars((string)($product['name'] ?? 'Premium Piece')) ?>
                         </h3>
-                        <span class="text-ink font-medium text-sm">$<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?></span>
                     </div>
                     <div class="flex justify-between items-center text-xs">
-                        <span class="text-zinc-500 uppercase tracking-widest font-medium">
+                        <span class="text-muted uppercase tracking-[0.15em] font-medium text-[10px]">
                             <?= htmlspecialchars((string)($product['category'] ?? 'Collection')) ?>
                         </span>
-                        <span class="text-zinc-400 font-light">/mo</span>
+                        <span class="font-mono text-ink font-medium">
+                            $<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?><span class="text-muted-light font-sans text-[10px]">/mo</span>
+                        </span>
                     </div>
                 </div>
             </a>
-            <?php endforeach; endif; ?>
+            <?php endforeach; ?>
         </div>
+        <?php else: ?>
+        <div class="py-20 text-center">
+            <p class="text-muted font-light"><?= $error ? htmlspecialchars($error) : 'No products available at this time.' ?></p>
+            <a href="<?= baseUrl('/shop') ?>" class="btn-primary mt-8 inline-flex">Browse All</a>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
-<!-- 5. TESTIMONIALS -->
-<section class="py-32 relative border-t border-zinc-200 bg-surface">
+<!-- ============================================ -->
+<!-- 5. CINEMATIC TESTIMONIALS -->
+<!-- ============================================ -->
+<section class="py-28 lg:py-36 relative border-t" style="border-color: rgba(231,229,228,0.6); background: #FAFAF9;">
     <div class="px-6 lg:px-12 max-w-[1600px] mx-auto">
-        <h2 class="text-4xl md:text-5xl font-serif font-medium tracking-tight text-ink mb-24 text-center">
-            Client Stories
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 text-left">
-            <div class="flex flex-col">
-                <p class="text-lg text-zinc-600 leading-relaxed mb-10 font-light italic">"I moved to a new city and furnished my entire apartment in two days without spending a fortune. The curation is impeccable."</p>
-                <div class="mt-auto">
-                    <h4 class="font-medium text-ink tracking-wide">Sarah Jenkins</h4>
-                    <p class="text-xs text-zinc-400 uppercase tracking-widest mt-1">New York</p>
+        <div class="text-center max-w-2xl mx-auto mb-20">
+            <div class="section-eyebrow"><span class="dot"></span>Client Stories</div>
+            <h2 class="section-title">What our<br><span class="italic text-champagne">members say.</span></h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            <div class="testimonial-card p-10 lg:p-12 bg-surface border" style="border-color: rgba(231,229,228,0.6);">
+                <div class="flex gap-1 mb-8 text-champagne">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                </div>
+                <p class="text-base text-muted leading-relaxed mb-10 font-light italic">"I moved to a new city and furnished my entire apartment in two days. The curation is impeccable — everything fits together effortlessly."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-ink text-white flex items-center justify-center text-sm font-serif italic">SJ</div>
+                    <div>
+                        <h4 class="font-medium text-ink text-sm tracking-wide">Sarah Jenkins</h4>
+                        <p class="text-[10px] text-muted-light uppercase tracking-[0.15em]">New York</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex flex-col">
-                <p class="text-lg text-zinc-600 leading-relaxed mb-10 font-light italic">"The delivery team was so professional. They carried a massive sofa up three flights of stairs and assembled it perfectly."</p>
-                <div class="mt-auto">
-                    <h4 class="font-medium text-ink tracking-wide">Michael Ross</h4>
-                    <p class="text-xs text-zinc-400 uppercase tracking-widest mt-1">Chicago</p>
+            <div class="testimonial-card p-10 lg:p-12 bg-surface border" style="border-color: rgba(231,229,228,0.6);">
+                <div class="flex gap-1 mb-8 text-champagne">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                </div>
+                <p class="text-base text-muted leading-relaxed mb-10 font-light italic">"The delivery team was incredible. They carried a massive sofa up three flights and assembled it perfectly. Truly white-glove service."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-ink text-white flex items-center justify-center text-sm font-serif italic">MR</div>
+                    <div>
+                        <h4 class="font-medium text-ink text-sm tracking-wide">Michael Ross</h4>
+                        <p class="text-[10px] text-muted-light uppercase tracking-[0.15em]">Chicago</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex flex-col">
-                <p class="text-lg text-zinc-600 leading-relaxed mb-10 font-light italic">"I love changing my decor frequently. RentEase lets me swap out my dining set whenever I want a fresh look. Highly recommend."</p>
-                <div class="mt-auto">
-                    <h4 class="font-medium text-ink tracking-wide">Anita Patel</h4>
-                    <p class="text-xs text-zinc-400 uppercase tracking-widest mt-1">Los Angeles</p>
+            <div class="testimonial-card p-10 lg:p-12 bg-surface border" style="border-color: rgba(231,229,228,0.6);">
+                <div class="flex gap-1 mb-8 text-champagne">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                </div>
+                <p class="text-base text-muted leading-relaxed mb-10 font-light italic">"I love changing my decor frequently. RentEase lets me swap pieces whenever I want a fresh look. It's interior design without commitment."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-ink text-white flex items-center justify-center text-sm font-serif italic">AP</div>
+                    <div>
+                        <h4 class="font-medium text-ink text-sm tracking-wide">Anita Patel</h4>
+                        <p class="text-[10px] text-muted-light uppercase tracking-[0.15em]">Los Angeles</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 6. FOOTER CTA -->
-<section class="py-40 px-6 text-center border-t border-zinc-200 relative bg-white">
+<!-- ============================================ -->
+<!-- 6. CINEMATIC CTA -->
+<!-- ============================================ -->
+<section class="py-32 lg:py-44 px-6 text-center relative border-t" style="border-color: rgba(231,229,228,0.6); background: #18181B;">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-champagne/5 rounded-full blur-[120px]"></div>
+    </div>
     <div class="relative z-10 max-w-3xl mx-auto">
-        <h2 class="text-5xl md:text-6xl font-serif font-medium tracking-tight text-ink mb-8">
-            Ready for a change?
+        <h2 class="text-4xl md:text-6xl font-serif font-medium tracking-tight text-white mb-8">
+            Ready for a<br><span class="italic text-champagne">change?</span>
         </h2>
-        <p class="text-xl text-zinc-500 font-light mb-16">Join thousands who have embraced spatial freedom.</p>
-        <div>
-            <a href="<?= baseUrl('/shop') ?>" class="inline-flex items-center justify-center px-12 py-5 bg-ink text-white hover:bg-zinc-800 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors outline-none focus-visible:ring-1 ring-ink border border-ink">
-                Start Exploring
-            </a>
+        <p class="text-lg text-white/60 font-light mb-14 max-w-lg mx-auto">Join thousands who have embraced spatial freedom. Start your first rental today.</p>
+        <div class="flex flex-col sm:flex-row gap-5 justify-center">
+            <a href="<?= baseUrl('/shop') ?>" class="inline-flex items-center justify-center px-12 py-5 bg-champagne text-ink text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-500 hover:bg-white outline-none focus-visible:ring-1 ring-champagne">Start Exploring</a>
+            <a href="<?= baseUrl('/signup') ?>" class="inline-flex items-center justify-center px-12 py-5 bg-transparent text-white border border-white/20 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-500 hover:border-champagne hover:text-champagne outline-none focus-visible:ring-1 ring-champagne">Create Account</a>
         </div>
     </div>
 </section>
 
-<!-- Home GSAP Initialization -->
+</main>
+
+<!-- Home GSAP Animations -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const checkHomeGsap = setInterval(() => {
+    const checkGsap = setInterval(() => {
         if (window.gsap && window.ScrollTrigger) {
-            clearInterval(checkHomeGsap);
+            clearInterval(checkGsap);
             gsap.registerPlugin(ScrollTrigger);
-            
+
             let ctx = gsap.context(() => {
-                // Loader + Hero entrance (single timeline like book opening)
+                // Cinematic Loader → Hero Timeline
                 const tl = gsap.timeline();
-                
-                // 1. Loader line expands (spine opens)
-                tl.to("#loader-line", { scaleX: 1, duration: 1, ease: "power2.inOut" })
+
+                // 1. Loader line expands (spine opening)
+                tl.to("#loader-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" })
                 // 2. Loader slides up (cover lifts)
-                  .to("#loader", { yPercent: -100, duration: 1.2, ease: "power4.inOut", delay: 0.2 })
-                // 3. Hero image zooms out (page settles) - starts during loader slide
-                  .from("#hero-img", { scale: 1.3, duration: 2, ease: "power2.out" }, "-=1")
-                // 4. Text mask reveal (content appears) - starts during loader slide
+                  .to("#loader", { yPercent: -100, duration: 1.2, ease: "power4.inOut", delay: 0.3 })
+                // 3. Hero image zooms out (page settles)
+                  .from("#hero-img", { scale: 1.3, duration: 2.2, ease: "power2.out" }, "-=1")
+                // 4. Text mask reveal (content appears)
                   .to('.text-mask-inner', {
                       y: '0%',
                       duration: 1.2,
@@ -261,26 +332,30 @@ document.addEventListener('DOMContentLoaded', () => {
                       duration: 1.5,
                       ease: 'power4.inOut'
                   }, "-=1.0")
-                // 6. Image scale down (continues)
+                // 6. Hero image scale settles
                   .to('#hero-img', {
                       scale: 1,
                       duration: 2.5,
                       ease: 'power2.out'
                   }, "-=1.5")
-                // 7. Fade up desc and ctas
-                  .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=2.0")
-                  .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power2.out' }, "-=1.8");
+                // 7. Fade in descriptions and CTAs
+                  .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=2.0")
+                  .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=1.8")
+                  .to('.gsap-fade', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, "-=1.5");
 
-                // Benefit cards
-                gsap.fromTo('.benefit-card', 
-                    { y: 30, opacity: 0 },
-                    { 
-                        y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power2.out',
-                        scrollTrigger: { trigger: '.benefit-card', start: 'top 85%' }
-                    }
-                );
+                // Benefit Cards Scroll Reveal
+                gsap.utils.toArray('.benefit-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: { trigger: card, start: 'top 85%' },
+                        y: 40,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: 'power3.out',
+                        delay: i * 0.1
+                    });
+                });
 
-                // Storytelling sticky logic
+                // Sticky Storytelling Image Swap
                 const steps = document.querySelectorAll('.step-block');
                 const images = [
                     document.getElementById('sticky-img-1'),
@@ -305,12 +380,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     });
                 }
+
+                // Product Cards Cascade Reveal
+                gsap.utils.toArray('.product-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: { trigger: card, start: 'top 85%' },
+                        y: 60,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: 'power3.out',
+                        delay: i * 0.08
+                    });
+                });
+
+                // Testimonial Cards Reveal
+                gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: { trigger: card, start: 'top 85%' },
+                        y: 40,
+                        opacity: 0,
+                        duration: 1.2,
+                        ease: 'power3.out',
+                        delay: i * 0.1
+                    });
+                });
             });
         }
     }, 100);
 });
 </script>
 
-</main>
-
-<?php require __DIR__ . '/partials/footer.php'; ?>?>
+<?php require __DIR__ . '/partials/footer.php'; ?>

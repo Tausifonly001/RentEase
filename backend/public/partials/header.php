@@ -35,12 +35,21 @@ if ($token !== '' && $token === $cachedToken && time() < $cacheExpiry && !empty(
                 $_SESSION['_auth_cached_token'] = $token;
                 $_SESSION['_auth_cache_expiry'] = time() + 300;
             } else {
+                $_SESSION['_auth_cached_user'] = null;
+                $_SESSION['_auth_cached_token'] = null;
+                $_SESSION['_auth_cache_expiry'] = null;
                 unset($_SESSION['_auth_cached_user'], $_SESSION['_auth_cached_token'], $_SESSION['_auth_cache_expiry']);
             }
         } else {
+            $_SESSION['_auth_cached_user'] = null;
+            $_SESSION['_auth_cached_token'] = null;
+            $_SESSION['_auth_cache_expiry'] = null;
             unset($_SESSION['_auth_cached_user'], $_SESSION['_auth_cached_token'], $_SESSION['_auth_cache_expiry']);
         }
     } catch (Throwable $ignored) {
+        $_SESSION['_auth_cached_user'] = null;
+        $_SESSION['_auth_cached_token'] = null;
+        $_SESSION['_auth_cache_expiry'] = null;
         unset($_SESSION['_auth_cached_user'], $_SESSION['_auth_cached_token'], $_SESSION['_auth_cache_expiry']);
     }
 }

@@ -4,7 +4,8 @@ parameters:
         - index.php
         - backend/
     excludePaths:
-        - backend/storage/
-        - vendor/
-        - node_modules/
+        analyseAndScan:
+            - backend/storage/ (?)
+            - vendor/ (?)
+            - node_modules (?)
     tmpDir: /tmp/phpstan

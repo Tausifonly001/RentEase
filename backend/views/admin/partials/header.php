@@ -26,7 +26,7 @@ $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
                     <a href="<?= baseUrl('/vendor-panel') ?>" class="hover:text-teal-600 transition-colors">Vendor</a>
                     <a href="<?= baseUrl('/shop') ?>" class="hover:text-teal-600 transition-colors">Shop</a>
                 </div>
-                
+
                 <div class="flex items-center gap-3 pl-6 border-l border-slate-200">
                     <a href="<?= baseUrl('/logout') ?>" class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-teal-600 transition-all shadow-md active:scale-95">
                         <span class="material-symbols-outlined text-[16px]">logout</span>

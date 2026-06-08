@@ -1,73 +1,75 @@
 <?php if ($error): ?>
-    <div class="bg-red-50 text-red-600 p-4 rounded-2xl flex items-center gap-3 border border-red-100 shadow-sm mt-4">
-        <span class="material-symbols-outlined font-light">error</span>
+    <div class="p-8 border border-border text-muted text-sm text-center bg-surface">
+        <span class="material-symbols-outlined font-light mb-2">error</span>
         <p class="font-light text-sm"><?= htmlspecialchars($error) ?></p>
     </div>
 <?php elseif (empty($products)): ?>
-    <div class="py-24 text-center border border-dashed border-slate-200 rounded-[2rem] bg-slate-50 mt-4">
-        <span class="material-symbols-outlined text-5xl mb-4 text-slate-300 font-light">inventory_2</span>
-        <h3 class="text-2xl font-normal mb-2 text-slate-900">No items found</h3>
-        <p class="text-slate-500 font-light">We couldn't find any products matching your filters.</p>
+    <div class="py-32 text-center border border-border bg-surface">
+        <span class="material-symbols-outlined text-4xl text-muted-light mb-4">inventory_2</span>
+        <h3 class="text-2xl font-serif font-medium text-ink mb-2">No pieces found</h3>
+        <p class="text-muted font-light">We couldn't find any products matching your filters.</p>
     </div>
 <?php else: ?>
     <!-- Grid -->
-    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
         <?php foreach ($products as $product): ?>
-            <div class="group/card relative w-full aspect-[4/5] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-700 product-card reveal-fade">
-                <!-- Background Image -->
-                <img alt="<?= htmlspecialchars((string)($product['name'] ?? 'Product')) ?>"
-                     src="<?= htmlspecialchars((string)($product['image_url'] ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600')) ?>"
-                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/card:scale-110" />
-
-                <!-- Gradient Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-80 group-hover/card:opacity-100 transition-opacity duration-700" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>'"></div>
-
-                <!-- Top Badges -->
-                <div class="absolute top-6 left-6 right-6 flex justify-between items-start z-10 pointer-events-none">
-                    <span class="bg-white/20 backdrop-blur-md border border-white/10 text-white text-[10px] font-light uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                        <?= htmlspecialchars((string)($product['category'] ?? 'Collection')) ?>
-                    </span>
+            <div class="product-card group relative w-full outline-none focus-visible:ring-1 ring-champagne p-2 -m-2 reveal-fade block">
+                
+                <div class="aspect-[4/5] bg-surface relative overflow-hidden mb-6">
+                    <!-- Image -->
+                    <img alt="<?= htmlspecialchars((string)($product['name'] ?? 'Product')) ?>"
+                         src="<?= htmlspecialchars((string)($product['image_url'] ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600')) ?>"
+                         class="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 cursor-pointer"
+                         onclick="window.location.href='<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>'"
+                         loading="lazy"
+                         style="filter: grayscale(10%);" />
                     
-                    <!-- Wishlist Button -->
-                    <div class="pointer-events-auto">
-                        <form method="POST" class="m-0">
-                            <input type="hidden" name="csrf_token" value="<?= RentEase\Support\Csrf::token() ?>">
-                            <input type="hidden" name="toggle_wishlist" value="1">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                            <?php $isInWishlist = in_array((int) $product['id'], $wishlistIds); ?>
-                            <button type="submit" class="wishlist-btn h-10 w-10 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center shadow-lg transition-colors <?= $isInWishlist ? 'text-red-400' : 'text-white' ?>">
-                                <span class="material-symbols-outlined !text-[20px] <?= $isInWishlist ? 'heart-beat' : '' ?>" style="font-variation-settings: 'FILL' <?= $isInWishlist ? '1' : '0' ?>;">favorite</span>
-                            </button>
-                        </form>
+                    <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/5 transition-colors duration-700 pointer-events-none"></div>
+                    
+                    <!-- View Details Hover -->
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-canvas/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                        <span class="text-[11px] font-medium tracking-[0.2em] uppercase text-ink">View Details</span>
+                    </div>
+
+                    <!-- Top Bar with Category & Wishlist -->
+                    <div class="absolute top-4 left-4 right-4 flex justify-between items-start z-10 pointer-events-none">
+                        <span class="bg-surface/80 backdrop-blur-sm border border-border text-ink text-[9px] font-medium tracking-[0.15em] uppercase px-3 py-1.5 shadow-sm">
+                            <?= htmlspecialchars((string)($product['category'] ?? 'Collection')) ?>
+                        </span>
+
+                        <div class="pointer-events-auto">
+                            <form method="POST" class="m-0">
+                                <input type="hidden" name="csrf_token" value="<?= RentEase\Support\Csrf::token() ?>">
+                                <input type="hidden" name="toggle_wishlist" value="1">
+                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                <?php $isInWishlist = in_array((int) $product['id'], $wishlistIds); ?>
+                                <button type="submit" class="wishlist-btn h-8 w-8 bg-surface/80 hover:bg-surface backdrop-blur-sm border border-border flex items-center justify-center shadow-sm transition-colors text-ink">
+                                    <span class="material-symbols-outlined text-[16px] <?= $isInWishlist ? 'text-rose' : '' ?>" style="font-variation-settings: 'FILL' <?= $isInWishlist ? '1' : '0' ?>;">favorite</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bottom Content -->
-                <div class="absolute bottom-6 left-6 right-6 flex flex-col translate-y-4 group-hover/card:translate-y-0 transition-transform duration-500 ease-out z-10 pointer-events-none">
-                    
-                    <!-- Price Badge -->
-                    <div class="flex flex-col items-start bg-slate-900/40 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-2xl shadow-lg mb-3 self-start">
-                        <span class="text-white font-normal text-lg leading-none">$<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?></span>
-                        <span class="text-white/70 text-[9px] font-light uppercase tracking-widest mt-0.5">/month</span>
+                <div class="flex flex-col px-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-serif font-medium text-ink group-hover:text-champagne transition-colors duration-500 cursor-pointer" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>'">
+                            <?= htmlspecialchars((string)($product['name'] ?? 'Premium Piece')) ?>
+                        </h3>
                     </div>
-
-                    <h3 class="text-2xl font-normal text-white mb-2 leading-tight drop-shadow-md pr-8 pointer-events-auto cursor-pointer" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>'">
-                        <?= htmlspecialchars((string)($product['name'] ?? 'Premium Piece')) ?>
-                    </h3>
-                    
-                    <!-- Action Row -->
-                    <div class="flex items-center justify-between mt-4 overflow-hidden pointer-events-auto">
-                        <div class="flex items-center gap-2 text-teal-400 font-light text-sm tracking-wide opacity-0 -translate-x-4 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-500 delay-100 cursor-pointer" onclick="window.location.href='<?= baseUrl('/product-detail?id=' . ($product['id'] ?? 0)) ?>'">
-                            <span>View Details</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-mono text-ink font-medium">
+                            $<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?><span class="text-muted-light font-sans text-[10px]">/mo</span>
+                        </span>
                         
-                        <form method="POST" action="<?= baseUrl('/cart') ?>" class="m-0">
+                        <!-- Add to Cart (Quick Action) -->
+                        <form method="POST" action="<?= baseUrl('/cart') ?>" class="m-0 pointer-events-auto">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                             <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-teal-500 hover:border-teal-500 transition-colors duration-500 shadow-xl group/cartbtn" title="Add to Cart">
-                                <span class="material-symbols-outlined text-lg group-hover/cartbtn:scale-110 transition-transform">add_shopping_cart</span>
+                            <button type="submit" class="text-[10px] text-muted hover:text-ink font-medium tracking-[0.1em] uppercase transition-colors outline-none flex items-center gap-1">
+                                <span>Add to Bag</span>
+                                <span class="material-symbols-outlined text-[14px]">add</span>
                             </button>
                         </form>
                     </div>

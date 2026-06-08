@@ -19,7 +19,7 @@ final class ProductPipelineService
     }
 
     /**
-     * Attempts to fetch and normalize from Fake Store first. 
+     * Attempts to fetch and normalize from Fake Store first.
      * Fallbacks to DummyJSON if Fake Store fails or category data is insufficient.
      * Enhances with Unsplash image where possible.
      *
@@ -154,7 +154,7 @@ final class ProductPipelineService
 
         $cacheKey = 'unsplash_' . md5(strtolower($query));
         $cachedUnsplash = $this->getCachedFile($cacheKey, 86400); // 24-hour cache for Unsplash images
-        
+
         $imageResponse = null;
 
         if ($cachedUnsplash !== null) {

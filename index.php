@@ -118,7 +118,7 @@ foreach ($viewRoutes as $route => $file) {
 }
 
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$normalizedUri = '/' . $cleanPath; 
+$normalizedUri = '/' . $cleanPath;
 
 try {
     if (!$router->dispatch($normalizedUri, $requestMethod)) {

@@ -46,11 +46,11 @@ $activeTab = Request::get('tab', 'overview');
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
-        
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .tab-link.active { 
-            color: #14b8a6; 
+        .tab-link.active {
+            color: #14b8a6;
             background: #f0fdfa;
             border-color: #ccfbf1;
         }
@@ -61,7 +61,7 @@ $activeTab = Request::get('tab', 'overview');
     <?php require_once __DIR__ . '/partials/header.php'; ?>
 
     <main class="flex-1 w-full mx-auto max-w-7xl px-4 py-8 md:px-8">
-        
+
         <!-- Header Section -->
         <div class="bento-item mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div class="space-y-2">
@@ -239,7 +239,7 @@ $activeTab = Request::get('tab', 'overview');
                                                 <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                                                 <input type="hidden" name="action" value="update_stock" />
                                                 <input type="hidden" name="id" value="<?= $p['id'] ?>" />
-                                                <input type="number" name="total_stock" value="<?= (int)($p['total_stock'] ?? 0) ?>" 
+                                                <input type="number" name="total_stock" value="<?= (int)($p['total_stock'] ?? 0) ?>"
                                                        class="w-16 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 outline-none focus:border-teal-500">
                                                 <button type="submit" class="p-1 rounded-lg bg-slate-900 text-white hover:bg-teal-600 active:scale-90 transition-all">
                                                     <span class="material-symbols-outlined text-[16px]">done</span>
@@ -277,7 +277,7 @@ $activeTab = Request::get('tab', 'overview');
                             <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                             <input type="hidden" name="action" id="product-action" value="create_product" />
                             <input type="hidden" name="id" id="product-id" value="" />
-                            
+
                             <div class="space-y-1">
                                 <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Name</label>
                                 <input type="text" name="name" id="product-name" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
@@ -348,7 +348,7 @@ $activeTab = Request::get('tab', 'overview');
                                                 <input type="hidden" name="action" value="update_order_status" />
                                                 <input type="hidden" name="order_id" value="<?= $o['id'] ?>" />
                                                 <input type="hidden" name="shipping_status" value="<?= $o['shipping_status'] ?>" />
-                                                <select name="payment_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php 
+                                                <select name="payment_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php
                                                     echo $o['payment_status'] === 'paid' ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-orange-600 bg-orange-50 border-orange-100';
                                                 ?>">
                                                     <option value="pending" <?= $o['payment_status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -363,7 +363,7 @@ $activeTab = Request::get('tab', 'overview');
                                                 <input type="hidden" name="action" value="update_order_status" />
                                                 <input type="hidden" name="order_id" value="<?= $o['id'] ?>" />
                                                 <input type="hidden" name="payment_status" value="<?= $o['payment_status'] ?>" />
-                                                <select name="shipping_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php 
+                                                <select name="shipping_status" onchange="this.form.submit()" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-bold outline-none <?php
                                                     echo $o['shipping_status'] === 'delivered' ? 'text-emerald-600 bg-emerald-50' : ($o['shipping_status'] === 'pending' ? 'text-slate-500 bg-slate-50' : 'text-blue-600 bg-blue-50');
                                                 ?>">
                                                     <option value="pending" <?= $o['shipping_status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -419,7 +419,7 @@ $activeTab = Request::get('tab', 'overview');
                                             <input type="hidden" name="csrf_token" value="<?= e(Csrf::token()) ?>" />
                                             <input type="hidden" name="action" value="update_delivery_status" />
                                             <input type="hidden" name="delivery_id" value="<?= $d['id'] ?>" />
-                                            <select name="status" onchange="this.form.submit()" class="bg-white border border-slate-100 rounded-lg px-2 py-1 text-[10px] font-bold uppercase outline-none <?php 
+                                            <select name="status" onchange="this.form.submit()" class="bg-white border border-slate-100 rounded-lg px-2 py-1 text-[10px] font-bold uppercase outline-none <?php
                                                 echo match($d['status']) {
                                                     'delivered' => 'text-emerald-600 bg-emerald-50',
                                                     'shipped' => 'text-blue-600 bg-blue-50',
@@ -440,7 +440,7 @@ $activeTab = Request::get('tab', 'overview');
                                             <input type="hidden" name="action" value="update_delivery_status" />
                                             <input type="hidden" name="delivery_id" value="<?= $d['id'] ?>" />
                                             <input type="hidden" name="status" value="<?= $d['status'] ?>" />
-                                            <input type="text" name="agent_notes" placeholder="Add note..." value="<?= e($d['agent_notes'] ?? '') ?>" 
+                                            <input type="text" name="agent_notes" placeholder="Add note..." value="<?= e($d['agent_notes'] ?? '') ?>"
                                                    class="bg-slate-50 border border-slate-100 rounded-lg px-2 py-1 text-[10px] font-medium text-slate-600 outline-none focus:bg-white focus:border-teal-500 w-32">
                                             <button type="submit" class="p-1 rounded-lg text-slate-400 hover:text-teal-600">
                                                 <span class="material-symbols-outlined text-[16px]">save</span>
@@ -498,7 +498,7 @@ $activeTab = Request::get('tab', 'overview');
                                         <p class="text-xs font-bold text-slate-900"><?= e($r['products']['name'] ?? 'N/A') ?></p>
                                         <p class="text-[9px] text-slate-400 font-medium">Tenant: <?= e($r['profiles']['full_name'] ?? 'Guest') ?></p>
                                     </div>
-                                    <span class="px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-wider <?php 
+                                    <span class="px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-wider <?php
                                         echo match($r['status'] ?? 'active') {
                                             'active' => 'bg-emerald-50 text-emerald-600',
                                             'return_requested' => 'bg-orange-50 text-orange-600',
@@ -623,7 +623,7 @@ $activeTab = Request::get('tab', 'overview');
                 onComplete: () => {
                     activeContent.classList.remove('active');
                     targetContent.classList.add('active');
-                    gsap.fromTo(targetContent, 
+                    gsap.fromTo(targetContent,
                         { opacity: 0, y: 10 },
                         { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
                     );
@@ -638,7 +638,7 @@ $activeTab = Request::get('tab', 'overview');
             if (typeof gsap !== 'undefined') {
                 gsap.to(form, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
             }
-            
+
             document.getElementById('form-heading').innerText = 'Modify Subscription';
             document.getElementById('product-action').value = 'update_product';
             document.getElementById('product-id').value = item.id;

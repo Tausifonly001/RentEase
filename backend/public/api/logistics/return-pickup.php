@@ -48,18 +48,18 @@ if ($method === 'POST') {
     try {
         // 1. Update rental status
         $rentalService->requestReturn((int)$rentalId, $currentUser['id'], $token);
-        
+
         // 2. Schedule pickup
         $result = $logisticsService->scheduleReturnPickup(
-            (int)$rentalId, 
-            $currentUser['id'], 
-            $date, 
-            $timeSlot, 
-            $condition, 
-            $reason, 
+            (int)$rentalId,
+            $currentUser['id'],
+            $date,
+            $timeSlot,
+            $condition,
+            $reason,
             $token
         );
-        
+
         echo json_encode($result);
     } catch (\Throwable $e) {
         http_response_code(500);

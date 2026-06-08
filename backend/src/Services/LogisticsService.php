@@ -8,20 +8,20 @@ use RentEase\Support\Validator;
 
 /**
  * Service for managing delivery and pickup logistics.
- * 
+ *
  * @package RentEase\Services
  */
 final class LogisticsService extends BaseSupabaseService
 {
     /**
      * Fetch all scheduled deliveries/pickups with related order and product info.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getAllDeliveries(): array
     {
         $path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url,sku))&order=scheduled_date.asc';
-        
+
         $response = $this->request('GET', $path, $this->serviceHeaders());
 
         if ($response['status'] < 200 || $response['status'] >= 300) {
@@ -33,7 +33,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Fetch deliveries/pickups for a specific user.
-     * 
+     *
      * @param string $userId The UUID of the user.
      * @param string $jwt The user's access token.
      * @return array<int, array<string, mixed>>
@@ -44,7 +44,7 @@ final class LogisticsService extends BaseSupabaseService
 
         $path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url,sku))';
         $path .= '&user_id=eq.' . rawurlencode($userId) . '&order=scheduled_date.asc';
-        
+
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 
         if ($response['status'] < 200 || $response['status'] >= 300) {
@@ -56,7 +56,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Fetch a specific delivery/pickup by ID.
-     * 
+     *
      * @param int $deliveryId
      * @param string $jwt
      * @return array<string, mixed>
@@ -67,7 +67,7 @@ final class LogisticsService extends BaseSupabaseService
 
         $path = '/rest/v1/deliveries?select=*,orders(id,total_amount),rentals(id,status,products(name,image_url,sku))';
         $path .= '&id=eq.' . $deliveryId;
-        
+
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 
         if ($response['status'] < 200 || $response['status'] >= 300 || empty($response['body'])) {
@@ -79,7 +79,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Update the status of a specific delivery.
-     * 
+     *
      * @param int $deliveryId
      * @param string $status
      * @param string|null $notes
@@ -88,7 +88,7 @@ final class LogisticsService extends BaseSupabaseService
     public function updateStatus(int $deliveryId, string $status, ?string $notes = null): array
     {
         Validator::integer(['id' => $deliveryId], 'id');
-        
+
         $validStatuses = ['SCHEDULED', 'IN_TRANSIT', 'COMPLETED', 'FAILED'];
         if (!in_array($status, $validStatuses, true)) {
             throw new \InvalidArgumentException('Invalid delivery status.');
@@ -98,7 +98,7 @@ final class LogisticsService extends BaseSupabaseService
             'status' => $status,
             'updated_at' => date('c')
         ];
-        
+
         if ($notes !== null) {
             $payload['agent_notes'] = $notes;
         }
@@ -119,7 +119,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Reschedule a delivery/pickup.
-     * 
+     *
      * @param int $deliveryId
      * @param string $newDate
      * @param string $newTimeSlot
@@ -130,13 +130,13 @@ final class LogisticsService extends BaseSupabaseService
     public function rescheduleDelivery(int $deliveryId, string $newDate, string $newTimeSlot, ?string $reason, string $jwt): array
     {
         Validator::integer(['id' => $deliveryId], 'id');
-        
+
         $payload = [
             'scheduled_date' => $newDate,
             'time_slot' => $newTimeSlot,
             'updated_at' => date('c')
         ];
-        
+
         if ($reason !== null) {
             $payload['agent_notes'] = "Reschedule reason: " . $reason;
         }
@@ -157,7 +157,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Schedule a return pickup.
-     * 
+     *
      * @param int $rentalId
      * @param string $userId
      * @param string $date
@@ -196,7 +196,7 @@ final class LogisticsService extends BaseSupabaseService
 
     /**
      * Submit customer feedback/survey.
-     * 
+     *
      * @param array<string, mixed> $payload
      * @param string $jwt
      * @return array<string, mixed>

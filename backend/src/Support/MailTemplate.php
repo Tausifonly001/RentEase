@@ -25,7 +25,7 @@ class MailTemplate
         }
 
         $content = file_get_contents($templatePath);
-        
+
         foreach ($data as $key => $value) {
             $content = str_replace('{{ ' . $key . ' }}', (string)$value, $content);
             $content = str_replace('{{' . $key . '}}', (string)$value, $content);
@@ -36,7 +36,7 @@ class MailTemplate
 
     /**
      * Get a default wrapper for simple emails.
-     * 
+     *
      * @param string $title
      * @param string $content
      * @return string

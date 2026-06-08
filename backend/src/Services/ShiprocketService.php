@@ -54,7 +54,7 @@ final class ShiprocketService extends BaseSupabaseService
         $response = $this->http->request('POST', $url, ['Content-Type' => 'application/json'], $payload);
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body']['token'])) {
             $this->token = (string) $response['body']['token'];
-            
+
             // Persist to Supabase
             $this->request(
                 'POST',
@@ -139,7 +139,7 @@ final class ShiprocketService extends BaseSupabaseService
         $response = $this->http->request('POST', $url, $headers, $payload);
         if ($response['status'] >= 200 && $response['status'] < 300 && !empty($response['body'])) {
             $data = $response['body'];
-            
+
             if (isset($data['awb_assign_status']) && $data['awb_assign_status'] == 1) {
                 $this->request(
                     'PATCH',

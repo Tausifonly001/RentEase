@@ -11,7 +11,7 @@ final class RewardService extends BaseSupabaseService
 {
     /**
      * Get the reward points balance and tier for a user.
-     * 
+     *
      * @param string $userId
      * @return array<string, mixed>
      */
@@ -39,7 +39,7 @@ final class RewardService extends BaseSupabaseService
 
     /**
      * Get the catalog of available rewards.
-     * 
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getRewardsCatalog(): array
@@ -82,7 +82,7 @@ final class RewardService extends BaseSupabaseService
 
     /**
      * Get redemption history for a user.
-     * 
+     *
      * @param string $userId
      * @return array<int, array<string, mixed>>
      */

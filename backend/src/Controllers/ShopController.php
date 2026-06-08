@@ -41,13 +41,13 @@ class ShopController
         $minPrice = (float) Request::get('min_price', 0);
         $maxPrice = (float) Request::get('max_price', 0);
         $page = max(1, (int) Request::get('page', 1));
-        
+
         $perPage = 12;
 
         try {
             // Check if we need to search or just list
             $products = $this->productService->catalog($page, $perPage, $category);
-            
+
             // Supabase doesn't easily return total count without a specific query, mock it or fetch all
             $totalCount = count($products) === $perPage ? $page * $perPage + 1 : ($page - 1) * $perPage + count($products);
 
@@ -84,7 +84,7 @@ class ShopController
                             ?? $userData['name']
                             ?? explode('@', $userData['email'])[0]
                             ?? 'User';
-                            
+
                         // Fetch wishlist
                         $wishItems = $this->wishlistService->getItems($currentUser['id'], $token);
                         $wishlistIds = array_column($wishItems, 'product_id');

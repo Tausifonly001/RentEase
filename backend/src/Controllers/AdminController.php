@@ -108,7 +108,7 @@ class AdminController
         // Calculate stats
         $activeRentalsCount = 0;
         $totalRevenue = 0.0;
-        
+
         error_log("AdminController: Data Loaded - Products: " . count($products) . " Rentals: " . count($rentals) . " Orders: " . count($orders));
 
         foreach ($rentals as $rental) {
@@ -209,7 +209,7 @@ class AdminController
     {
         $id = Request::post('id');
         $stock = (int) Request::post('total_stock');
-        
+
         $this->http->request('PATCH', $this->config['supabase_url'] . '/rest/v1/products?id=eq.' . urlencode((string)$id), $this->serviceHeaders, ['total_stock' => $stock]);
         $this->redirectWithSuccess("Stock level updated.");
     }
@@ -218,7 +218,7 @@ class AdminController
     {
         $id = Request::post('rental_id');
         $status = Request::post('status');
-        
+
         $data = ['status' => $status];
         if ($status === 'returned' || $status === 'completed' || $status === 'closed') {
             $data['actual_return_date'] = date('Y-m-d');
@@ -234,7 +234,7 @@ class AdminController
         $paymentStatus = Request::post('payment_status');
         $shippingStatus = Request::post('shipping_status');
         $trackingUrl = Request::post('tracking_url');
-        
+
         $data = [
             'payment_status' => $paymentStatus,
             'shipping_status' => $shippingStatus,
@@ -250,7 +250,7 @@ class AdminController
         $id = Request::post('delivery_id');
         $status = Request::post('status');
         $notes = Request::post('agent_notes');
-        
+
         $data = [
             'status' => $status,
             'agent_notes' => $notes ?: null,
@@ -266,7 +266,7 @@ class AdminController
         $id = Request::post('request_id');
         $status = Request::post('status');
         $notes = Request::post('notes');
-        
+
         $data = [
             'status' => $status,
             'notes' => $notes ?: null,

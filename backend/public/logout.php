@@ -9,8 +9,8 @@ $authService = new AuthService($config);
 $authService->clearAuthCookie();
 
 if (session_status() === PHP_SESSION_ACTIVE) {
-    $_SESSION = [];
-    session_destroy();
+ $_SESSION = [];
+ session_destroy();
 }
 
 header('Location: ' . baseUrl('/'));

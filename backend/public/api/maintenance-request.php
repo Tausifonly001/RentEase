@@ -37,7 +37,7 @@ try {
     // Require authenticated user
     $auth = AuthMiddleware::requireUser($config);
     $jwt = $auth['token'];
-    
+
     // Add user_id from auth to prevent forging requests for other users
     $payload['user_id'] = $auth['user']['id'] ?? '';
 

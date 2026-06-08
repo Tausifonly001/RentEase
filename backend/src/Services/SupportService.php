@@ -6,14 +6,14 @@ namespace RentEase\Services;
 
 /**
  * SupportService handles support tickets and contact requests.
- * 
+ *
  * @package RentEase\Services
  */
 final class SupportService extends BaseSupabaseService
 {
     /**
      * Create a new support ticket.
-     * 
+     *
      * @param array<string, mixed> $payload
      * @param string $jwt
      * @return array<string, mixed>
@@ -36,7 +36,7 @@ final class SupportService extends BaseSupabaseService
 
     /**
      * Get tickets for a specific user.
-     * 
+     *
      * @param string $userId
      * @param string $jwt
      * @return array<int, array<string, mixed>>

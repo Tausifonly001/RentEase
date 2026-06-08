@@ -29,7 +29,7 @@ final class PHPMailerService implements EmailInterface
             $mail->Password   = (string)($this->config['smtp_pass'] ?? '');
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = (int)($this->config['smtp_port'] ?? 587);
-            
+
             // Timeout settings
             $mail->Timeout = 10;
 

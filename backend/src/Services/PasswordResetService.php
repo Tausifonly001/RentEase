@@ -63,7 +63,7 @@ final class PasswordResetService extends BaseSupabaseService
         // 5. Send email via Resend (Auth transactional)
         $resetLink = rtrim((string) $this->config['app_url'], '/') . '/reset-password?token=' . rawurlencode($rawToken);
         $subject = "RentEase - Password Reset Request";
-        
+
         $body = MailTemplate::basic(
             "Reset Your Password",
             "<p>We received a request to reset your password for your RentEase account. If you did not request this, you can safely ignore this email.</p>

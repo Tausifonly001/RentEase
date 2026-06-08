@@ -11,7 +11,7 @@ final class ReferralService extends BaseSupabaseService
 {
     /**
      * Get referral statistics for a user.
-     * 
+     *
      * @param string $userId
      * @return array<string, mixed>
      */
@@ -39,7 +39,7 @@ final class ReferralService extends BaseSupabaseService
 
     /**
      * Generate a fallback referral code if one doesn't exist.
-     * 
+     *
      * @param string $userId
      * @return string
      */
@@ -50,7 +50,7 @@ final class ReferralService extends BaseSupabaseService
 
     /**
      * Get the referral history for a user.
-     * 
+     *
      * @param string $userId
      * @return array<int, array<string, mixed>>
      */

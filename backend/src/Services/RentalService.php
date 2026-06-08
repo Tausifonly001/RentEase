@@ -176,11 +176,11 @@ final class RentalService extends BaseSupabaseService
                 'requested_return_date' => date('Y-m-d')
             ]
         );
-        
+
         if ($response['status'] < 200 || $response['status'] >= 300) {
             throw new \RuntimeException('Return request failed');
         }
-        
+
         return ['success' => true, 'message' => 'Return requested successfully'];
     }
 
@@ -198,16 +198,16 @@ final class RentalService extends BaseSupabaseService
         // First get the rental to find its end_date
         $rentalUrl = '/rest/v1/rentals?id=eq.' . $rentalId . '&user_id=eq.' . urlencode($userId) . '&select=*';
         $getRental = $this->request('GET', $rentalUrl, $this->userHeaders($jwt));
-        
+
         if ($getRental['status'] < 200 || $getRental['status'] >= 300 || empty($getRental['body'])) {
             throw new \RuntimeException("Rental not found or access denied.");
         }
-        
+
         $rental = $getRental['body'][0] ?? $getRental['body'];
         $currentEndDate = new \DateTime($rental['end_date']);
         $newEndDate = clone $currentEndDate;
         $newEndDate->modify('+' . $extraDays . ' days');
-        
+
         // Update rental end_date
         $updateResponse = $this->request(
             'PATCH',
@@ -219,11 +219,11 @@ final class RentalService extends BaseSupabaseService
                 'last_extended_at' => date('c')
             ]
         );
-        
+
         if ($updateResponse['status'] < 200 || $updateResponse['status'] >= 300) {
             throw new \RuntimeException("Failed to extend lease.");
         }
-        
+
         // Audit extension
         $auditPayload = [
             'rental_id' => $rentalId,
@@ -231,14 +231,14 @@ final class RentalService extends BaseSupabaseService
             'extension_days' => $extraDays,
             'new_end_date' => $newEndDate->format('Y-m-d')
         ];
-        
+
         $this->request(
             'POST',
             '/rest/v1/rental_extensions',
             $this->userHeaders($jwt),
             $auditPayload
         );
-        
+
         return ['success' => true, 'message' => 'Lease extended successfully.'];
     }
 

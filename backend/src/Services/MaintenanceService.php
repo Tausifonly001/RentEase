@@ -8,14 +8,14 @@ use RentEase\Support\Validator;
 
 /**
  * MaintenanceService handles creating and retrieving maintenance requests.
- * 
+ *
  * @package RentEase\Services
  */
 final class MaintenanceService extends BaseSupabaseService
 {
     /**
      * Create a new maintenance request.
-     * 
+     *
      * @param array<string, mixed> $payload
      * @param string $jwt The user's access token.
      * @return array<string, mixed>
@@ -47,7 +47,7 @@ final class MaintenanceService extends BaseSupabaseService
 
     /**
      * Get maintenance requests for a specific user.
-     * 
+     *
      * @param string $userId The UUID of the user.
      * @param string $jwt The user's access token.
      * @return array<int, array<string, mixed>>
@@ -58,7 +58,7 @@ final class MaintenanceService extends BaseSupabaseService
 
         $path = '/rest/v1/maintenance_requests?select=*,rentals(products(name,image_url))';
         $path .= '&user_id=eq.' . rawurlencode($userId) . '&order=created_at.desc';
-        
+
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 
         if ($response['status'] < 200 || $response['status'] >= 300) {
@@ -67,17 +67,17 @@ final class MaintenanceService extends BaseSupabaseService
 
         return is_array($response['body']) ? $response['body'] : [];
     }
-    
+
     /**
      * Get all maintenance requests (Admin role required or service role).
-     * 
+     *
      * @param string $jwt The user's access token (must have admin permissions) or service role.
      * @return array<int, array<string, mixed>>
      */
     public function getAllRequests(string $jwt): array
     {
         $path = '/rest/v1/maintenance_requests?select=*,rentals(id,start_date,end_date,products(name)),profiles(full_name,email)&order=created_at.desc';
-        
+
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 
         if ($response['status'] < 200 || $response['status'] >= 300) {

@@ -40,7 +40,7 @@ try {
     ];
 
     $res = $http->request('PUT', $config['supabase_url'] . '/auth/v1/user', $headers, $payload);
-    
+
     if ($res['status'] >= 200 && $res['status'] < 300) {
         // Also update profiles table
         $profilePayload = [

@@ -61,7 +61,7 @@ class MailService
 
     /**
      * Generic send method for flexibility.
-     * 
+     *
      * @param string $driver
      * @param string $to
      * @param string $subject

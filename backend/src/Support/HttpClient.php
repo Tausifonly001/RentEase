@@ -63,7 +63,7 @@ final class HttpClient
 
     /**
      * Perform multiple HTTP requests concurrently.
-     * 
+     *
      * @param array<string, array{method: string, url: string, headers?: array<string, string>, jsonBody?: array<string, mixed>|null}> $requests
      * @return array<string, array{status: int, body: array<string, mixed>|string}>
      */
@@ -117,7 +117,7 @@ final class HttpClient
         foreach ($curlHandles as $key => $ch) {
             $rawBody = curl_multi_getcontent($ch);
             $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-            
+
             $decoded = json_decode((string)$rawBody, true);
             $body = is_array($decoded) ? $decoded : ['raw' => $rawBody];
 
@@ -125,7 +125,7 @@ final class HttpClient
                 'status' => $status,
                 'body' => $body,
             ];
-            
+
             curl_multi_remove_handle($multiHandle, $ch);
             curl_close($ch);
         }

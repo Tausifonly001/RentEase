@@ -23,7 +23,7 @@ foreach ($iterator as $file) {
     // 2. Adjust small text to use font-light
     $content = preg_replace_callback('/class="([^"]*)"/', function ($matches) {
         $classes = $matches[1];
-        
+
         // If the element has a small text class
         if (preg_match('/\btext-(xs|sm|\[\d+px\])\b/', $classes)) {
             // If it now has font-normal (from step 1 or previously), change to font-light
@@ -34,7 +34,7 @@ foreach ($iterator as $file) {
                 $classes .= ' font-light';
             }
         }
-        
+
         return 'class="' . $classes . '"';
     }, $content);
 

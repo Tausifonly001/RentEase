@@ -1,0 +1,10 @@
+parameters:
+    level: 6
+    paths:
+        - index.php
+        - backend/
+    excludePaths:
+        - backend/storage/
+        - vendor/
+        - node_modules/
+    tmpDir: /tmp/phpstan

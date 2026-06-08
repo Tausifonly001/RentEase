@@ -2,6 +2,7 @@
     "name": "miita/rentease",
     "description": "Premium furniture and appliances rental platform.",
     "type": "project",
+    "license": "MIT",
     "require": {
         "stripe/stripe-php": "16.0",
         "phpmailer/phpmailer": "6.9",

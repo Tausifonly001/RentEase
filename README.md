@@ -171,4 +171,4 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ---
 
-**Built with ❤️ by [Tausif Ali](https://github.com/Tausifonly001)**
+**Built with ❤️ by [Md Tausif Ali Ansari](https://github.com/Tausifonly001)**

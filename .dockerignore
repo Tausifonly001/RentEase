@@ -18,6 +18,7 @@ vendor/
 *.tmp
 *.map
 dist/
+!dist/output.css
 build/
 scratch/
 __pycache__/

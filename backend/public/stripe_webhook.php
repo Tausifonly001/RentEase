@@ -12,7 +12,7 @@ declare(strict_types=1);
 use RentEase\Services\PaymentService;
 use RentEase\Services\RentalService;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $paymentService = new PaymentService($config);
 $rentalService = new RentalService($config);

@@ -11,7 +11,7 @@
  * Note: Requires direct PostgreSQL connection details in your .env file!
  */
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 echo "🚀 RentEase Auto-Migration Script\n";
 echo str_repeat('-', 40) . "\n";

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 use RentEase\Support\HttpClient;
 
@@ -371,7 +371,7 @@ foreach ($chunkedProducts as $chunk) {
         $totalInserted += count($chunk);
     } else {
         echo "Failed to seed chunk. Status: " . $insertResponse['status'] . "\n";
-        print_r($insertResponse['body']);
+        echo json_encode($insertResponse['body'], JSON_PRETTY_PRINT) . "\n";
     }
 }
 

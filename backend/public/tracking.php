@@ -23,13 +23,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $currentUser = null;
 $token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- }
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
@@ -214,7 +215,7 @@ require_once __DIR__ . '/partials/header.php';
  Live Support
  </a>
  <?php if ($status !== 'COMPLETED'): ?>
- <a href="reschedule.php?id=<?= $activeDelivery['id'] ?>" class="w-full bg-surface border-2 text-muted font-normal py-4 flex items-center justify-center gap-2 hover:bg-canvas transition-all" style="border-color: rgba(231,229,228,0.6); border-radius: 0.75rem;">
+  <a href="<?= baseUrl('/reschedule') ?>?id=<?= $activeDelivery['id'] ?>" class="w-full bg-surface border-2 text-muted font-normal py-4 flex items-center justify-center gap-2 hover:bg-canvas transition-all" style="border-color: rgba(231,229,228,0.6); border-radius: 0.75rem;">
  <span class="material-symbols-outlined text-xl">event_repeat</span>
  Reschedule
  </a>
@@ -223,54 +224,52 @@ require_once __DIR__ . '/partials/header.php';
  </div>
  </div>
  </div>
- <?php endif; ?>
+<?php endif; ?>
 </main>
 
+<?php if ($activeDelivery): ?>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const deliveryId = <?= $activeDelivery['id'] ?? 'null' ?>;
+const deliveryId = <?= $activeDelivery['id'] ?>;
 const activeOrderId = '<?= $activeDelivery['order_id'] ?? '' ?>';
 const supabaseUrl = '<?= $config['supabase_url'] ?? '' ?>';
 const supabaseKey = '<?= $config['supabase_anon_key'] ?? '' ?>';
 
 if (supabaseUrl && supabaseKey) {
- window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 }
 window.activeOrderId = activeOrderId;
-// For simulation, setting a fixed destination. In a real app, load this from order.
 window.destinationCoords = { lat: 40.7100, lng: -74.0000 };
 
 async function pollStatus() {
- if (!deliveryId) return;
- try {
- const response = await fetch(`api/logistics/status.php?id=${deliveryId}`);
- const data = await response.json();
- if (data.status && data.status !== '<?= $status ?>') {
- window.location.reload();
- }
- } catch (e) {
- console.error('Polling failed', e);
- }
+    if (!deliveryId) return;
+    try {
+        const response = await fetch('<?= baseUrl('/api/logistics/status') ?>?id=' + deliveryId);
+        const data = await response.json();
+        if (data.status && data.status !== '<?= $status ?>') {
+            window.location.reload();
+        }
+    } catch (e) {
+        console.error('Polling failed', e);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
- gsap.from('.reveal-element', {
- opacity: 0,
- y: 20,
- duration: 0.8,
- stagger: 0.1,
- ease: 'power3.out'
- });
+    gsap.from('.reveal-element', {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out'
+    });
 
- // Poll every 30 seconds for general status changes, but GPS is realtime
- setInterval(pollStatus, 30000);
+    setInterval(pollStatus, 30000);
 });
 </script>
 
-<!-- Load tracking JS -->
 <script src="<?= baseUrl('/js/tracking.js') ?>"></script>
-<!-- Load Google Maps API (Deferred to maintain performance) -->
-<?php $mapsKey = getenv('GOOGLE_MAPS_API_KEY') ?: ''; ?>
+<?php $mapsKey = $config['google_maps_api_key'] ?? ''; ?>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= htmlspecialchars($mapsKey) ?>&callback=initMap"></script>
+<?php endif; ?>
 
 <?php require_once __DIR__ . '/partials/footer.php'; ?>

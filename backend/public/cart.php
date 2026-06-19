@@ -6,7 +6,7 @@ use RentEase\Services\RentalService;
 use RentEase\Services\AuthService;
 use RentEase\Support\Csrf;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $productService = new ProductService($config);
@@ -25,17 +25,6 @@ try {
 } catch (Throwable $ignored) {}
 
 $cart = $_SESSION['cart'] ?? [];
-
-$subtotal = 0.0;
-$deposits = 0.0;
-$delivery = 29.0;
-foreach ($cart as $id => $item) {
- $monthlyPrice = (float)($item['monthly_price'] ?? ($item['rental_price'] ?? 0));
- $subtotal += $monthlyPrice;
- $deposits += $monthlyPrice * 0.5;
-}
-$tax = $subtotal * 0.08;
-$total = $subtotal + $deposits + $delivery + $tax;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
  $action = $_POST['action'];
@@ -61,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
  if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
  $error = 'Session expired. Please refresh.';
  } elseif (!$currentUser) {
- $error = 'Please login/sign up first.';
+ header('Location: ' . baseUrl('/login?redirect=cart'));
+ exit;
  } elseif (empty($cart)) {
  $error = 'Cart is empty.';
  } else {
@@ -85,6 +75,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
  }
  }
 }
+
+$subtotal = 0.0;
+$deposits = 0.0;
+$delivery = 29.0;
+foreach ($cart as $id => $item) {
+ $monthlyPrice = (float)($item['monthly_price'] ?? ($item['rental_price'] ?? 0));
+ $subtotal += $monthlyPrice;
+ $deposits += $monthlyPrice * 0.5;
+}
+$tax = $subtotal * 0.08;
+$total = $subtotal + $deposits + $delivery + $tax;
 
 $cartCount = count($cart);
 $dbItems = [];
@@ -188,32 +189,32 @@ require __DIR__ . '/partials/header.php';
  </div>
  <div>
  <label class="form-label">Time Slot</label>
- <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
- <label class="cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
- <input type="radio" name="delivery_time" value="09:00 - 12:00" class="hidden" required>
- <div class="text-muted has-[:checked]:text-champagne-dark">
- <span class="material-symbols-outlined text-2xl mb-1">light_mode</span>
- <p class="text-sm font-light">Morning</p>
- <p class="text-[10px] text-muted-light uppercase tracking-widest">9AM - 12PM</p>
- </div>
- </label>
- <label class="cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
- <input type="radio" name="delivery_time" value="12:00 - 15:00" class="hidden" required>
- <div class="text-muted has-[:checked]:text-champagne-dark">
- <span class="material-symbols-outlined text-2xl mb-1">wb_sunny</span>
- <p class="text-sm font-light">Afternoon</p>
- <p class="text-[10px] text-muted-light uppercase tracking-widest">12PM - 3PM</p>
- </div>
- </label>
- <label class="cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
- <input type="radio" name="delivery_time" value="15:00 - 18:00" class="hidden" required>
- <div class="text-muted has-[:checked]:text-champagne-dark">
- <span class="material-symbols-outlined text-2xl mb-1">routine</span>
- <p class="text-sm font-light">Evening</p>
- <p class="text-[10px] text-muted-light uppercase tracking-widest">3PM - 6PM</p>
- </div>
- </label>
- </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <label class="relative cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
+  <input type="radio" name="delivery_time" value="09:00 - 12:00" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+  <div class="text-muted has-[:checked]:text-champagne-dark">
+  <span class="material-symbols-outlined text-2xl mb-1">light_mode</span>
+  <p class="text-sm font-light">Morning</p>
+  <p class="text-[10px] text-muted-light uppercase tracking-widest">9AM - 12PM</p>
+  </div>
+  </label>
+  <label class="relative cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
+  <input type="radio" name="delivery_time" value="12:00 - 15:00" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+  <div class="text-muted has-[:checked]:text-champagne-dark">
+  <span class="material-symbols-outlined text-2xl mb-1">wb_sunny</span>
+  <p class="text-sm font-light">Afternoon</p>
+  <p class="text-[10px] text-muted-light uppercase tracking-widest">12PM - 3PM</p>
+  </div>
+  </label>
+  <label class="relative cursor-pointer border p-4 text-center transition-all hover:border-champagne/30 has-[:checked]:border-champagne has-[:checked]:bg-champagne/5" style="border-color: rgba(231,229,228,0.6);">
+  <input type="radio" name="delivery_time" value="15:00 - 18:00" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+  <div class="text-muted has-[:checked]:text-champagne-dark">
+  <span class="material-symbols-outlined text-2xl mb-1">routine</span>
+  <p class="text-sm font-light">Evening</p>
+  <p class="text-[10px] text-muted-light uppercase tracking-widest">3PM - 6PM</p>
+  </div>
+  </label>
+  </div>
  </div>
  </div>
  </div>

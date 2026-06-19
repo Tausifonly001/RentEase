@@ -5,7 +5,7 @@ use RentEase\Services\ProductService;
 use RentEase\Services\AuthService;
 use RentEase\Support\Csrf;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $productService = new ProductService($config);
 $furniture = [];

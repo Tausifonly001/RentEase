@@ -8,19 +8,11 @@
 
 window.OneSignal = window.OneSignal || [];
 
-console.log('[OneSignal] Script loaded, current config:', window.RENTEASE_CONFIG);
-
 OneSignal.push(function() {
-    console.log('[OneSignal] SDK Push callback triggered');
-    
     if (!window.RENTEASE_CONFIG || !window.RENTEASE_CONFIG.onesignal_app_id) {
-        console.error('[OneSignal] Missing App ID or RENTEASE_CONFIG');
         return;
     }
 
-    // 1. Initialize with configuration
-    console.log('[OneSignal] Initializing with App ID:', window.RENTEASE_CONFIG.onesignal_app_id);
-    
     OneSignal.init({
         appId: window.RENTEASE_CONFIG.onesignal_app_id,
         safari_web_id: window.RENTEASE_CONFIG.onesignal_safari_web_id,
@@ -43,26 +35,21 @@ OneSignal.push(function() {
                 'dialog.button.secondary.foreground': '#006a65'
             }
         },
-        allowLocalhostAsSecureOrigin: true, // For XAMPP development
+        allowLocalhostAsSecureOrigin: true,
     });
 
-    // 2. Identify User if logged in
     const userId = window.RENTEASE_CONFIG.current_user_id;
     if (userId) {
-        console.log('[OneSignal] Identifying user:', userId);
         OneSignal.login(userId);
     } else {
-        console.log('[OneSignal] Guest user session');
         OneSignal.logout();
     }
 
-    // 3. Subscription handling
     OneSignal.on('subscriptionChange', function(isSubscribed) {
-        console.log('[OneSignal] The user\'s subscription state is now:', isSubscribed);
+        // subscription state changed
     });
 
-    // 4. Notification handling (Foreground)
     OneSignal.on('notificationDisplay', function(event) {
-        console.warn('[OneSignal] Notification displayed:', event);
+        // notification displayed
     });
 });

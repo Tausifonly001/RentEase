@@ -27,11 +27,11 @@ if (!$currentUser) {
  <p class="text-xs text-muted font-light">Manage your account & billing</p>
  </div>
  <nav class="space-y-1">
- <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="settings.php">
+  <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="<?= baseUrl('/settings') ?>">
  <span class="material-symbols-outlined">person</span>
  <span class="text-sm font-light">Profile Info</span>
  </a>
- <a class="bg-champagne/10 text-champagne-dark font-normal rounded-lg px-4 py-3 flex items-center gap-3 border-l-4 border-champagne-dark transition-all" href="payment-methods.php">
+  <a class="bg-champagne/10 text-champagne-dark font-normal rounded-lg px-4 py-3 flex items-center gap-3 border-l-4 border-champagne-dark transition-all" href="<?= baseUrl('/payment-methods') ?>">
  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
  <span class="text-sm font-light">Payment Methods</span>
  </a>
@@ -39,14 +39,14 @@ if (!$currentUser) {
  <span class="material-symbols-outlined">receipt_long</span>
  <span class="text-sm font-light">Rental History</span>
  </a>
- <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="coming-soon.php">
- <span class="material-symbols-outlined">notifications</span>
- <span class="text-sm font-light">Notifications</span>
- </a>
- <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="coming-soon.php">
- <span class="material-symbols-outlined">security</span>
- <span class="text-sm font-light">Security</span>
- </a>
+  <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="<?= baseUrl('/coming-soon') ?>">
+  <span class="material-symbols-outlined">notifications</span>
+  <span class="text-sm font-light">Notifications</span>
+  </a>
+  <a class="text-ink px-4 py-3 flex items-center gap-3 hover:bg-canvas rounded-lg transition-all" href="<?= baseUrl('/coming-soon') ?>">
+  <span class="material-symbols-outlined">security</span>
+  <span class="text-sm font-light">Security</span>
+  </a>
  </nav>
  </aside>
 

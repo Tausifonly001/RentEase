@@ -6,7 +6,7 @@ use RentEase\Services\PasswordResetService;
 use RentEase\Services\MailService;
 use RentEase\Support\Csrf;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $mailService = new MailService($config);
@@ -54,22 +54,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
  <script src="https://cdn.tailwindcss.com"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined" rel="stylesheet">
- <script>
- tailwind.config = {
- theme: {
- extend: {
- colors: {
- primary: '#0F172A',
- secondary: '#3B82F6',
- accent: '#F59E0B'
- },
- fontFamily: {
- sans: ['Inter', 'sans-serif']
- }
- }
- }
- }
- </script>
+  <script>
+  tailwind.config = {
+  theme: {
+  extend: {
+  colors: {
+  primary: '#0F172A',
+  secondary: '#3B82F6',
+  accent: '#F59E0B',
+  ink: '#18181B',
+  'ink-soft': '#27272A',
+  muted: '#6B6561',
+  'muted-light': '#8C8885',
+  canvas: '#FAFAF9',
+  surface: '#FFFFFF',
+  champagne: '#C5A98B',
+  'champagne-light': '#D4C5B0',
+  'champagne-dark': '#A8886E',
+  border: 'rgba(231, 229, 228, 0.6)',
+  },
+  fontFamily: {
+  sans: ['Inter', 'sans-serif']
+  }
+  }
+  }
+  }
+  </script>
  <style>
  .glass {
  background: rgba(255, 255, 255, 0.95);
@@ -99,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
  <span class="material-symbols-outlined text-4xl text-red-500 mb-4">cancel</span>
  <h3 class="text-red-900 font-normal mb-2">Invalid Link</h3>
  <p class="text-red-700 text-sm mb-6 font-light"><?= htmlspecialchars($error) ?></p>
- <a href="forgot-password.php" class="inline-block py-3 px-6 bg-red-600 text-white font-normal rounded-xl hover:bg-red-700 transition-colors">
+  <a href="<?= baseUrl('/forgot-password') ?>" class="inline-block py-3 px-6 bg-red-600 text-white font-normal rounded-xl hover:bg-red-700 transition-colors">
  Request New Link
  </a>
  </div>
@@ -120,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $email) {
  </div>
  <?php endif; ?>
 
- <form action="reset-password.php" method="POST" class="space-y-6">
+  <form action="<?= baseUrl('/reset-password') ?>" method="POST" class="space-y-6">
  <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
  <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
 

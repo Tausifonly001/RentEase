@@ -15,7 +15,7 @@ return [
         FILTER_VALIDATE_BOOLEAN
     ),
     'cache_dir' => __DIR__ . '/../storage/cache',
-    'cookie_secure' => strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') === false,
+    'cookie_secure' => isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'localhost') === false,
     'cookie_samesite' => 'Lax',
     'stripe_secret_key' => (string) (getenv('STRIPE_SECRET_KEY') ?: getenv('STRIPE_SECRET')),
     'stripe_webhook_secret' => (string) getenv('STRIPE_WEBHOOK_SECRET'),
@@ -28,6 +28,11 @@ return [
     'onesignal_app_id' => (string) getenv('ONESIGNAL_APP_ID'),
     'onesignal_rest_api_key' => (string) getenv('ONESIGNAL_REST_API_KEY'),
     'onesignal_safari_web_id' => (string) getenv('ONESIGNAL_SAFARI_WEB_ID'),
+    'google_maps_api_key' => (string) getenv('GOOGLE_MAPS_API_KEY'),
+    'groq_api_key' => (string) getenv('GROQ_API_KEY'),
+    'unsplash_access_key' => (string) getenv('UNSPLASH_ACCESS_KEY'),
+    'shiprocket_email' => (string) getenv('SHIPROCKET_EMAIL'),
+    'shiprocket_password' => (string) getenv('SHIPROCKET_PASSWORD'),
     'enabled_oauth_providers' => [
         'google' => ['name' => 'Google', 'icon' => 'https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png'],
         'github' => ['name' => 'GitHub', 'icon' => 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'],

@@ -2,9 +2,8 @@
 declare(strict_types=1);
 
 use RentEase\Middleware\ApiSecurity;
-use RentEase\Middleware\AuthMiddleware;
 
-require __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json');
 ApiSecurity::enforce($config);
@@ -40,7 +39,7 @@ if (mb_strlen($message) > 2000) {
     exit;
 }
 
-$apiKey = getenv('GROQ_API_KEY') ?: '';
+$apiKey = $config['groq_api_key'] ?? '';
 
 if ($apiKey === '') {
     sleep(1);

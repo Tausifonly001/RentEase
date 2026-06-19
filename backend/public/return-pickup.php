@@ -22,13 +22,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $currentUser = null;
 $token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- }
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
@@ -94,7 +95,7 @@ require_once __DIR__ . '/partials/header.php';
  <div class="col-span-2 py-12 text-center bg-surface rounded-2xl border-2 border-dashed border-border">
  <span class="material-symbols-outlined text-4xl text-muted-light mb-4">inventory_2</span>
  <p class="text-muted font-normal">No active rentals to return.</p>
- <a href="browse.php" class="text-champagne-dark font-normal mt-2 inline-block hover:underline">Browse Catalog</a>
+  <a href="<?= baseUrl('/browse') ?>" class="text-champagne-dark font-normal mt-2 inline-block hover:underline">Browse Catalog</a>
  </div>
  <?php else: ?>
  <?php foreach ($activeRentals as $rental):
@@ -410,7 +411,7 @@ async function submitReturn() {
  try {
  // We handle one item at a time for now to keep it simple with existing API
  // or loop through if needed. Let's do the first one selected for simplicity.
- const response = await fetch('api/logistics/return-pickup.php', {
+  const response = await fetch('<?= baseUrl('/api/logistics/return-pickup') ?>', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({

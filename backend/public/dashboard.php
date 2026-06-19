@@ -21,17 +21,18 @@ if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 $currentUser = null;
 $token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- $currentUser['name'] = $userData['user_metadata']['full_name']
- ?? $userData['name']
- ?? explode('@', $userData['email'])[0]
- ?? 'User';
- }
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+		$currentUser['name'] = $userData['user_metadata']['full_name']
+		?? $userData['name']
+		?? explode('@', $userData['email'])[0]
+		?? 'User';
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {

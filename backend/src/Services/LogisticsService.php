@@ -20,7 +20,7 @@ final class LogisticsService extends BaseSupabaseService
      */
     public function getAllDeliveries(): array
     {
-        $path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url,sku))&order=scheduled_date.asc';
+        $path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url))&order=scheduled_date.asc';
 
         $response = $this->request('GET', $path, $this->serviceHeaders());
 
@@ -42,8 +42,8 @@ final class LogisticsService extends BaseSupabaseService
     {
         Validator::uuid(['user_id' => $userId], 'user_id');
 
-        $path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url,sku))';
-        $path .= '&user_id=eq.' . rawurlencode($userId) . '&order=scheduled_date.asc';
+$path = '/rest/v1/deliveries?select=*,orders(total_amount,payment_status),rentals(id,status,products(name,image_url))';
+$path .= '&user_id=eq.' . rawurlencode($userId) . '&order=scheduled_date.asc';
 
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 
@@ -65,8 +65,8 @@ final class LogisticsService extends BaseSupabaseService
     {
         Validator::integer(['id' => $deliveryId], 'id');
 
-        $path = '/rest/v1/deliveries?select=*,orders(id,total_amount),rentals(id,status,products(name,image_url,sku))';
-        $path .= '&id=eq.' . $deliveryId;
+$path = '/rest/v1/deliveries?select=*,orders(id,total_amount),rentals(id,status,products(name,image_url))';
+$path .= '&id=eq.' . $deliveryId;
 
         $response = $this->request('GET', $path, $this->userHeaders($jwt));
 

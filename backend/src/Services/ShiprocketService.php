@@ -6,7 +6,6 @@ namespace RentEase\Services;
 
 use RentEase\Support\HttpClient;
 use RuntimeException;
-use PDO;
 
 final class ShiprocketService extends BaseSupabaseService
 {
@@ -17,8 +16,8 @@ final class ShiprocketService extends BaseSupabaseService
     public function __construct(array $config, ?HttpClient $http = null)
     {
         parent::__construct($config, $http);
-        $this->email = getenv('SHIPROCKET_EMAIL');
-        $this->password = getenv('SHIPROCKET_PASSWORD');
+        $this->email = $config['shiprocket_email'] ?? '';
+        $this->password = $config['shiprocket_password'] ?? '';
     }
 
     /**

@@ -18,6 +18,9 @@ try {
     $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
     if ($token) {
         $currentUser = $authService->validateToken($token);
+        if ($currentUser) {
+            $token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+        }
     }
 } catch (\Throwable $ignored) {}
 

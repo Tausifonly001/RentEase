@@ -5,7 +5,7 @@ declare(strict_types=1);
 use RentEase\Services\AuthService;
 use RentEase\Middleware\ApiSecurity;
 
-require __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
 ApiSecurity::enforce($config);

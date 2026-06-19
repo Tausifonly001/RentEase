@@ -22,13 +22,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $currentUser = null;
 $token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- }
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
@@ -390,7 +391,7 @@ async function submitReschedule() {
  btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Processing...';
 
  try {
- const response = await fetch('api/logistics/reschedule.php', {
+  const response = await fetch('<?= baseUrl('/api/logistics/reschedule') ?>', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({

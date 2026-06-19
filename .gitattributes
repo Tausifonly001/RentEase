@@ -1,0 +1,21 @@
+# Normalize line endings to LF
+* text=auto
+
+# PHP files
+*.php text eol=lf
+
+# JS / CSS / HTML
+*.js text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+
+# Config
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
  const comments = document.getElementById('comments').value;
 
  try {
- const response = await fetch('api/logistics/survey.php', {
+  const response = await fetch('<?= baseUrl('/api/logistics/survey') ?>', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({

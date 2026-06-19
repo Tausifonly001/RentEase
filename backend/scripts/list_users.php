@@ -1,5 +1,5 @@
 <?php
-require 'backend/bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 $http = new RentEase\Support\HttpClient();
 $serviceHeaders = [
     'apikey' => (string) $config['supabase_service_role_key'],
@@ -14,5 +14,5 @@ if (isset($res['body']['users'])) {
         echo "- " . $u['id'] . " (" . $u['email'] . ")\n";
     }
 } else {
-    print_r($res['body']);
+    echo json_encode($res['body'], JSON_PRETTY_PRINT) . "\n";
 }

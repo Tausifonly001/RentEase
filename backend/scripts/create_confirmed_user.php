@@ -1,5 +1,5 @@
 <?php
-require 'backend/bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 $http = new RentEase\Support\HttpClient();
 $serviceHeaders = [
     'apikey' => (string) $config['supabase_service_role_key'],
@@ -29,4 +29,4 @@ $payload = [
 
 $res = $http->request('POST', $config['supabase_url'] . '/auth/v1/admin/users', $serviceHeaders, $payload);
 echo "Creation Status: " . $res['status'] . "\n";
-print_r($res['body']);
+echo json_encode($res['body'], JSON_PRETTY_PRINT) . "\n";

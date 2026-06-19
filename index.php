@@ -106,13 +106,15 @@ $viewRoutes = [
     'success' => 'success.php',
     'agent-tracking' => 'agent-tracking.php',
     'auth-callback' => 'auth-callback.php',
+    'forgot-password' => 'forgot-password.php',
+    'reset-password' => 'reset-password.php',
 ];
 
 foreach ($viewRoutes as $route => $file) {
-    $router->get('/' . $route, function() use ($file, $config) {
+    $router->get('/' . $route, function() use ($config, $file) {
         require __DIR__ . '/backend/public/' . $file;
     });
-    $router->post('/' . $route, function() use ($file, $config) {
+    $router->post('/' . $route, function() use ($config, $file) {
         require __DIR__ . '/backend/public/' . $file;
     });
 }

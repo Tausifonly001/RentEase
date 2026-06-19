@@ -5,7 +5,7 @@ use RentEase\Services\AuthService;
 use RentEase\Support\Csrf;
 use RentEase\Support\Session;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $csrfToken = Csrf::token();
@@ -25,10 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  $loginResult = $authService->login(['email' => $email, 'password' => $password]);
  $token = (string) ($loginResult['access_token'] ?? '');
  if ($token !== '') {
- $rememberMe = !empty($_POST['remember']);
- $authService->persistSession($loginResult, $rememberMe);
- header('Location: ' . baseUrl('/'));
- exit;
+  $rememberMe = !empty($_POST['remember']);
+  $authService->persistSession($loginResult, $rememberMe);
+  $redirect = $_GET['redirect'] ?? '';
+  if ($redirect && !str_contains($redirect, '..') && !str_contains($redirect, '//')) {
+   header('Location: ' . baseUrl('/' . ltrim($redirect, '/')));
+  } else {
+   header('Location: ' . baseUrl('/'));
+  }
+  exit;
  } else {
  $error = 'Authentication failed. Please verify your credentials.';
  }
@@ -55,24 +60,9 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
- <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
- <script>
- tailwind.config = {
- theme: {
- extend: {
- colors: {
- ink: '#18181B', muted: '#78716C', 'muted-light': '#A8A29E',
- canvas: '#FAFAF9', champagne: '#C5A98B', 'champagne-dark': '#A8886E',
- },
- fontFamily: {
- sans: ['Inter', 'sans-serif'], serif: ['"Playfair Display"', 'serif'],
- }
- }
- }
- }
- </script>
- <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>">
+  <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
  <style>
  .clip-reveal { clip-path: inset(0 100% 0 0); }
  .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
@@ -141,7 +131,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  <div class="mt-10 opacity-0 gsap-fade">
  <div class="relative">
  <div class="absolute inset-0 flex items-center">
- <div class="w-full border-t" style="border-color: rgba(231,229,228,0.6);"></div>
+  <div class="w-full border-t border-subtle"></div>
  </div>
  <div class="relative flex justify-center text-[9px] uppercase tracking-[0.25em] font-medium">
  <span class="px-4 bg-surface text-muted-light">Or continue with</span>
@@ -149,7 +139,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  </div>
  <div class="mt-8 grid grid-cols-<?= min(2, count($oauthProviders)) ?> gap-4">
  <?php foreach ($oauthProviders as $id => $provider): ?>
- <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group" style="border-color: rgba(231,229,228,0.6);">
+  <a href="<?= baseUrl('/api/auth/oauth?provider=' . $id) ?>" class="flex justify-center items-center gap-3 w-full border border-subtle py-3 hover:border-champagne transition-colors duration-500 outline-none focus-visible:ring-1 ring-champagne group">
  <img src="<?= $provider['icon'] ?>" alt="<?= htmlspecialchars($provider['name']) ?>" class="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity duration-500 grayscale group-hover:grayscale-0">
  <span class="text-[10px] font-medium text-ink uppercase tracking-widest"><?= htmlspecialchars($provider['name']) ?></span>
  </a>
@@ -189,11 +179,10 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  </div>
  </div>
  </div>
- </div>
+  </div>
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
- <script>
- document.addEventListener('DOMContentLoaded', () => {
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
  if (typeof gsap !== 'undefined') {
  gsap.context(() => {
  const tl = gsap.timeline();

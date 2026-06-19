@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 use RentEase\Support\HttpClient;
 
@@ -104,5 +104,5 @@ if ($insertResponse['status'] >= 200 && $insertResponse['status'] < 300) {
     echo "Successfully seeded " . count($products) . " items.\n";
 } else {
     echo "Failed to seed data. Status: " . $insertResponse['status'] . "\n";
-    print_r($insertResponse['body']);
+    echo json_encode($insertResponse['body'], JSON_PRETTY_PRINT) . "\n";
 }

@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
  const data = Object.fromEntries(formData.entries());
 
  try {
- const response = await fetch('api/support/ticket.php', {
+  const response = await fetch('<?= baseUrl('/api/support/ticket') ?>', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify(data)

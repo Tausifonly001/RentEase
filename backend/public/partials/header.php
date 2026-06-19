@@ -76,32 +76,7 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        ink: '#18181B',
-                        'ink-soft': '#27272A',
-                        muted: '#78716C',
-                        'muted-light': '#A8A29E',
-                        canvas: '#FAFAF9',
-                        champagne: '#C5A98B',
-                        'champagne-light': '#D4C5B0',
-                        'champagne-dark': '#A8886E',
-                        rose: '#D4A59A',
-                        'rose-light': '#E8CBC4',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>">
     <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
     <style>
         .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
@@ -123,7 +98,7 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
 <div id="mobile-overlay" class="hidden fixed inset-0 bg-ink/20 backdrop-blur-sm z-40 md:hidden" aria-hidden="true"></div>
 
 <!-- Navigation -->
-<nav id="main-nav" class="fixed w-full top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-border transition-all duration-300" style="border-color: rgba(231,229,228,0.6);">
+<nav id="main-nav" class="fixed w-full top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-border transition-all duration-300">
     <div class="flex justify-between items-center h-20 px-6 md:px-12 w-full max-w-[1600px] mx-auto">
         <a href="<?= baseUrl('/') ?>" class="inline-flex items-center gap-3 text-2xl font-serif font-bold text-ink tracking-tighter hover:opacity-70 transition-opacity duration-300 outline-none focus-visible:ring-1 ring-champagne group">
             <span class="w-9 h-9 flex items-center justify-center bg-ink text-white text-sm font-medium group-hover:bg-champagne transition-colors duration-500">R</span>
@@ -166,12 +141,12 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
         </button>
     </div>
 
-    <div id="mobile-nav" class="hidden fixed top-20 left-0 w-full bg-canvas/98 backdrop-blur-md px-6 py-8 flex-col gap-1 shadow-xl border-b border-border" style="border-color: rgba(231,229,228,0.6);">
-        <a href="<?= baseUrl('/shop?category=Furniture') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border" style="border-color: rgba(231,229,228,0.4);">Furniture</a>
-        <a href="<?= baseUrl('/shop?category=Appliances') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border" style="border-color: rgba(231,229,228,0.4);">Appliances</a>
-        <a href="<?= baseUrl('/shop') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border" style="border-color: rgba(231,229,228,0.4);">Packages</a>
-        <a href="<?= baseUrl('/#how-it-works') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border" style="border-color: rgba(231,229,228,0.4);">How it Works</a>
-        <div class="mt-6 pt-6 border-t border-border" style="border-color: rgba(231,229,228,0.4);">
+    <div id="mobile-nav" class="hidden fixed top-20 left-0 w-full bg-canvas/98 backdrop-blur-md px-6 py-8 flex-col gap-1 shadow-xl border-b border-border">
+        <a href="<?= baseUrl('/shop?category=Furniture') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border">Furniture</a>
+        <a href="<?= baseUrl('/shop?category=Appliances') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border">Appliances</a>
+        <a href="<?= baseUrl('/shop') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border">Packages</a>
+        <a href="<?= baseUrl('/#how-it-works') ?>" class="text-sm text-muted hover:text-ink tracking-[0.15em] uppercase transition-colors py-4 border-b border-border">How it Works</a>
+        <div class="mt-6 pt-6 border-t border-border">
             <?php if ($currentUser): ?>
                 <a href="<?= baseUrl($profileLink) ?>" class="block w-full text-center py-3 bg-ink text-white text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-500 hover:bg-champagne hover:text-ink">My Account</a>
             <?php else: ?>

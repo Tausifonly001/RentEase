@@ -24,13 +24,14 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 $currentUser = null;
 $token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- }
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
@@ -108,7 +109,7 @@ require_once __DIR__ . '/partials/header.php';
  </div>
  <h2 class="text-2xl font-normal text-ink mb-2">Your wishlist is empty</h2>
  <p class="text-muted mb-8">Start exploring and save items you love for later.</p>
- <a href="browse.php" class="bg-ink text-white px-10 py-4 font-normal hover:opacity-90 transition-all inline-block" style="border-radius: 0.75rem;">Browse Products</a>
+  <a href="<?= baseUrl('/browse') ?>" class="bg-ink text-white px-10 py-4 font-normal hover:opacity-90 transition-all inline-block" style="border-radius: 0.75rem;">Browse Products</a>
  </div>
  <?php else: ?>
  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 reveal-element">
@@ -121,7 +122,7 @@ require_once __DIR__ . '/partials/header.php';
  src="<?= htmlspecialchars((string)($product['image_url'] ?? 'https://via.placeholder.com/400x500')) ?>"
  alt="<?= htmlspecialchars((string)($product['name'] ?? 'Furniture')) ?>"/>
 
- <form action="wishlist.php" method="POST" class="absolute top-4 right-4">
+  <form action="<?= baseUrl('/wishlist') ?>" method="POST" class="absolute top-4 right-4">
  <input type="hidden" name="csrf_token" value="<?= Csrf::token() ?>">
  <input type="hidden" name="action" value="remove">
  <input type="hidden" name="product_id" value="<?= htmlspecialchars((string)$product['id']) ?>">
@@ -135,7 +136,7 @@ require_once __DIR__ . '/partials/header.php';
  <h3 class="text-xl font-normal text-ink mb-2 line-clamp-1"><?= htmlspecialchars((string)($product['name'] ?? 'Untitled Item')) ?></h3>
  <p class="text-lg font-normal text-ink mb-6">From $<?= number_format((float)($product['monthly_price'] ?? 0), 0) ?><span class="text-xs font-light text-muted-light">/mo</span></p>
 
- <form action="cart.php" method="POST" class="mt-auto">
+  <form action="<?= baseUrl('/cart') ?>" method="POST" class="mt-auto">
  <input type="hidden" name="action" value="add">
  <input type="hidden" name="product_id" value="<?= htmlspecialchars((string)$product['id']) ?>">
  <button type="submit" class="w-full border-2 text-champagne-dark font-normal py-3 hover:bg-champagne hover:text-white transition-all flex justify-center items-center gap-2" style="border-color: #D4A574; border-radius: 0.75rem;">
@@ -186,7 +187,7 @@ require_once __DIR__ . '/partials/header.php';
  <section class="bg-canvas rounded-[2rem] p-12 reveal-element">
  <div class="flex justify-between items-center mb-10">
  <h2 class="text-2xl font-normal text-ink tracking-tight">Recommended for You</h2>
- <a class="text-champagne-dark font-light text-sm flex items-center gap-1 hover:underline" href="browse.php">
+  <a class="text-champagne-dark font-light text-sm flex items-center gap-1 hover:underline" href="<?= baseUrl('/browse') ?>">
  View All Explore
  <span class="material-symbols-outlined text-lg">chevron_right</span>
  </a>

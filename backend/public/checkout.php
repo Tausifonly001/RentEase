@@ -7,7 +7,7 @@ use RentEase\Services\StripeService;
 use RentEase\Support\Csrf;
 use RentEase\Support\HttpClient;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $productService = new ProductService($config);

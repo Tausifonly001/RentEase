@@ -32,7 +32,7 @@ require_once __DIR__ . '/partials/header.php';
  <span class="material-symbols-outlined">dashboard</span>
  Back to Dashboard
  </a>
- <a href="browse.php" class="w-full md:w-auto px-10 py-4 bg-white border-2 border-border text-ink font-normal rounded-2xl hover:bg-surface transition-all active:scale-95 flex items-center justify-center gap-2">
+  <a href="<?= baseUrl('/browse') ?>" class="w-full md:w-auto px-10 py-4 bg-white border-2 border-border text-ink font-normal rounded-2xl hover:bg-surface transition-all active:scale-95 flex items-center justify-center gap-2">
  <span class="material-symbols-outlined">search</span>
  Browse Furniture
  </a>

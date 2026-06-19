@@ -4,7 +4,6 @@ let mapInitialized = false;
 
 function initMap() {
     if (typeof google === 'undefined') {
-        console.error('Google Maps API not loaded.');
         document.getElementById('map-container').innerHTML = '<div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-500 font-bold">Map unavailable (check API key)</div>';
         return;
     }
@@ -193,11 +192,7 @@ function startRealtimeTracking() {
                 }
             }
         )
-        .subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-                console.log('Realtime delivery tracking active.');
-            }
-        });
+        .subscribe();
         
     // Fetch initial location
     supabase

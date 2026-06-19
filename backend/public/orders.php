@@ -5,7 +5,7 @@ use RentEase\Services\AuthService;
 use RentEase\Services\LogisticsService;
 use RentEase\Support\HttpClient;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $logisticsService = new LogisticsService($config);
@@ -15,16 +15,20 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 $currentUser = null;
+$token = '';
 try {
- $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
- if ($token) {
- $currentUser = $authService->validateToken($token);
- }
+	$token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
+	if ($token) {
+	$currentUser = $authService->validateToken($token);
+	if ($currentUser) {
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+	}
+	}
 } catch (Throwable $ignored) {}
 
 if (!$currentUser) {
- header('Location: ' . baseUrl('/login?redirect=orders'));
- exit;
+	header('Location: ' . baseUrl('/login?redirect=orders'));
+	exit;
 }
 
 $http = new HttpClient();

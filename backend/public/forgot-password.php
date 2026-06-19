@@ -6,7 +6,7 @@ use RentEase\Services\PasswordResetService;
 use RentEase\Services\MailService;
 use RentEase\Support\Csrf;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $authService = new AuthService($config);
 $mailService = new MailService($config);
@@ -43,22 +43,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  <script src="https://cdn.tailwindcss.com"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined" rel="stylesheet">
- <script>
- tailwind.config = {
- theme: {
- extend: {
- colors: {
- primary: '#0F172A',
- secondary: '#3B82F6',
- accent: '#F59E0B'
- },
- fontFamily: {
- sans: ['Inter', 'sans-serif']
- }
- }
- }
- }
- </script>
+  <script>
+  tailwind.config = {
+  theme: {
+  extend: {
+  colors: {
+  primary: '#0F172A',
+  secondary: '#3B82F6',
+  accent: '#F59E0B',
+  ink: '#18181B',
+  'ink-soft': '#27272A',
+  muted: '#6B6561',
+  'muted-light': '#8C8885',
+  canvas: '#FAFAF9',
+  surface: '#FFFFFF',
+  champagne: '#C5A98B',
+  'champagne-light': '#D4C5B0',
+  'champagne-dark': '#A8886E',
+  border: 'rgba(231, 229, 228, 0.6)',
+  },
+  fontFamily: {
+  sans: ['Inter', 'sans-serif']
+  }
+  }
+  }
+  }
+  </script>
  <style>
  .glass {
  background: rgba(255, 255, 255, 0.95);
@@ -101,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  <p class="text-emerald-700 text-sm font-light"><?= htmlspecialchars($message) ?></p>
  </div>
  <?php else: ?>
- <form action="forgot-password.php" method="POST" class="space-y-6">
+  <form action="<?= baseUrl('/forgot-password') ?>" method="POST" class="space-y-6">
  <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
 
  <div class="space-y-2">

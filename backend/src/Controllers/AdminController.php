@@ -109,7 +109,6 @@ class AdminController
         $activeRentalsCount = 0;
         $totalRevenue = 0.0;
 
-        error_log("AdminController: Data Loaded - Products: " . count($products) . " Rentals: " . count($rentals) . " Orders: " . count($orders));
 
         foreach ($rentals as $rental) {
             if (($rental['status'] ?? $rental['rental_status'] ?? '') === 'active') {

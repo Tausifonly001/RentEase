@@ -5,7 +5,7 @@ use RentEase\Services\ProductService;
 use RentEase\Services\WishlistService;
 use RentEase\Services\AuthService;
 
-require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $productService = new ProductService($config);
@@ -15,16 +15,17 @@ $authService = new AuthService($config);
 $currentUser = null;
 $token = $_COOKIE[$config['cookie_name'] ?? ''] ?? '';
 if ($token) {
- try {
- $userData = $authService->validateToken($token);
- if ($userData) {
- $currentUser = $userData;
- $currentUser['name'] = $userData['user_metadata']['full_name']
- ?? $userData['name']
- ?? explode('@', $userData['email'])[0]
- ?? 'User';
- }
- } catch (Throwable $ignored) {}
+	try {
+	$userData = $authService->validateToken($token);
+	if ($userData) {
+		$currentUser = $userData;
+		$token = (string) ($_SESSION['_auth_current_jwt'] ?? $token);
+		$currentUser['name'] = $userData['user_metadata']['full_name']
+		?? $userData['name']
+		?? explode('@', $userData['email'])[0]
+		?? 'User';
+	}
+	} catch (Throwable $ignored) {}
 }
 
 $product = null;

@@ -32,26 +32,26 @@ $csrfToken = Csrf::token();
  <p class="text-xs text-muted font-light">Manage your rental experience</p>
  </div>
  <nav class="space-y-1">
- <a class="bg-champagne/10 text-champagne-dark px-4 py-3 flex items-center gap-3 transition-all" href="settings.php" style="border-radius: 0.5rem;">
+  <a class="bg-champagne/10 text-champagne-dark px-4 py-3 flex items-center gap-3 transition-all" href="<?= baseUrl('/settings') ?>" style="border-radius: 0.5rem;">
  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
  <span class="text-sm font-light">Profile</span>
  </a>
- <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="coming-soon.php" style="border-radius: 0.5rem;">
- <span class="material-symbols-outlined">notifications</span>
- <span class="text-sm font-light">Notifications</span>
- </a>
- <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="coming-soon.php" style="border-radius: 0.5rem;">
- <span class="material-symbols-outlined">security</span>
- <span class="text-sm font-light">Security</span>
- </a>
- <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="payment-methods.php" style="border-radius: 0.5rem;">
+  <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="<?= baseUrl('/coming-soon') ?>" style="border-radius: 0.5rem;">
+  <span class="material-symbols-outlined">notifications</span>
+  <span class="text-sm font-light">Notifications</span>
+  </a>
+  <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="<?= baseUrl('/coming-soon') ?>" style="border-radius: 0.5rem;">
+  <span class="material-symbols-outlined">security</span>
+  <span class="text-sm font-light">Security</span>
+  </a>
+  <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="<?= baseUrl('/payment-methods') ?>" style="border-radius: 0.5rem;">
  <span class="material-symbols-outlined">credit_card</span>
  <span class="text-sm font-light">Payment Methods</span>
  </a>
- <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="coming-soon.php" style="border-radius: 0.5rem;">
- <span class="material-symbols-outlined">card_membership</span>
- <span class="text-sm font-light">Membership</span>
- </a>
+  <a class="text-muted px-4 py-3 flex items-center gap-3 hover:bg-canvas transition-all" href="<?= baseUrl('/coming-soon') ?>" style="border-radius: 0.5rem;">
+  <span class="material-symbols-outlined">card_membership</span>
+  <span class="text-sm font-light">Membership</span>
+  </a>
  </nav>
  </aside>
 
@@ -68,7 +68,7 @@ $csrfToken = Csrf::token();
  <div class="grid grid-cols-12 gap-8">
  <!-- Personal Information Section -->
  <section class="col-span-12 lg:col-span-8 bg-surface overflow-hidden" style="border-color: rgba(231,229,228,0.6);">
- <form action="api/update-profile.php" method="POST">
+  <form action="<?= baseUrl('/api/update-profile') ?>" method="POST">
  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
  <div class="p-8">

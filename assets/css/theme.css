@@ -4,16 +4,14 @@
    Typography: Playfair Display (headlines) + Inter (body)
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
 :root {
     /* === Color Tokens (Luxury Palette) === */
     --re-canvas: #FAFAF9;
     --re-surface: #FFFFFF;
     --re-ink: #18181B;
     --re-ink-soft: #27272A;
-    --re-muted: #78716C;
-    --re-muted-light: #A8A29E;
+    --re-muted: #6B6561;
+    --re-muted-light: #8C8885;
     --re-border: rgba(231, 229, 228, 0.6);
     --re-border-solid: #E7E5E4;
 
@@ -76,6 +74,9 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--re-muted-light); }
 * { scrollbar-width: thin; scrollbar-color: var(--re-border-solid) transparent; }
+
+/* === Border Utilities === */
+.border-subtle { border-color: var(--re-border) !important; }
 
 /* === Focus Ring (Champagne Gold) === */
 *:focus-visible {

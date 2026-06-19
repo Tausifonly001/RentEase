@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use RentEase\Services\AuthService;
 
-require __DIR__ . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 $provider = $_GET['provider'] ?? null;
 if (!$provider) {

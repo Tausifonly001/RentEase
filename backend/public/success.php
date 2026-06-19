@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-require_once __DIR__ . '/../src/Support/helpers.php';
 
 use RentEase\Services\AuthService;
 
@@ -32,21 +31,31 @@ if (!$currentUser) {
  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
- <script>
- tailwind.config = {
- theme: {
- extend: {
- fontFamily: {
- sans: ['Inter', 'sans-serif'],
- inter: ['Inter', 'sans-serif'],
- },
- colors: {
- teal: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a', 950: '#042f2e' },
- }
- }
- }
- }
- </script>
+  <script>
+  tailwind.config = {
+  theme: {
+  extend: {
+  fontFamily: {
+  sans: ['Inter', 'sans-serif'],
+  inter: ['Inter', 'sans-serif'],
+  },
+  colors: {
+  teal: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a', 950: '#042f2e' },
+  ink: '#18181B',
+  'ink-soft': '#27272A',
+  muted: '#6B6561',
+  'muted-light': '#8C8885',
+  canvas: '#FAFAF9',
+  surface: '#FFFFFF',
+  champagne: '#C5A98B',
+  'champagne-light': '#D4C5B0',
+  'champagne-dark': '#A8886E',
+  border: 'rgba(231, 229, 228, 0.6)',
+  }
+  }
+  }
+  }
+  </script>
  <style>
  .gradient-bg {
  background: radial-gradient(circle at top right, #f0fdfa 0%, #ffffff 50%, #f8fafc 100%);

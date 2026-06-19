@@ -25,10 +25,23 @@ require __DIR__ . '/partials/header.php';
 ?>
 
 <!-- Loader -->
-<div id="loader" class="fixed inset-0 bg-canvas z-[60] flex items-center justify-center">
-    <div class="text-center">
-        <div class="w-10 h-10 mx-auto mb-6 flex items-center justify-center bg-ink text-white font-serif text-lg font-medium tracking-wide">R</div>
-        <div class="w-20 h-[1px] bg-champagne mx-auto origin-left" style="transform: scaleX(0);" id="loader-line"></div>
+<div id="loader" class="fixed inset-0 z-[60]">
+    <!-- Background image hidden behind the two halves -->
+    <div id="loader-bg" class="absolute inset-0 z-0 scale-110">
+        <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="" class="w-full h-full object-cover" aria-hidden="true" />
+        <div class="absolute inset-0 bg-ink/20"></div>
+    </div>
+
+    <!-- Top half (covers background, breaks upward) -->
+    <div id="loader-top" class="absolute top-0 left-0 w-full h-1/2 bg-canvas z-10"></div>
+
+    <!-- Bottom half (covers background, breaks downward) -->
+    <div id="loader-bottom" class="absolute bottom-0 left-0 w-full h-1/2 bg-canvas z-10"></div>
+
+    <!-- R logo and champagne line at center seam -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 text-center" id="loader-brand">
+        <div class="w-12 h-12 mx-auto mb-4 flex items-center justify-center bg-ink text-white font-serif text-lg font-medium tracking-wide">R</div>
+        <div class="w-24 h-[1.5px] bg-champagne mx-auto origin-left" style="transform: scaleX(0);" id="loader-line"></div>
     </div>
 </div>
 
@@ -313,35 +326,105 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Cinematic Loader → Hero Timeline
                 const tl = gsap.timeline();
 
-                // 1. Loader line expands (spine opening)
-                tl.to("#loader-line", { scaleX: 1, duration: 1.2, ease: "power2.inOut" })
-                // 2. Loader slides up (cover lifts)
-                  .to("#loader", { yPercent: -100, duration: 1.2, ease: "power4.inOut", delay: 0.3 })
-                // 3. Hero image zooms out (page settles)
-                  .from("#hero-img", { scale: 1.3, duration: 2.2, ease: "power2.out" }, "-=1")
-                // 4. Text mask reveal (content appears)
-                  .to('.text-mask-inner', {
-                      y: '0%',
-                      duration: 1.2,
-                      ease: 'power4.out',
-                      stagger: 0.15
-                  }, "-=1.5")
-                // 5. Image curtain reveal
-                  .to('#hero-image-overlay', {
-                      clipPath: 'inset(0 0 0 100%)',
-                      duration: 1.5,
-                      ease: 'power4.inOut'
-                  }, "-=1.0")
-                // 6. Hero image scale settles
-                  .to('#hero-img', {
-                      scale: 1,
-                      duration: 2.5,
-                      ease: 'power2.out'
-                  }, "-=1.5")
-                // 7. Fade in descriptions and CTAs
-                  .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=2.0")
-                  .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=1.8")
-                  .to('.gsap-fade', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, "-=1.5");
+                // Elements
+                const loader = document.getElementById('loader');
+                const loaderTop = document.getElementById('loader-top');
+                const loaderBottom = document.getElementById('loader-bottom');
+                const loaderBrand = document.getElementById('loader-brand');
+                const loaderLine = document.getElementById('loader-line');
+                const loaderBg = document.getElementById('loader-bg');
+
+                // Background image initially hidden behind halves
+                if (loaderBg) {
+                    gsap.set(loaderBg, {
+                        zIndex: 0,
+                        opacity: 1
+                    });
+                }
+
+                // 1. Line expands from center (spine starts opening)
+                tl.to(loaderLine, {
+                    scaleX: 1,
+                    duration: 1.2,
+                    ease: "power2.inOut",
+                    transformOrigin: "center"
+                })
+
+                // 2. Dramatic paper-tear effect from center
+                .to('#loader-top', {
+                    y: -200,  // Strong upward snap
+                    scale: 0.7,  // Shrink slightly for depth
+                    rotation: 12,  // More dramatic rotation
+                    duration: 1.0,
+                    ease: "power4.out",  // Fast start, slow finish
+                    transformOrigin: "top center"
+                }, "<")
+
+                .to('#loader-bottom', {
+                    y: 200,  // Strong downward snap
+                    scale: 0.7,  // Shrink slightly for depth
+                    rotation: -12,  // Opposite rotation
+                    duration: 1.0,
+                    ease: "power4.out",  // Fast start, slow finish
+                    transformOrigin: "bottom center"
+                }, "<")
+
+                // 3. Brand content explodes outward as paper tears
+                .to(loaderBrand, {
+                    opacity: 0,
+                    scale: 0.5,
+                    y: -50,
+                    duration: 0.6,
+                    ease: "power2.in"
+                }, "<")
+
+                // 4. Background image zooms slightly to enhance reveal
+                .to(loaderBg, {
+                    scale: 1.05,
+                    duration: 1.5,
+                    ease: "power2.out"
+                }, "<+")
+
+                // 5. Loader fades completely after tear
+                .to(loader, {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.in"
+                }, "<+")
+
+                // 4. Hero image zooms out (page settles)
+                .from('#hero-img', {
+                    scale: 1.3,
+                    duration: 2.2,
+                    ease: "power2.out"
+                }, "-=1.2")
+
+                // 5. Text mask reveal
+                .to('.text-mask-inner', {
+                    y: '0%',
+                    duration: 1.2,
+                    ease: 'power4.out',
+                    stagger: 0.15
+                }, "-=1.3")
+
+                // 6. Image curtain reveal
+                .to('#hero-image-overlay', {
+                    clipPath: 'inset(0 0 0 100%)',
+                    duration: 1.5,
+                    ease: 'power4.inOut'
+                }, "-=1.0")
+
+                // 7. Hero image scale settles
+                .to('#hero-img', {
+                    scale: 1,
+                    duration: 2.5,
+                    ease: 'power2.out'
+                }, "-=1.5")
+
+                // 8. Fade in descriptions and CTAs
+                .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=2.0")
+                .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=1.8")
+                .to('.gsap-fade', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, "-=1.5");
 
                 // Benefit Cards Scroll Reveal
                 gsap.utils.toArray('.benefit-card').forEach((card, i) => {

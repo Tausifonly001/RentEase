@@ -9,6 +9,5 @@ parameters:
             - vendor/
     tmpDir: /tmp/phpstan
 
-# includes:
-#     - phpstan-baseline.neon
-# Uncomment above & run `vendor/bin/phpstan analyse --generate-baseline` to create baseline
+includes:
+    - phpstan-baseline.neon

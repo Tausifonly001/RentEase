@@ -59,7 +59,7 @@ dist/*
 build/
 
 # ===== STATIC ANALYSIS =====
-/phpstan-baseline.neon
+# /phpstan-baseline.neon  # uncomment to ignore baseline locally
 
 # ===== GENERATED DATA =====
 models.json

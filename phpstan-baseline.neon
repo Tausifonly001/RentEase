@@ -1,0 +1,475 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/public/agent-tracking.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/api/auth/oauth.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/book-rental.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/api/chat.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/public/api/checkout.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/api/furniture.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/api/login.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/logistics/reschedule.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: backend/public/api/logistics/return-pickup.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/logistics/status.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/logistics/survey.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/maintenance-request.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 10
+			path: backend/public/api/orders.php
+
+		-
+			message: '#^Variable \$token might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/api/orders.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/api/products.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: backend/public/api/returns.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/api/signup.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/api/support/ticket.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/public/api/update-profile.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/public/api/webhook/shiprocket.php
+
+		-
+			message: '#^Offset 0 on array\<string, mixed\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: backend/public/api/webhook/stripe.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 15
+			path: backend/public/api/webhook/stripe.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/auth-callback.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: backend/public/cart.php
+
+		-
+			message: '#^Offset 0 on array\<string, mixed\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: backend/public/checkout.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 8
+			path: backend/public/checkout.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/concierge.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/dashboard.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/forgot-password.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/home.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/login.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/logout.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/maintenance-tracker.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/public/orders.php
+
+		-
+			message: '#^Variable \$config in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: backend/public/partials/header.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/partner.php
+
+		-
+			message: '#^Variable \$currentUser might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/payment-methods.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/product-detail.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/referrals.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/request-maintenance.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/reschedule.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/reset-password.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/return-pickup.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/rewards.php
+
+		-
+			message: '#^Variable \$currentUser might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/settings.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/shop.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/public/signup.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 8
+			path: backend/public/stripe_webhook.php
+
+		-
+			message: '#^Variable \$http might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/stripe_webhook.php
+
+		-
+			message: '#^Variable \$serviceHeaders might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/stripe_webhook.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/success.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/support.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/public/survey.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/tracking.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/public/wishlist.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/scripts/create_confirmed_user.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/scripts/list_users.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/scripts/reseed.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: backend/scripts/seed.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: backend/scripts/seed_fakestore.php
+
+		-
+			message: '#^Variable \$activeRentalsCount might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$deliveries might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$error might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$maintenanceReqs might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$orders might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$products might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$rentals might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$success might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$users might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/admin/dashboard.php
+
+		-
+			message: '#^Variable \$category might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/shop/browse.php
+
+		-
+			message: '#^Variable \$products might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/shop/browse.php
+
+		-
+			message: '#^Variable \$error might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/shop/partials/product-grid.php
+
+		-
+			message: '#^Variable \$wishlistIds might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/shop/partials/product-grid.php
+
+		-
+			message: '#^Variable \$error might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/vendor/dashboard.php
+
+		-
+			message: '#^Variable \$products might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/vendor/dashboard.php
+
+		-
+			message: '#^Variable \$rentals might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/vendor/dashboard.php
+
+		-
+			message: '#^Variable \$success might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: backend/views/vendor/dashboard.php
+
+		-
+			message: '#^Anonymous function has an unused use \$config\.$#'
+			identifier: closure.unusedUse
+			count: 22
+			path: index.php
+
+		-
+			message: '#^Variable \$config might not be defined\.$#'
+			identifier: variable.undefined
+			count: 22
+			path: index.php

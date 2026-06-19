@@ -24,25 +24,33 @@ $pageDescription = 'Transform your space without commitment. Rent premium furnit
 require __DIR__ . '/partials/header.php';
 ?>
 
-<!-- Loader -->
-<div id="loader" class="fixed inset-0 z-[60]">
-    <!-- Background image hidden behind the two halves -->
-    <div id="loader-bg" class="absolute inset-0 z-0 scale-110">
-        <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="" class="w-full h-full object-cover" aria-hidden="true" />
-        <div class="absolute inset-0 bg-ink/20"></div>
+<!-- Ultra-Professional Cinematic Loader -->
+<div id="loader" class="fixed inset-0 flex pointer-events-auto overflow-hidden bg-transparent" style="z-index: 100;">
+    
+    <!-- Top-Left Triangle -->
+    <div id="loader-tl" class="absolute inset-0 z-20 flex justify-center items-center overflow-hidden bg-ink" style="clip-path: polygon(0 0, 100% 0, 0 100%);">
+        <!-- Seamless Cinematic Background Image -->
+        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover loader-bg-img" style="transform: scale(1.1);" alt="" />
+        <div class="absolute inset-0 bg-ink/50 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-ink/60"></div>
+        
+        <div class="relative text-center w-full z-10" id="logo-tl" style="transform: scale(0.95); opacity: 0;">
+            <span class="font-serif text-4xl md:text-6xl font-medium tracking-[0.3em] text-white whitespace-nowrap drop-shadow-2xl">RENTEASE</span>
+        </div>
     </div>
 
-    <!-- Top half (covers background, breaks upward) -->
-    <div id="loader-top" class="absolute top-0 left-0 w-full h-1/2 bg-canvas z-10"></div>
+    <!-- Bottom-Right Triangle -->
+    <div id="loader-br" class="absolute inset-0 z-10 flex justify-center items-center overflow-hidden bg-ink" style="clip-path: polygon(100% 0, 100% 100%, 0 100%);">
+        <!-- Seamless Cinematic Background Image (Identical to Top-Left) -->
+        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover loader-bg-img" style="transform: scale(1.1);" alt="" />
+        <div class="absolute inset-0 bg-ink/50 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-ink/60"></div>
 
-    <!-- Bottom half (covers background, breaks downward) -->
-    <div id="loader-bottom" class="absolute bottom-0 left-0 w-full h-1/2 bg-canvas z-10"></div>
-
-    <!-- R logo and champagne line at center seam -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 text-center" id="loader-brand">
-        <div class="w-12 h-12 mx-auto mb-4 flex items-center justify-center bg-ink text-white font-serif text-lg font-medium tracking-wide">R</div>
-        <div class="w-24 h-[1.5px] bg-champagne mx-auto origin-left" style="transform: scaleX(0);" id="loader-line"></div>
+        <div class="relative text-center w-full z-10" id="logo-br" style="transform: scale(0.95); opacity: 0;">
+            <span class="font-serif text-4xl md:text-6xl font-medium tracking-[0.3em] text-white whitespace-nowrap drop-shadow-2xl">RENTEASE</span>
+        </div>
     </div>
+
 </div>
 
 <main class="w-full relative bg-canvas">
@@ -323,78 +331,65 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
 
             let ctx = gsap.context(() => {
-                // Cinematic Loader → Hero Timeline
+                // Cinematic Professional Loader → Hero Timeline
                 const tl = gsap.timeline();
 
-                // Elements
                 const loader = document.getElementById('loader');
-                const loaderTop = document.getElementById('loader-top');
-                const loaderBottom = document.getElementById('loader-bottom');
-                const loaderBrand = document.getElementById('loader-brand');
-                const loaderLine = document.getElementById('loader-line');
-                const loaderBg = document.getElementById('loader-bg');
+                const loaderTl = document.getElementById('loader-tl');
+                const loaderBr = document.getElementById('loader-br');
+                const logoTl = document.getElementById('logo-tl');
+                const logoBr = document.getElementById('logo-br');
+                const loaderBgImgs = document.querySelectorAll('.loader-bg-img');
 
-                // Background image initially hidden behind halves
-                if (loaderBg) {
-                    gsap.set(loaderBg, {
-                        zIndex: 0,
-                        opacity: 1
-                    });
-                }
+                // 0. Slow cinematic pan/zoom on the background images (Creates a GIF-like video feel)
+                tl.to(loaderBgImgs, {
+                    scale: 1.0,
+                    duration: 3.5,
+                    ease: "power1.out"
+                }, 0)
 
-                // 1. Line expands from center (spine starts opening)
-                tl.to(loaderLine, {
-                    scaleX: 1,
-                    duration: 1.2,
-                    ease: "power2.inOut",
-                    transformOrigin: "center"
-                })
-
-                // 2. Dramatic paper-tear effect from center
-                .to('#loader-top', {
-                    y: -200,  // Strong upward snap
-                    scale: 0.7,  // Shrink slightly for depth
-                    rotation: 12,  // More dramatic rotation
-                    duration: 1.0,
-                    ease: "power4.out",  // Fast start, slow finish
-                    transformOrigin: "top center"
-                }, "<")
-
-                .to('#loader-bottom', {
-                    y: 200,  // Strong downward snap
-                    scale: 0.7,  // Shrink slightly for depth
-                    rotation: -12,  // Opposite rotation
-                    duration: 1.0,
-                    ease: "power4.out",  // Fast start, slow finish
-                    transformOrigin: "bottom center"
-                }, "<")
-
-                // 3. Brand content explodes outward as paper tears
-                .to(loaderBrand, {
-                    opacity: 0,
-                    scale: 0.5,
-                    y: -50,
-                    duration: 0.6,
-                    ease: "power2.in"
-                }, "<")
-
-                // 4. Background image zooms slightly to enhance reveal
-                .to(loaderBg, {
-                    scale: 1.05,
+                // 1. Text fades in and slowly scales (Luxury entrance)
+                tl.to([logoTl, logoBr], {
+                    opacity: 1,
+                    scale: 1.0,
                     duration: 1.5,
                     ease: "power2.out"
-                }, "<+")
+                })
 
-                // 5. Loader fades completely after tear
-                .to(loader, {
-                    opacity: 0,
+                // 2. The Crack (Laser cut reveals a sliver of the bright page underneath)
+                .to(loaderTl, {
+                    x: -4,
+                    y: -4,
                     duration: 0.8,
-                    ease: "power2.in"
-                }, "<+")
+                    ease: "expo.out"
+                }, "+=0.3")
+                .to(loaderBr, {
+                    x: 4,
+                    y: 4,
+                    duration: 0.8,
+                    ease: "expo.out"
+                }, "<")
 
-                // 4. Hero image zooms out (page settles)
+                // 3. The Grand Unveil (Sliding diagonally away)
+                .to(loaderTl, {
+                    xPercent: -100,
+                    yPercent: -100,
+                    duration: 1.6,
+                    ease: "expo.inOut"
+                }, "+=0.5")
+                .to(loaderBr, {
+                    xPercent: 100,
+                    yPercent: 100,
+                    duration: 1.6,
+                    ease: "expo.inOut"
+                }, "<")
+
+                // 4. Hide loader completely
+                .set(loader, { display: "none" })
+
+                // 5. Hero settling
                 .from('#hero-img', {
-                    scale: 1.3,
+                    scale: 1.15,
                     duration: 2.2,
                     ease: "power2.out"
                 }, "-=1.2")

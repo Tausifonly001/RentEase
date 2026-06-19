@@ -47,7 +47,7 @@ jobs:
 
       - name: Check for leaked secrets
         run: |
-          UNTRACKED=$(git ls-files --others --ignored --exclude-standard .env)
+          UNTRACKED=$(git ls-files --others --exclude-standard .env)
           if [ -n "$UNTRACKED" ]; then
             echo "::error:: .env is untracked but not ignored — remove it immediately"
             exit 1
@@ -56,7 +56,7 @@ jobs:
             echo "::error:: .env is committed — remove it immediately"
             exit 1
           fi
-          if ! echo ".env" | git check-ignore --stdin --no-index > /dev/null 2>&1; then
+          if ! echo ".env" | git check-ignore --stdin -q; then
             echo "::error:: .env is not in .gitignore — add it now"
             exit 1
           fi

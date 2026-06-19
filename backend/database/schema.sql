@@ -8,9 +8,10 @@ create extension if not exists btree_gist;
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'rental_status') THEN
-        CREATE TYPE public.rental_status AS ENUM ('active', 'completed', 'cancelled', 'return_requested', 'return_inspection', 'closed');
+        CREATE TYPE public.rental_status AS ENUM ('active', 'pending', 'completed', 'cancelled', 'return_requested', 'return_inspection', 'closed');
     ELSE
         -- Add new values if type exists
+        BEGIN ALTER TYPE public.rental_status ADD VALUE IF NOT EXISTS 'pending'; EXCEPTION WHEN duplicate_object THEN END;
         BEGIN ALTER TYPE public.rental_status ADD VALUE IF NOT EXISTS 'return_requested'; EXCEPTION WHEN duplicate_object THEN END;
         BEGIN ALTER TYPE public.rental_status ADD VALUE IF NOT EXISTS 'return_inspection'; EXCEPTION WHEN duplicate_object THEN END;
         BEGIN ALTER TYPE public.rental_status ADD VALUE IF NOT EXISTS 'closed'; EXCEPTION WHEN duplicate_object THEN END;
@@ -349,6 +350,10 @@ create table if not exists public.orders (
   return_status text default 'none',
   created_at timestamptz not null default now()
 );
+
+-- Ensure order_id column exists on rentals (after orders table is created)
+alter table public.rentals add column if not exists order_id uuid references public.orders(id) on delete set null;
+create index if not exists idx_rentals_order on public.rentals (order_id);
 
 create table if not exists public.payments (
   id uuid primary key default gen_random_uuid(),

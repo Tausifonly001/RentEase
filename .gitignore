@@ -46,6 +46,7 @@ OneSignalSDK-v16-ServiceWorker/
 
 # ===== TEMP / DEBUG =====
 scratch/
+/tmp/
 *.tmp
 temp*.html
 *-temp.html
@@ -55,3 +56,6 @@ progress.txt
 *.map
 dist/
 build/
+
+# ===== GENERATED DATA =====
+models.json

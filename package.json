@@ -3,7 +3,9 @@
   "description": "Premium furniture and appliance rental platform",
   "private": true,
   "scripts": {
-    "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "build:dev": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build:full": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify && node -e \"const fs=require('fs');const a=fs.readFileSync('./dist/output.css');const b=fs.readFileSync('./assets/css/theme.css');fs.writeFileSync('./dist/bundle.css',a+b);console.log('bundled')\""
   },
   "version": "1.0.0",
   "main": "OneSignalSDKWorker.js",

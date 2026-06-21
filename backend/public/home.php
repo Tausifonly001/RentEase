@@ -86,7 +86,7 @@ require __DIR__ . '/partials/header.php';
 
         <div class="relative z-10 w-full min-h-[50vh] lg:min-h-[85vh] order-1 lg:order-2 overflow-hidden bg-surface" id="hero-img-container">
             <div class="absolute inset-0 bg-champagne/10 z-10 clip-reveal" id="hero-image-overlay"></div>
-            <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="Luxury living room interior" class="w-full h-full object-cover origin-center scale-110" id="hero-img" style="filter: grayscale(15%);">
+            <img src="<?= baseUrl('/assets/images/home_hero.png') ?>" alt="Luxury living room interior" fetchpriority="high" decoding="async" class="w-full h-full object-cover origin-center scale-110" id="hero-img" style="filter: grayscale(15%);">
             <div class="absolute inset-0 bg-gradient-to-t from-canvas/40 via-transparent to-transparent z-10 lg:hidden"></div>
         </div>
     </div>
@@ -325,166 +325,67 @@ require __DIR__ . '/partials/header.php';
 <!-- Home GSAP Animations -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const checkGsap = setInterval(() => {
-        if (window.gsap && window.ScrollTrigger) {
-            clearInterval(checkGsap);
-            gsap.registerPlugin(ScrollTrigger);
+    (window.RentEase ? RentEase.gsapReady : Promise.resolve(null)).then(function(gsap) {
+        if (!gsap || !window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
 
-            let ctx = gsap.context(() => {
-                // Cinematic Professional Loader → Hero Timeline
-                const tl = gsap.timeline();
+        gsap.context(() => {
+            const tl = gsap.timeline();
 
-                const loader = document.getElementById('loader');
-                const loaderTl = document.getElementById('loader-tl');
-                const loaderBr = document.getElementById('loader-br');
-                const logoTl = document.getElementById('logo-tl');
-                const logoBr = document.getElementById('logo-br');
-                const loaderBgImgs = document.querySelectorAll('.loader-bg-img');
+            const loader = document.getElementById('loader');
+            const loaderTl = document.getElementById('loader-tl');
+            const loaderBr = document.getElementById('loader-br');
+            const logoTl = document.getElementById('logo-tl');
+            const logoBr = document.getElementById('logo-br');
+            const loaderBgImgs = document.querySelectorAll('.loader-bg-img');
 
-                // 0. Slow cinematic pan/zoom on the background images (Creates a GIF-like video feel)
-                tl.to(loaderBgImgs, {
-                    scale: 1.0,
-                    duration: 3.5,
-                    ease: "power1.out"
-                }, 0)
+            tl.to(loaderBgImgs, { scale: 1.0, duration: 3.5, ease: "power1.out" }, 0)
+              .to([logoTl, logoBr], { opacity: 1, scale: 1.0, duration: 1.5, ease: "power2.out" })
+              .to(loaderTl, { x: -4, y: -4, duration: 0.8, ease: "expo.out" }, "+=0.3")
+              .to(loaderBr, { x: 4, y: 4, duration: 0.8, ease: "expo.out" }, "<")
+              .to(loaderTl, { xPercent: -100, yPercent: -100, duration: 1.6, ease: "expo.inOut" }, "+=0.5")
+              .to(loaderBr, { xPercent: 100, yPercent: 100, duration: 1.6, ease: "expo.inOut" }, "<")
+              .set(loader, { display: "none" })
+              .from('#hero-img', { scale: 1.15, duration: 2.2, ease: "power2.out" }, "-=1.2")
+              .to('.text-mask-inner', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 }, "-=1.3")
+              .to('#hero-image-overlay', { clipPath: 'inset(0 0 0 100%)', duration: 1.5, ease: 'power4.inOut' }, "-=1.0")
+              .to('#hero-img', { scale: 1, duration: 2.5, ease: 'power2.out' }, "-=1.5")
+              .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=2.0")
+              .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=1.8")
+              .to('.gsap-fade', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, "-=1.5");
 
-                // 1. Text fades in and slowly scales (Luxury entrance)
-                tl.to([logoTl, logoBr], {
-                    opacity: 1,
-                    scale: 1.0,
-                    duration: 1.5,
-                    ease: "power2.out"
-                })
-
-                // 2. The Crack (Laser cut reveals a sliver of the bright page underneath)
-                .to(loaderTl, {
-                    x: -4,
-                    y: -4,
-                    duration: 0.8,
-                    ease: "expo.out"
-                }, "+=0.3")
-                .to(loaderBr, {
-                    x: 4,
-                    y: 4,
-                    duration: 0.8,
-                    ease: "expo.out"
-                }, "<")
-
-                // 3. The Grand Unveil (Sliding diagonally away)
-                .to(loaderTl, {
-                    xPercent: -100,
-                    yPercent: -100,
-                    duration: 1.6,
-                    ease: "expo.inOut"
-                }, "+=0.5")
-                .to(loaderBr, {
-                    xPercent: 100,
-                    yPercent: 100,
-                    duration: 1.6,
-                    ease: "expo.inOut"
-                }, "<")
-
-                // 4. Hide loader completely
-                .set(loader, { display: "none" })
-
-                // 5. Hero settling
-                .from('#hero-img', {
-                    scale: 1.15,
-                    duration: 2.2,
-                    ease: "power2.out"
-                }, "-=1.2")
-
-                // 5. Text mask reveal
-                .to('.text-mask-inner', {
-                    y: '0%',
-                    duration: 1.2,
-                    ease: 'power4.out',
-                    stagger: 0.15
-                }, "-=1.3")
-
-                // 6. Image curtain reveal
-                .to('#hero-image-overlay', {
-                    clipPath: 'inset(0 0 0 100%)',
-                    duration: 1.5,
-                    ease: 'power4.inOut'
-                }, "-=1.0")
-
-                // 7. Hero image scale settles
-                .to('#hero-img', {
-                    scale: 1,
-                    duration: 2.5,
-                    ease: 'power2.out'
-                }, "-=1.5")
-
-                // 8. Fade in descriptions and CTAs
-                .to('#hero-desc', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=2.0")
-                .to('#hero-ctas', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=1.8")
-                .to('.gsap-fade', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, "-=1.5");
-
-                // Benefit Cards Scroll Reveal
-                gsap.utils.toArray('.benefit-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: { trigger: card, start: 'top 85%' },
-                        y: 40,
-                        opacity: 0,
-                        duration: 1.2,
-                        ease: 'power3.out',
-                        delay: i * 0.1
-                    });
-                });
-
-                // Sticky Storytelling Image Swap
-                const steps = document.querySelectorAll('.step-block');
-                const images = [
-                    document.getElementById('sticky-img-1'),
-                    document.getElementById('sticky-img-2'),
-                    document.getElementById('sticky-img-3')
-                ];
-
-                if (steps.length > 0 && images[0]) {
-                    steps.forEach((step, index) => {
-                        ScrollTrigger.create({
-                            trigger: step,
-                            start: "top center",
-                            end: "bottom center",
-                            onToggle: self => {
-                                if (self.isActive && images[index]) {
-                                    images.forEach(img => {
-                                        if (img) gsap.to(img, { opacity: 0, duration: 0.8, ease: 'power2.inOut' });
-                                    });
-                                    gsap.to(images[index], { opacity: 1, duration: 0.8, ease: 'power2.inOut' });
-                                }
-                            }
-                        });
-                    });
-                }
-
-                // Product Cards Cascade Reveal
-                gsap.utils.toArray('.product-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: { trigger: card, start: 'top 85%' },
-                        y: 60,
-                        opacity: 0,
-                        duration: 1.2,
-                        ease: 'power3.out',
-                        delay: i * 0.08
-                    });
-                });
-
-                // Testimonial Cards Reveal
-                gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: { trigger: card, start: 'top 85%' },
-                        y: 40,
-                        opacity: 0,
-                        duration: 1.2,
-                        ease: 'power3.out',
-                        delay: i * 0.1
-                    });
-                });
+            gsap.utils.toArray('.benefit-card').forEach((card, i) => {
+                gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 85%' }, y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', delay: i * 0.1 });
             });
-        }
-    }, 100);
+
+            const steps = document.querySelectorAll('.step-block');
+            const images = [
+                document.getElementById('sticky-img-1'),
+                document.getElementById('sticky-img-2'),
+                document.getElementById('sticky-img-3')
+            ];
+            if (steps.length > 0 && images[0]) {
+                steps.forEach((step, index) => {
+                    ScrollTrigger.create({
+                        trigger: step, start: "top center", end: "bottom center",
+                        onToggle: self => {
+                            if (self.isActive && images[index]) {
+                                images.forEach(img => { if (img) gsap.to(img, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }); });
+                                gsap.to(images[index], { opacity: 1, duration: 0.8, ease: 'power2.inOut' });
+                            }
+                        }
+                    });
+                });
+            }
+
+            gsap.utils.toArray('.product-card').forEach((card, i) => {
+                gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 85%' }, y: 60, opacity: 0, duration: 1.2, ease: 'power3.out', delay: i * 0.08 });
+            });
+            gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+                gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 85%' }, y: 40, opacity: 0, duration: 1.2, ease: 'power3.out', delay: i * 0.1 });
+            });
+        });
+    });
 });
 </script>
 

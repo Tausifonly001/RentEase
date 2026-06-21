@@ -52,35 +52,22 @@ window.RentEase = window.RentEase || {};
         warning: function(title, message) { this.show(title, message, 'warning'); }
     };
 
-    // === GSAP Boot ===
-    const GSAP_CHECK_INTERVAL = 100;
-    const GSAP_MAX_RETRIES = 30;
-
-    function waitForGsap(callback) {
-        let retries = 0;
-        const check = setInterval(function() {
-            retries++;
-            if (window.gsap) {
-                clearInterval(check);
-                callback(window.gsap);
-            } else if (retries >= GSAP_MAX_RETRIES) {
-                clearInterval(check);
-                // fallback: make all hidden elements visible
-                document.querySelectorAll('.text-mask-inner').forEach(function(el) {
-                    el.style.transform = 'translateY(0)';
-                });
-                document.querySelectorAll('[class*="reveal-"], .gsap-fade, .gsap-fade-up').forEach(function(el) {
-                    el.style.opacity = '1';
-                    el.style.transform = 'none';
-                });
-                document.querySelectorAll('.clip-reveal').forEach(function(el) {
-                    el.style.clipPath = 'inset(0 0% 0 0)';
-                });
-            }
-        }, GSAP_CHECK_INTERVAL);
-    }
-
-    RE.waitForGsap = waitForGsap;
+    // === GSAP Boot (Promise-based, no polling) ===
+    RE.gsapReady = new Promise(function(resolve) {
+        if (window.gsap) return resolve(window.gsap);
+        Object.defineProperty(window, 'gsap', {
+            configurable: true,
+            set: function(v) { resolve(v); Object.defineProperty(window, 'gsap', { value: v, writable: true }); },
+            get: function() { return undefined; }
+        });
+        setTimeout(function() {
+            // fallback after 5s: make all hidden elements visible
+            document.querySelectorAll('.text-mask-inner').forEach(function(el) { el.style.transform = 'translateY(0)'; });
+            document.querySelectorAll('[class*="reveal-"], .gsap-fade, .gsap-fade-up').forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; });
+            document.querySelectorAll('.clip-reveal').forEach(function(el) { el.style.clipPath = 'inset(0 0% 0 0)'; });
+            resolve(null);
+        }, 5000);
+    });
 
     // === Text Mask Reveal ===
     RE.revealTextMasks = function(gsap, container, options) {

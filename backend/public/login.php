@@ -47,27 +47,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $oauthProviders = $config['enabled_oauth_providers'] ?? [];
 $pageTitle = 'Welcome back — RentEase';
 $pageDescription = 'Sign in to manage your rentals, track deliveries, and access member rewards.';
+$appUrl = $config['app_url'] ?? baseUrl('/');
+$ogImage = baseUrl('/assets/images/og-image.png');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
- <title><?= htmlspecialchars($pageTitle) ?></title>
- <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
- <meta name="theme-color" content="#fafaf9">
- <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>">
-  <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
- <style>
- .clip-reveal { clip-path: inset(0 100% 0 0); }
- .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
- .text-mask-inner { display: inline-block; transform: translateY(100%); }
- </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<title><?= htmlspecialchars($pageTitle) ?></title>
+	<meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
+	<meta name="robots" content="index, follow">
+	<meta name="theme-color" content="#fafaf9">
+	<link rel="canonical" href="<?= htmlspecialchars($appUrl) ?>">
+	<link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
+	<link rel="apple-touch-icon" href="<?= baseUrl('/favicon.svg') ?>">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="<?= htmlspecialchars($appUrl) ?>">
+	<meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
+	<meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
+	<meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?>">
+	<meta name="twitter:description" content="<?= htmlspecialchars($pageDescription) ?>">
+	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+	<style>
+	body{background:#FAFAF9;color:#18181B;font-family:Inter,system-ui,sans-serif;overflow-x:hidden}
+	.clip-reveal{clip-path:inset(0 100% 0 0)}
+	.text-mask{overflow:hidden;display:inline-block;vertical-align:bottom;padding-bottom:.1em;margin-bottom:-.1em}
+	.text-mask-inner{display:inline-block;transform:translateY(100%)}
+	</style>
+	<link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>" media="print" onload="this.media='all';this.onload=null">
+	<noscript><link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>"></noscript>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" media="print" onload="this.media='all';this.onload=null">
+	<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"></noscript>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" media="print" onload="this.media='auto';this.onload=null">
+	<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"></noscript>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 </head>
 <body class="min-h-screen bg-canvas text-muted font-sans selection:bg-champagne/20 selection:text-champagne-dark overflow-x-hidden">
  <div class="flex min-h-screen w-full flex-row-reverse">
@@ -161,7 +179,7 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  <!-- Image Side -->
  <div class="hidden lg:block lg:w-1/2 relative bg-surface overflow-hidden" style="border-right: 1px solid rgba(231,229,228,0.6);">
  <div class="absolute inset-0 bg-champagne/10 z-10 clip-reveal" id="image-overlay"></div>
- <img src="<?= baseUrl('/assets/images/auth/login_bg.png') ?>" alt="Modern Interior" class="absolute inset-0 w-full h-full object-cover origin-center scale-110" id="hero-image" style="filter: grayscale(30%);">
+	<img src="<?= baseUrl('/assets/images/auth/login_bg.png') ?>" alt="Modern Interior" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover origin-center scale-110" id="hero-image" style="filter: grayscale(30%);">
  <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent z-10"></div>
 
  <div class="absolute bottom-16 left-16 right-16 text-white max-w-lg z-20">
@@ -183,7 +201,16 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
- if (typeof gsap !== 'undefined') {
+ (window.RentEase ? RentEase.gsapReady : Promise.resolve(null)).then(function(gsap) {
+ if (!gsap) {
+ document.querySelectorAll('.gsap-fade, #quote-author').forEach(el => el.style.opacity = '1');
+ document.querySelectorAll('.text-mask-inner').forEach(el => el.style.transform = 'translateY(0)');
+ const overlay = document.getElementById('image-overlay');
+ if (overlay) overlay.style.display = 'none';
+ const img = document.getElementById('hero-image');
+ if (img) img.style.transform = 'scale(1)';
+ return;
+ }
  gsap.context(() => {
  const tl = gsap.timeline();
  tl.to('.text-mask-inner:not(.quote-text)', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 });
@@ -193,15 +220,9 @@ $pageDescription = 'Sign in to manage your rentals, track deliveries, and access
  tl.to('.quote-text', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.15 }, "-=1.5");
  tl.to('#quote-author', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, "-=1.0");
  });
- } else {
- document.querySelectorAll('.gsap-fade, #quote-author').forEach(el => el.style.opacity = '1');
- document.querySelectorAll('.text-mask-inner').forEach(el => el.style.transform = 'translateY(0)');
- const overlay = document.getElementById('image-overlay');
- if (overlay) overlay.style.display = 'none';
- const img = document.getElementById('hero-image');
- if (img) img.style.transform = 'scale(1)';
- }
  });
- </script>
+ });
+  </script>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('<?= baseUrl('/sw.js') ?>')});}</script>
 </body>
 </html>

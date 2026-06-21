@@ -61,6 +61,9 @@ if (!empty($_SESSION['cart'])) {
 
 $pageTitle = $pageTitle ?? 'RentEase — Premium Furniture & Appliance Rentals';
 $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances with flexible monthly plans. Free delivery, easy returns, zero commitment.';
+
+$appUrl = $config['app_url'] ?? baseUrl('/');
+$ogImage = baseUrl('/assets/images/og-image.png');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,21 +74,84 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#fafaf9">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="<?= htmlspecialchars($appUrl . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: $appUrl) ?>">
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?= baseUrl('/favicon.svg') ?>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="apple-touch-icon" href="<?= baseUrl('/favicon.svg') ?>">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= htmlspecialchars($appUrl) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>">
+    <meta property="og:site_name" content="RentEase">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($pageDescription) ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars($ogImage) ?>">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "RentEase",
+        "url": "<?= htmlspecialchars($appUrl) ?>",
+        "description": "<?= htmlspecialchars($pageDescription) ?>",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "<?= htmlspecialchars($appUrl) ?>/shop?category={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>">
-    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+
+    <!-- Critical CSS Inline (above-fold paint) -->
     <style>
-        .text-mask { overflow: hidden; display: inline-block; vertical-align: bottom; padding-bottom: 0.1em; margin-bottom: -0.1em; }
-        .text-mask-inner { display: inline-block; transform: translateY(100%); }
-        .clip-reveal { clip-path: inset(0 100% 0 0); }
+        body{background:#FAFAF9;color:#18181B;font-family:Inter,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        .text-mask{overflow:hidden;display:inline-block;vertical-align:bottom;padding-bottom:.1em;margin-bottom:-.1em}
+        .text-mask-inner{display:inline-block;transform:translateY(100%)}
+        .clip-reveal{clip-path:inset(0 100% 0 0)}
+        #main-nav{position:fixed;width:100%;top:0;z-index:50;background:rgba(250,250,249,0.8)}
+        .scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:9999;pointer-events:none}
+        .scroll-progress-bar{height:100%;width:0%;background:#C5A98B}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+        .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 2.5rem;min-height:48px;background:#18181B;color:#fff;font-size:.6875rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none}
+        .btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 2.5rem;min-height:48px;background:transparent;color:#18181B;font-size:.6875rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:1px solid #E7E5E4;cursor:pointer;text-decoration:none}
     </style>
+
+    <!-- Deferred Full Stylesheet -->
+    <link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>"></noscript>
+
+    <!-- Deferred Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"></noscript>
+
+    <!-- Deferred Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <script src="<?= baseUrl('/assets/js/theme.js') ?>" defer></script>
+    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('<?= baseUrl('/sw.js') ?>')});}</script>
 </head>
 <body class="bg-canvas text-ink font-sans antialiased min-h-screen flex flex-col selection:bg-champagne/20 selection:text-champagne-dark overflow-x-hidden">
 
@@ -157,39 +223,34 @@ $pageDescription = $pageDescription ?? 'Rent premium furniture and appliances wi
     </div>
 </nav>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.RentEase) {
-        RentEase.initScrollProgress();
-        RentEase.initNavScroll();
-    }
-
-    const btn = document.getElementById('mobile-menu-btn');
-    const nav = document.getElementById('mobile-nav');
-    const overlay = document.getElementById('mobile-overlay');
-
-    function toggleMobileNav() {
-        const isOpen = nav.classList.contains('flex');
-        nav.classList.toggle('hidden');
-        nav.classList.toggle('flex');
-        if (overlay) overlay.classList.toggle('hidden');
-        document.body.style.overflow = isOpen ? '' : 'hidden';
-        const icon = btn.querySelector('.material-symbols-outlined');
-        if (icon) icon.textContent = isOpen ? 'menu' : 'close';
-    }
-
-    if (btn && nav) {
-        btn.addEventListener('click', toggleMobileNav);
-        if (overlay) overlay.addEventListener('click', toggleMobileNav);
-    }
-
-    const gsapCheck = setInterval(() => {
-        if (window.gsap) {
-            clearInterval(gsapCheck);
-            gsap.context(() => {
-                gsap.from('#main-nav', { y: -80, opacity: 0, duration: 1.2, ease: 'power2.out', delay: 0.1 });
-            });
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.RentEase) {
+            RentEase.initScrollProgress();
+            RentEase.initNavScroll();
         }
-    }, 100);
-});
-</script>
+
+        const btn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('mobile-nav');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleMobileNav() {
+            const isOpen = nav.classList.contains('flex');
+            nav.classList.toggle('hidden');
+            nav.classList.toggle('flex');
+            if (overlay) overlay.classList.toggle('hidden');
+            document.body.style.overflow = isOpen ? '' : 'hidden';
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (icon) icon.textContent = isOpen ? 'menu' : 'close';
+        }
+
+        if (btn && nav) {
+            btn.addEventListener('click', toggleMobileNav);
+            if (overlay) overlay.addEventListener('click', toggleMobileNav);
+        }
+
+        (window.RentEase ? RentEase.gsapReady : Promise.resolve(null)).then(function(gsap) {
+            if (gsap) gsap.from('#main-nav', { y: -80, opacity: 0, duration: 1.2, ease: 'power2.out', delay: 0.1 });
+        });
+    });
+    </script>

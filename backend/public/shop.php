@@ -107,34 +107,20 @@ include_once __DIR__ . '/partials/header.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    (window.RentEase ? RentEase.gsapReady : Promise.resolve(null)).then(function(gsap) {
+        if (!gsap || !window.ScrollTrigger) return;
         gsap.registerPlugin(ScrollTrigger);
 
         const tl = gsap.timeline();
-
         tl.from('#shop-title', { y: 40, opacity: 0, duration: 1.2, ease: 'power4.out' }, 0)
           .from('.section-eyebrow', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0)
           .to('.filter-nav', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 0.4);
 
         gsap.utils.toArray('.product-card').forEach((card, i) => {
-            gsap.from(card, {
-                scrollTrigger: { trigger: card, start: 'top 85%' },
-                y: 60,
-                opacity: 0,
-                duration: 1.2,
-                ease: 'power3.out',
-                delay: i * 0.08
-            });
+            gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 85%' }, y: 60, opacity: 0, duration: 1.2, ease: 'power3.out', delay: i * 0.08 });
         });
-
-        gsap.to('.load-more', {
-            scrollTrigger: { trigger: '.load-more', start: 'top 90%' },
-            opacity: 1,
-            y: -20,
-            duration: 1,
-            ease: 'power3.out'
-        });
-    }
+        gsap.to('.load-more', { scrollTrigger: { trigger: '.load-more', start: 'top 90%' }, opacity: 1, y: -20, duration: 1, ease: 'power3.out' });
+    });
 });
 </script>
 

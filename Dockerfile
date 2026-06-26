@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.3-apache AS base
 
 RUN apt-get update && apt-get install -y \
     libpq-dev \
@@ -17,6 +17,11 @@ RUN sed -i 's|/var/www/html|/var/www/html|g' /etc/apache2/sites-available/000-de
 COPY . /var/www/html/
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+# Build Tailwind CSS
+RUN apt-get update && apt-get install -y nodejs npm && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && npm install && npm run build:css \
+    && rm -rf /var/www/html/node_modules
 
 RUN chown -R www-data:www-data /var/www/html \
     && find /var/www/html/backend/storage -type d -exec chmod 755 {} \; \

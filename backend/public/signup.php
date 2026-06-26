@@ -89,8 +89,10 @@ $ogImage = baseUrl('/assets/images/og-image.png');
 	.text-mask{overflow:hidden;display:inline-block;vertical-align:bottom;padding-bottom:.1em;margin-bottom:-.1em}
 	.text-mask-inner{display:inline-block;transform:translateY(100%)}
 	</style>
-	<link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>" media="print" onload="this.media='all';this.onload=null">
-	<noscript><link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>"></noscript>
+	<link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>" media="print" onload="this.media='all';this.onload=null">
+	<noscript><link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>"></noscript>
+	<link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>" media="print" onload="this.media='all';this.onload=null">
+	<noscript><link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>"></noscript>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" media="print" onload="this.media='all';this.onload=null">
 	<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"></noscript>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" media="print" onload="this.media='auto';this.onload=null">

@@ -138,8 +138,10 @@ $ogImage = baseUrl('/assets/images/og-image.png');
     </style>
 
     <!-- Deferred Full Stylesheet -->
-    <link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>" media="print" onload="this.media='all';this.onload=null">
-    <noscript><link rel="stylesheet" href="<?= baseUrl('/dist/bundle.css') ?>"></noscript>
+    <link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="<?= baseUrl('/dist/output.css') ?>"></noscript>
+    <link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="<?= baseUrl('/assets/css/theme.css') ?>"></noscript>
 
     <!-- Deferred Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all';this.onload=null">

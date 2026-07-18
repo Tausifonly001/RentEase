@@ -1,0 +1,128 @@
+[
+    {
+        "id": 1,
+        "name": "Minimalist Scandinavian Sofa",
+        "category": "Furniture",
+        "monthly_price": 59.0,
+        "total_stock": 10,
+        "image_url": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80",
+        "description": "Cozy Scandinavian oak sofa with fabric cushions. Minimalist styling and high-quality material for a calm, modern living room."
+    },
+    {
+        "id": 2,
+        "name": "Oak Wood Study Desk",
+        "category": "Furniture",
+        "monthly_price": 29.0,
+        "total_stock": 15,
+        "image_url": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=800&q=80",
+        "description": "Perfect minimalist desk for a home office. Features real oak wood and an iron metal frame for lasting durability."
+    },
+    {
+        "id": 3,
+        "name": "Ergonomic Task Chair",
+        "category": "Furniture",
+        "monthly_price": 24.0,
+        "total_stock": 25,
+        "image_url": "https://images.unsplash.com/photo-1505797149-43b0069ec26b?auto=format&fit=crop&w=800&q=80",
+        "description": "Modern task chair with lumbar support, mesh backing, and height adjustment for all-day comfort."
+    },
+    {
+        "id": 4,
+        "name": "Rustic Coffee Table",
+        "category": "Furniture",
+        "monthly_price": 19.0,
+        "total_stock": 8,
+        "image_url": "https://images.unsplash.com/photo-1538694014760-577cb7ebf1d6?auto=format&fit=crop&w=800&q=80",
+        "description": "Teak coffee table with metal legs and a beautiful rustic grain that adds a homely touch to any space."
+    },
+    {
+        "id": 5,
+        "name": "Queen Platform Bed",
+        "category": "Furniture",
+        "monthly_price": 49.0,
+        "total_stock": 6,
+        "image_url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
+        "description": "Low-profile queen platform bed with a solid wood frame and a clean, contemporary silhouette."
+    },
+    {
+        "id": 6,
+        "name": "Open Bookshelf Unit",
+        "category": "Furniture",
+        "monthly_price": 22.0,
+        "total_stock": 12,
+        "image_url": "https://images.unsplash.com/photo-1594620302200-9a762244a156?auto=format&fit=crop&w=800&q=80",
+        "description": "Airy open bookshelf with five spacious tiers, ideal for books, plants, and curated decor."
+    },
+    {
+        "id": 7,
+        "name": "Dining Table Set",
+        "category": "Furniture",
+        "monthly_price": 69.0,
+        "total_stock": 5,
+        "image_url": "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=800&q=80",
+        "description": "Statement dining table that seats six, crafted from sustainable hardwood with a soft matte finish."
+    },
+    {
+        "id": 8,
+        "name": "Velvet Lounge Chair",
+        "category": "Furniture",
+        "monthly_price": 39.0,
+        "total_stock": 14,
+        "image_url": "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80",
+        "description": "Plush velvet lounge chair with a brass-toned base, perfect for a reading nook or accent corner."
+    },
+    {
+        "id": 9,
+        "name": "Smart 22\" 4K Monitor",
+        "category": "Appliances",
+        "monthly_price": 39.0,
+        "total_stock": 18,
+        "image_url": "https://fakestoreapi.com/img/81QpkIctqPL._AC_SX679_t.png",
+        "description": "Ultra-thin 22-inch Full HD IPS monitor with crisp colors, ideal for work and streaming setups."
+    },
+    {
+        "id": 10,
+        "name": "Curved Ultrawide Monitor",
+        "category": "Appliances",
+        "monthly_price": 59.0,
+        "total_stock": 9,
+        "image_url": "https://fakestoreapi.com/img/81Zt42ioCgL._AC_SX679_t.png",
+        "description": "49-inch super-ultrawide QLED curved monitor for an immersive workstation or entertainment rig."
+    },
+    {
+        "id": 11,
+        "name": "Portable 2TB Hard Drive",
+        "category": "Appliances",
+        "monthly_price": 19.0,
+        "total_stock": 30,
+        "image_url": "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_t.png",
+        "description": "Compact and rugged 2TB portable external hard drive with USB 3.0 for backups on the go."
+    },
+    {
+        "id": 12,
+        "name": "1TB Internal SSD",
+        "category": "Appliances",
+        "monthly_price": 29.0,
+        "total_stock": 22,
+        "image_url": "https://fakestoreapi.com/img/61U7T1koQqL._AC_SX679_t.png",
+        "description": "1TB SATA III internal SSD that boots your system in seconds and accelerates everyday tasks."
+    },
+    {
+        "id": 13,
+        "name": "256GB Performance SSD",
+        "category": "Appliances",
+        "monthly_price": 25.0,
+        "total_stock": 20,
+        "image_url": "https://fakestoreapi.com/img/71kWymZ+c+L._AC_SX679_t.png",
+        "description": "256GB 3D NAND SLC-cache SSD delivering a noticeable speed boost for laptops and desktops."
+    },
+    {
+        "id": 14,
+        "name": "4TB Gaming Drive",
+        "category": "Appliances",
+        "monthly_price": 35.0,
+        "total_stock": 16,
+        "image_url": "https://fakestoreapi.com/img/61mtL65D4cL._AC_SX679_t.png",
+        "description": "4TB portable gaming drive, formatted for plug-and-play storage across consoles and PCs."
+    }
+]

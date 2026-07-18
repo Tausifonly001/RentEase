@@ -53,6 +53,18 @@ require __DIR__ . '/partials/header.php';
 
 </div>
 
+<!-- Safety net: never let the intro loader block the page if GSAP fails to load -->
+<script>
+(function () {
+    function hideLoader() {
+        var l = document.getElementById('loader');
+        if (l) { l.style.display = 'none'; }
+    }
+    window.addEventListener('load', function () { setTimeout(hideLoader, 3000); });
+    setTimeout(hideLoader, 5000);
+})();
+</script>
+
 <main class="w-full relative bg-canvas">
 
 <!-- ============================================ -->
@@ -326,7 +338,11 @@ require __DIR__ . '/partials/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     (window.RentEase ? RentEase.gsapReady : Promise.resolve(null)).then(function(gsap) {
-        if (!gsap || !window.ScrollTrigger) return;
+        if (!gsap || !window.ScrollTrigger) {
+            var l = document.getElementById('loader');
+            if (l) { l.style.display = 'none'; }
+            return;
+        }
         gsap.registerPlugin(ScrollTrigger);
 
         gsap.context(() => {

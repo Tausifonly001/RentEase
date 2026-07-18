@@ -34,7 +34,7 @@ require __DIR__ . '/partials/header.php';
         <div class="absolute inset-0 bg-ink/50 mix-blend-multiply"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-ink/60"></div>
         
-        <div class="relative text-center w-full z-10" id="logo-tl" style="transform: scale(0.95); opacity: 0;">
+        <div class="relative text-center w-full z-10" id="logo-tl" style="transform: scale(0.95);">
             <span class="font-serif text-4xl md:text-6xl font-medium tracking-[0.3em] text-white whitespace-nowrap drop-shadow-2xl">RENTEASE</span>
         </div>
     </div>
@@ -46,7 +46,7 @@ require __DIR__ . '/partials/header.php';
         <div class="absolute inset-0 bg-ink/50 mix-blend-multiply"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-ink/60"></div>
 
-        <div class="relative text-center w-full z-10" id="logo-br" style="transform: scale(0.95); opacity: 0;">
+        <div class="relative text-center w-full z-10" id="logo-br" style="transform: scale(0.95);">
             <span class="font-serif text-4xl md:text-6xl font-medium tracking-[0.3em] text-white whitespace-nowrap drop-shadow-2xl">RENTEASE</span>
         </div>
     </div>
@@ -56,12 +56,12 @@ require __DIR__ . '/partials/header.php';
 <!-- Safety net: never let the intro loader block the page if GSAP fails to load -->
 <script>
 (function () {
+    var l = document.getElementById('loader');
     function hideLoader() {
-        var l = document.getElementById('loader');
-        if (l) { l.style.display = 'none'; }
+        if (l) { l.style.display = 'none'; l = null; }
     }
-    window.addEventListener('load', function () { setTimeout(hideLoader, 3000); });
-    setTimeout(hideLoader, 5000);
+    setTimeout(hideLoader, 2500);
+    window.addEventListener('load', function () { setTimeout(hideLoader, 1500); });
 })();
 </script>
 

@@ -61,12 +61,14 @@ window.RentEase = window.RentEase || {};
             get: function() { return undefined; }
         });
         setTimeout(function() {
-            // fallback after 5s: make all hidden elements visible
+            // fallback after 3s: make all hidden elements visible + hide loader
             document.querySelectorAll('.text-mask-inner').forEach(function(el) { el.style.transform = 'translateY(0)'; });
             document.querySelectorAll('[class*="reveal-"], .gsap-fade, .gsap-fade-up').forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; });
             document.querySelectorAll('.clip-reveal').forEach(function(el) { el.style.clipPath = 'inset(0 0% 0 0)'; });
+            var loader = document.getElementById('loader');
+            if (loader) loader.style.display = 'none';
             resolve(null);
-        }, 5000);
+        }, 3000);
     });
 
     // === Text Mask Reveal ===

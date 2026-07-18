@@ -11,7 +11,7 @@ $pageDescription = 'The page you are looking for could not be found.';
 require __DIR__ . '/partials/header.php';
 ?>
 
-<main class="flex-grow flex items-center justify-center px-4 py-20 page-fade">
+<main class="flex-grow flex items-center justify-center px-4 py-20">
  <div class="text-center max-w-2xl mx-auto">
 
  <!-- Hero illustration -->
@@ -33,7 +33,7 @@ require __DIR__ . '/partials/header.php';
  </div>
 
  <!-- Copy -->
- <span class="badge badge-accent mb-5">Lost in the catalog</span>
+  <span class="badge mb-5">Lost in the catalog</span>
  <h2 class="text-3xl md:text-5xl font-bold text-ink mb-4 tracking-tight">We can't find that page</h2>
  <p class="text-muted text-lg max-w-md mx-auto mb-12 leading-relaxed">
  The page you're looking for doesn't exist, was moved, or is temporarily unavailable. Let's get you back to the good stuff.
@@ -41,14 +41,14 @@ require __DIR__ . '/partials/header.php';
 
  <!-- CTAs -->
  <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
- <a href="<?= baseUrl('/') ?>" class="btn-pill btn-pill-lg group">
- <span class="material-symbols-outlined text-base">home</span>
- Back to Home
- </a>
- <a href="<?= baseUrl('/shop') ?>" class="btn-pill btn-pill-lg btn-pill-secondary group">
- <span class="material-symbols-outlined text-base">storefront</span>
- Browse Catalog
- </a>
+  <a href="<?= baseUrl('/') ?>" class="btn-primary">
+  <span class="material-symbols-outlined text-base">home</span>
+  Back to Home
+  </a>
+  <a href="<?= baseUrl('/shop') ?>" class="btn-secondary">
+  <span class="material-symbols-outlined text-base">storefront</span>
+  Browse Catalog
+  </a>
  </div>
 
  <!-- Helpful links -->

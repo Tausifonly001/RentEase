@@ -10,6 +10,7 @@ require_once __DIR__ . '/../bootstrap.php';
 $authService = new AuthService($config);
 $csrfToken = Csrf::token();
 $error = Session::getFlash('error', $_GET['error'] ?? null);
+$success = Session::getFlash('success', $_GET['registered'] ?? null);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  if (!Csrf::validate($_POST['csrf_token'] ?? null)) {
@@ -112,11 +113,17 @@ $ogImage = baseUrl('/assets/images/og-image.png');
  <p class="text-muted text-sm font-light opacity-0 gsap-fade">Please enter your details to sign in.</p>
  </div>
 
- <?php if ($error): ?>
- <div class="mb-8 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm font-light opacity-0 gsap-fade">
- <?= htmlspecialchars($error) ?>
- </div>
- <?php endif; ?>
+  <?php if ($error): ?>
+  <div class="mb-8 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm font-light opacity-0 gsap-fade">
+  <?= htmlspecialchars($error) ?>
+  </div>
+  <?php endif; ?>
+
+  <?php if ($success): ?>
+  <div class="mb-8 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-light opacity-0 gsap-fade">
+  <?= htmlspecialchars($success) ?>
+  </div>
+  <?php endif; ?>
 
  <form action="<?= baseUrl('/login') ?>" method="POST" class="space-y-8" novalidate>
  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">

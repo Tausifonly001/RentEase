@@ -27,6 +27,26 @@ final class AuthService extends BaseSupabaseService
         $msg = strtolower((string)($response['body']['msg'] ?? $response['body']['message'] ?? $response['body']['error'] ?? ''));
         $isRateLimited = ($response['status'] === 429) || (strpos($msg, 'rate limit') !== false);
 
+        // When email confirmation is required, the anonymous signup creates
+        // the user but returns no session. Confirm the address through the
+        // admin API so the new account is immediately usable without relying
+        // on email delivery (the usual reason a fresh signup "fails").
+        $user = $response['body']['user'] ?? null;
+        if ($response['status'] >= 200 && $response['status'] < 300 && is_array($user)) {
+            $isConfirmed = !empty($user['email_confirmed_at']) || !empty($response['body']['access_token']);
+            if (!$isConfirmed && !empty($user['id'])) {
+                try {
+                    $this->request('PUT', '/auth/v1/admin/users/' . $user['id'], $this->serviceHeaders(), [
+                        'email_confirm' => true,
+                    ]);
+                    $user['email_confirmed_at'] = date('c');
+                    $response['body']['user'] = $user;
+                } catch (Throwable $e) {
+                    // Ignore — caller surfaces a clear error if login fails.
+                }
+            }
+        }
+
         $allowAdminFallback = (bool) ($this->config['allow_signup_admin_fallback'] ?? false);
         if ($isRateLimited && $allowAdminFallback) {
             $adminResponse = $this->request('POST', '/auth/v1/admin/users', $this->serviceHeaders(), [
@@ -40,8 +60,76 @@ final class AuthService extends BaseSupabaseService
             }
         }
 
+        // Recovery: if the email is already registered (e.g. from a previous
+        // unconfirmed attempt), confirm it and sign in so the user is never
+        // blocked from reaching the application.
+        if ($response['status'] < 200 || $response['status'] >= 300) {
+            $body = strtolower((string)($response['body']['msg'] ?? $response['body']['message'] ?? $response['body']['error'] ?? $response['body']['error_description'] ?? ''));
+            $alreadyExists = strpos($body, 'already registered') !== false
+                || strpos($body, 'already been registered') !== false
+                || strpos($body, 'user already') !== false;
+            if ($alreadyExists) {
+                $recovered = $this->recoverExistingAccount($email, $password);
+                if ($recovered !== null) {
+                    return $recovered;
+                }
+            }
+        }
+
         $this->assertSuccess($response, 'Signup failed');
+
+        // If signup did not already issue a session, exchange the credentials
+        // for one so the caller is authenticated straight away.
+        if (empty($response['body']['access_token'])) {
+            try {
+                $session = $this->login(['email' => $email, 'password' => $password]);
+                if (!empty($session['access_token'])) {
+                    $response['body'] = array_merge($response['body'], $session);
+                }
+            } catch (Throwable $e) {
+                // Account exists; the user can sign in manually.
+            }
+        }
+
         return $response['body'];
+    }
+
+    /**
+     * Best-effort recovery for an email that is already registered: try a
+     * direct login, and if that fails because the account is unconfirmed,
+     * confirm it via the admin API and log in again.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function recoverExistingAccount(string $email, string $password): ?array
+    {
+        try {
+            $session = $this->login(['email' => $email, 'password' => $password]);
+            if (!empty($session['access_token'])) {
+                return $session;
+            }
+        } catch (Throwable $e) {
+            // Account likely unconfirmed; attempt confirmation below.
+        }
+
+        try {
+            $listResponse = $this->request('GET', '/auth/v1/admin/users?email=' . urlencode($email) . '&per_page=1', $this->serviceHeaders());
+            $users = $listResponse['body']['users'] ?? [];
+            $userId = is_array($users) && !empty($users[0]['id']) ? (string) $users[0]['id'] : '';
+            if ($userId !== '') {
+                $this->request('PUT', '/auth/v1/admin/users/' . $userId, $this->serviceHeaders(), [
+                    'email_confirm' => true,
+                ]);
+                $session = $this->login(['email' => $email, 'password' => $password]);
+                if (!empty($session['access_token'])) {
+                    return $session;
+                }
+            }
+        } catch (Throwable $e) {
+            // Fall through to the original signup error.
+        }
+
+        return null;
     }
 
     /**

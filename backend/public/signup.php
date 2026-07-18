@@ -42,14 +42,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  $onesignal->sendPush([$email], 'Welcome to RentEase!', 'Your account has been created successfully.');
  } catch (\Throwable $e) { error_log("Push notification failed: " . $e->getMessage()); }
 
- $loginResult = $authService->login(['email' => $email, 'password' => $password]);
- $token = (string) ($loginResult['access_token'] ?? '');
- if ($token !== '') $authService->persistSession($loginResult, true);
- header('Location: ' . baseUrl('/'));
- exit;
- } catch (Throwable $e) {
- $error = 'Signup failed. That email may already be in use or your password is too weak.';
- }
+  try {
+  $loginResult = $authService->login(['email' => $email, 'password' => $password]);
+  $token = (string) ($loginResult['access_token'] ?? '');
+  if ($token !== '') {
+    $authService->persistSession($loginResult, true);
+    header('Location: ' . baseUrl('/'));
+    exit;
+  }
+  } catch (Throwable $e) {
+  error_log('Auto-login after signup failed: ' . $e->getMessage());
+  }
+
+  // Account was created successfully; let the user sign in manually.
+  Session::flash('success', 'Your account has been created. Please sign in to continue.');
+  header('Location: ' . baseUrl('/login'));
+  exit;
+  } catch (Throwable $e) {
+  $error = 'Signup failed. That email may already be in use or your password is too weak.';
+  }
  }
  }
 }

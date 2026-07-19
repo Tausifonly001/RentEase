@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace RentEase\Services;
 
+use Throwable;
+
 final class ProductService extends BaseSupabaseService
 {
     /**

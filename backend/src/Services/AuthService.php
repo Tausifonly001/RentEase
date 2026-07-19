@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RentEase\Services;
 
 use RentEase\Support\Validator;
+use Throwable;
 
 final class AuthService extends BaseSupabaseService
 {
